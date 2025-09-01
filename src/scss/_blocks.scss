@@ -5,12 +5,58 @@
     }
   }
 
+  // .block-genplan__content-container
+
+  &__content-container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 1296px;
+    height: 100%;
+    transform-origin: center center;
+    transition: transform 0.3s;
+    will-change: transform;
+    transform: translate(0px, 0px) scale(1);
+    overflow: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    // Добавляем плавные переходы
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.5s ease,
+      visibility 0.5s ease,
+      transform 0.3s;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      width: 1456px;
+    }
+
+    &._active {
+      opacity: 1;
+      visibility: visible;
+      z-index: 3;
+    }
+
+    // Первый шаг видим по умолчанию
+    &.step1 {
+      opacity: 1;
+      visibility: visible;
+      z-index: 3;
+    }
+  }
+
   // .block-genplan__content
 
   &__content {
     position: relative;
     width: 100%;
-    height: 631px;
+    height: 681px;
     &::before {
       content: "";
       position: absolute;
@@ -34,43 +80,64 @@
     overflow: hidden;
     position: relative;
     cursor: grab;
+    z-index: 2;
     background: #f0f0f0;
     &.dragging {
       cursor: grabbing;
     }
-    svg {
-      height: 100%;
-      left: 0;
-      position: absolute;
-      top: 0;
-      width: 100%;
-      z-index: 4;
+  }
+
+  // .block-genplan__svg
+
+  &__svg {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 4;
+  }
+
+  // .block-genplan__path
+
+  &__path {
+    &._active {
+      &.path1 {
+        fill: rgba(205, 117, 85, 0.5);
+      }
+      &.path-blue {
+        fill: rgba(12, 39, 118, 0.65);
+      }
     }
   }
 
   // .block-genplan__tips
 
   &__tips {
+    height: 100%;
+    left: 0;
     position: absolute;
     top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
+    z-index: 30;
   }
 
   // .block-genplan__tippy
 
   &__tippy {
     position: absolute;
-    z-index: 20;
-    background: #cd7555;
+    z-index: 30;
+    background-color: #fff;
+    color: #0c2776;
     border-radius: 38px;
     padding: 12px 11px;
     font-weight: 500;
     font-size: 17px;
     line-height: 78%;
     letter-spacing: -0.03em;
-    color: #fff;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
     &::before {
       content: "";
       position: absolute;
@@ -81,7 +148,49 @@
       height: 0;
       border-left: 12px solid transparent;
       border-right: 12px solid transparent;
-      border-top: 10px solid #cd7555;
+      border-top: 10px solid #fff;
+      @media (max-width: 768px) {
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+      }
+    }
+    .choice-home & {
+      &._active {
+        background: #ffb26b;
+        &::before {
+          content: "";
+          border-top: 10px solid #ffb26b;
+        }
+      }
+    }
+    &._active {
+      color: #fff;
+      background: #cd7555;
+      &::before {
+        content: "";
+        border-top: 10px solid #cd7555;
+      }
+    }
+    @media (max-width: 768px) {
+      font-size: 22px;
+      padding: 15px 13px;
+      border-radius: 48px;
+    }
+  }
+
+  // .block-genplan__popups
+
+  &__popups {
+    @media (min-width: 769px) {
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 1296px;
+      z-index: 1;
+      .popup-open & {
+        z-index: 6;
+      }
     }
   }
 
@@ -126,6 +235,14 @@
     min-height: 50px;
     overflow: hidden;
     gap: 10px;
+
+    // Добавляем плавные переходы
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.5s ease,
+      visibility 0.5s ease;
+
     &::before {
       content: "";
       position: absolute;
@@ -136,10 +253,45 @@
       background: rgba(0, 0, 0, 0.65);
       backdrop-filter: blur(12.445961952209473px);
     }
+
     span {
       position: relative;
       z-index: 5;
     }
+
+    &.title-genplan {
+      // Первый заголовок видим по умолчанию
+      opacity: 1;
+      visibility: visible;
+      &.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    &.title-house {
+      display: flex; // Всегда display: flex, но скрыт через opacity
+
+      svg {
+        transition: fill 0.3s;
+        transform: rotate(-180deg);
+      }
+
+      &:hover {
+        .block-genplan__icon {
+          background-color: #0c2776;
+        }
+        svg {
+          fill: #fff;
+        }
+      }
+    }
+
+    &._active {
+      opacity: 1;
+      visibility: visible;
+    }
+
     @media (max-width: 768px) {
       top: 30px;
       left: 15px;
@@ -155,10 +307,11 @@
     position: relative;
     z-index: 5;
     border-radius: 50%;
-    background: #fff;
+    background-color: #fff;
     width: 40px;
     height: 40px;
     flex: 0 0 40px;
+    transition: background-color 0.3s;
     svg {
       fill: var(--theme-color-accent);
     }
@@ -199,6 +352,7 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
+    pointer-events: none;
     z-index: 20;
     p {
       font-family: var(--second-family);
@@ -226,7 +380,24 @@
 
   &__filter {
     flex: 0 0 auto;
+    pointer-events: auto;
+    @media (max-width: 768px) {
+      margin: 0px 0px 2px 0px;
+    }
   }
+}
+
+// Убираем старые классы скрытия
+.block-genplan__content-container.step2,
+.title-house {
+  display: block; // Или flex, в зависимости от исходного значения
+}
+
+// Активные состояния
+.block-genplan__content-container._active,
+.block-genplan__title._active {
+  opacity: 1;
+  visibility: visible;
 }
 
 //Зум
@@ -413,14 +584,14 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.65);
   transition: opacity 0.3s;
-  z-index: 30;
+  z-index: 70;
   opacity: 0;
   pointer-events: none;
   &.fullscreen-hint_active {
@@ -484,9 +655,6 @@
 
 .block-genplan-popup {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   margin: 15px;
   color: #fff;
   z-index: 50;
@@ -497,6 +665,28 @@
   &._active {
     opacity: 1;
     pointer-events: auto;
+  }
+  .choice-home & {
+    width: 245px;
+    @media (max-width: 768px) {
+      top: auto !important;
+      bottom: 20px !important;
+      transform: translate(-50%, 0px);
+      width: 100%;
+      margin: 0px 0px 0px 0px;
+      padding: 15px;
+      .block-genplan-popup__close {
+        right: 15px;
+      }
+    }
+  }
+  @media (max-width: 768px) {
+    z-index: 60;
+    top: 52% !important;
+    left: 50% !important;
+    bottom: auto !important;
+    right: auto !important;
+    transform: translate(-50%, -50%);
   }
   @media (max-width: 480px) {
     width: 100%;
@@ -510,8 +700,8 @@
     padding: 15px;
     max-width: 350px;
     border-radius: 20px;
-    overflow: hidden;
     margin: 0 auto;
+    overflow: hidden;
     &::before {
       content: "";
       position: absolute;
@@ -531,14 +721,44 @@
       height: 100%;
       background: rgba(0, 0, 0, 0.6);
     }
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
+      max-width: 100%;
+    }
+    .choice-home & {
+      max-width: 245px;
+      @media (max-width: 768px) {
+        max-width: 100%;
+      }
     }
   }
 
   // .block-genplan-popup__close
 
   &__close {
+    display: none;
+    justify-content: center;
+    align-items: center;
     position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    border-radius: 50%;
+    right: 0;
+    top: -35px;
+    transition: opacity 0.3s;
+    svg {
+      fill: #000;
+    }
+    &:hover {
+      opacity: 0.7;
+    }
+    @media (max-width: 768px) {
+      display: flex;
+    }
+    @media (max-width: 480px) {
+      right: 15px;
+      top: -25px;
+    }
   }
 
   // .block-genplan-popup__title
