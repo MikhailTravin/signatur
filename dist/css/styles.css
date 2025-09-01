@@ -309,7 +309,7 @@ a {
 .block-genplan__content-container::-webkit-scrollbar {
   display: none;
 }
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .block-genplan__content-container {
     width: 1456px;
   }
