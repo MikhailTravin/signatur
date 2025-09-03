@@ -4,3 +4,112 @@
 .swiper-button-disabled {
     opacity: 0.5;
 }
+
+.pagination {
+    display: flex;
+    gap: 10px;
+    .swiper-pagination-bullet {
+        flex: 1 1 auto;
+        height: 3px;
+        margin: 0px 0px 0px 0px !important;
+        opacity: 1;
+        border-radius: 0px;
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    .swiper-pagination-bullet-active {
+        background-color: #fff;
+    }
+}
+
+.arrow-prev,
+.arrow-next {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 50%;
+    flex: 0 0 35px;
+    width: 35px;
+    height: 35px;
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    &.white {
+        background-color: #fff;
+        transition: opacity 0.3s;
+        svg {
+            fill: var(--theme-color-accent);
+        }
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+
+    &.blue {
+        background-color: #fff;
+        transition: border 0.3s;
+        border: 2px solid rgba(12, 39, 118, 0.4);
+        svg {
+            fill: var(--theme-color-accent);
+        }
+        &:hover {
+            border: 2px solid rgba(12, 39, 118, 1);
+        }
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+    }
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        border-top-color: transparent;
+        border-left-color: transparent;
+        transform: rotate(0deg);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    svg {
+        fill: #fff;
+    }
+
+    &:hover {
+        &::before {
+            opacity: 1;
+            animation: spinAndFill 1s ease-in-out forwards;
+        }
+    }
+}
+
+.arrow-prev {
+    svg {
+        transform: rotate(-180deg);
+    }
+}
+
+@keyframes spinAndFill {
+    0% {
+        transform: rotate(0deg);
+        border-top-color: transparent;
+        border-left-color: transparent;
+    }
+    100% {
+        transform: rotate(360deg);
+        border-top-color: #fff;
+        border-left-color: #fff;
+    }
+}

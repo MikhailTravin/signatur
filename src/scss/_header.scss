@@ -1,0 +1,112 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 20;
+    // .header__content
+
+    &__content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 0px;
+    }
+
+    // .header__body
+
+    &__body {
+        display: flex;
+        align-items: center;
+        position: relative;
+        z-index: 100;
+        border-radius: 33px;
+        padding: 6px 6px 6px 16px;
+        overflow: hidden;
+        gap: 50px;
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(13.600000381469727px);
+            background: rgba(0, 0, 0, 0.4);
+        }
+    }
+
+    // .header__logo
+
+    &__logo {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        img {
+            width: 98px;
+            height: auto;
+        }
+    }
+
+    // .header__menu
+
+    &__menu {
+        position: relative;
+        z-index: 10;
+    }
+
+    // .header__icon
+
+    &__icon {
+        flex: 0 0 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #fff;
+        cursor: pointer;
+    }
+}
+.icon-menu {
+    position: relative;
+    width: 19px;
+    height: 16px;
+    cursor: pointer;
+    z-index: 5;
+    span,
+    &::before,
+    &::after {
+        content: "";
+        transition: background-color 0.3s ease 0s;
+        right: 0;
+        position: absolute;
+        width: 100%;
+        height: 3px;
+        background-color: var(--theme-color-accent);
+    }
+    &::before {
+        top: 0;
+    }
+    &::after {
+        bottom: 0;
+    }
+    span {
+        top: calc(50% - 1.5px);
+    }
+    .menu-open & {
+        &::before {
+            top: calc(50% - 1.5px);
+            transform: rotate(-45deg);
+        }
+        span {
+            width: 0;
+        }
+        &::after {
+            content: "";
+            bottom: calc(50% - 1.5px);
+            transform: rotate(45deg);
+        }
+    }
+}
