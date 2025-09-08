@@ -15,6 +15,19 @@
 .main {
   flex-grow: 1;
   flex-shrink: 1;
+  &.contacts {
+    .footer {
+      min-height: 100vh;
+    }
+    .footer__content {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .top-footer {
+      flex: 1 1 auto;
+    }
+  }
 }
 
 .container {

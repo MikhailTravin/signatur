@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>Карточка квартиры</title>
+    {% include 'blocks/head.njk' %}
+</head>
+
+<body class="preload mp">
+    <div class="main-wrapper-outer">
+        {% include 'blocks/header.njk' %}
+        <main class="main">
+
+            <div class="block-product-card">
+                <div class="container">
+                    <div class="block-product-card__content">
+                        <div class="left-product-card">
+                            <div class="left-product-card__top">
+                                <ul>
+                                    <li>1-комнатная кв.</li>
+                                    <li>32.8 м²</li>
+                                    <li>3-й подьезд</li>
+                                    <li>6 этаж</li>
+                                </ul>
+                            </div>
+                            <div class="left-product-card__images">
+                                <img src="img/image24.webp" alt="" class="left-product-card__pic">
+                                <div data-da=".left-product-card__bottom, 768, last" class="options options-product-card">
+                                    <div class="options__item">
+                                        <input hidden id="az_90" class="options__input" type="radio" value="1"
+                                            name="azimuth_1">
+                                        <label for="az_90" class="options__label">
+                                            <span class="options__text">Утро</span></label>
+                                    </div>
+                                    <div class="options__item">
+                                        <input checked hidden id="az_180" class="options__input" type="radio"
+                                            value="180" name="azimuth_1">
+                                        <label for="az_180" class="options__label">
+                                            <span class="options__text">День</span></label>
+                                    </div>
+                                    <div class="options__item">
+                                        <input hidden id="az_270" class="options__input" type="radio" value="270"
+                                            name="azimuth_1">
+                                        <label for="az_270" class="options__label">
+                                            <span class="options__text">Вечер</span></label>
+                                    </div>
+                                    <div class="options-close">
+                                        <svg aria-hidden="true" width="18" height="18">
+                                            <use xlink:href="img/sprite.svg#close"></use>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="left-product-card__sun-line">
+                                    <div class="left-product-card__item-sun-line"
+                                        style="transform:rotate(calc(315deg + 22.5deg));">
+                                    </div>
+                                    <div class="left-product-card__item-sun-line"
+                                        style="transform: rotate(calc(112.5deg));">
+                                    </div>
+                                    <div class="left-product-card__item-sun-line sun-line"
+                                        style="transform: rotate(260deg);">
+                                        <div class="icon-sun-line">
+                                            <img src="img/sun-icon-line.svg" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="position-line" style="transform: rotate(0deg);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="left-product-card__bottom">
+                                <div class="left-product-card__icons">
+                                    <div class="left-product-card__icon">
+                                        <img src="img/compass.svg" alt="">
+                                    </div>
+                                    <div class="left-product-card__icon sun-position">
+                                        <img src="img/sun.svg" alt="">
+                                    </div>
+                                </div>
+                                <div class="left-product-card__navigation">
+                                    <a href="#" class="left-product-card__title _active">Планировка</a>
+                                    <a href="#" class="left-product-card__title">План
+                                        этаж</a>
+                                    <a href="#" class="left-product-card__title">Генплан</a>
+                                </div>
+                                <div class="left-product-card__buttons">
+                                    <a href="#" class="left-product-card__button">
+                                        <img src="img/file.svg" alt="">
+                                    </a>
+                                    <a href="#" class="left-product-card__button">
+                                        <svg aria-hidden="true" width="24" height="18">
+                                            <use xlink:href="img/sprite.svg#download"></use>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right-product-card">
+                            <div class="right-product-card__top">
+                                <div class="right-product-card__title">Стоимость</div>
+                                <span>*Серый ключ</span>
+                            </div>
+                            <div class="right-product-card__body">
+                                <div class="right-product-card__column">
+                                    <div class="right-product-card__tag">Базовая</div>
+                                    <div class="right-product-card__price">
+                                        6 068 000₽
+                                        <span>185 000 ₽/м²</span>
+                                    </div>
+                                    <ul>
+                                        <li>
+                                            <div class="right-product-card__name">
+                                                Жилая
+                                            </div>
+                                            <div class="right-product-card__value">
+                                                11.2 м²
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="right-product-card__name">
+                                                Потолок
+                                            </div>
+                                            <div class="right-product-card__value">
+                                                2.7 м
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="right-product-card__column column-sale">
+                                    <div class="right-product-card__tag">С акцией месяца</div>
+                                    <div class="right-product-card__price">
+                                        6 068 000₽
+                                        <span>185 000 ₽/м²</span>
+                                    </div>
+                                    <ul>
+                                        <li>
+                                            <div class="right-product-card__name">
+                                                Кухня
+                                            </div>
+                                            <div class="right-product-card__value">
+                                                11.2 м²
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="right-product-card__name">
+                                                Спальня
+                                            </div>
+                                            <div class="right-product-card__value">
+                                                1
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="right-product-card__button">
+                                <a href="#" class="btn btn-bg">Смотреть кладовые</a>
+                                <a href="#" class="btn">
+                                    <span>Забронировать</span>
+                                    <svg aria-hidden="true" width="12" height="8">
+                                        <use xlink:href="img/sprite.svg#arrow1"></use>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'blocks/calculator.njk' %}
+
+            {% include 'blocks/genplan.njk' %}
+
+            <div class="block-apartments other-apartments">
+                <div class="container">
+                    <h1 class="title2">
+                        Другие квартиры в этом доме
+                    </h1>
+                    <div class="block-apartments__content">
+                        <div class="block-apartments__body">
+                            <div class="block-apartments__cards">
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="block-apartments__button btn">Вернуться к поиску</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'blocks/button-fixed.njk' %}
+
+        </main>
+        {% include 'blocks/footer.njk' %}
+    </div>
+    {% include 'blocks/scripts.njk' %}
+</body>
+
+</html>

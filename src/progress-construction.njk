@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>Динамика строительства</title>
+    {% include 'blocks/head.njk' %}
+</head>
+
+<body class="preload mp">
+    <div class="main-wrapper-outer">
+        {% include 'blocks/header.njk' %}
+        <main class="main">
+
+            <div class="block-progress-construction progress-construction2">
+                <div class="container">
+                    <div class="block-progress-construction__content">
+                        <div class="block-progress-construction__left">
+                            <img loading="lazy" src="img/image11.webp" alt="" class="block-progress-construction__pic1">
+                            <div class="block-progress-construction__item">
+                                <h2 class="title2">
+                                    Динамика строительства
+                                </h2>
+                                <a href="#" data-da=".block-progress-construction__content, 992, last" class="btn">
+                                    <span>Подробнее о прогрессе</span>
+                                    <svg aria-hidden="true" width="9" height="10">
+                                        <use xlink:href="img/sprite.svg#plus"></use>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="block-progress-construction__right">
+                            <div class="block-progress-construction__slider swiper">
+                                <div class="block-progress-construction__wrapper swiper-wrapper">
+                                    <a href="img/image12.webp" data-fancybox="gallery1"
+                                        class="block-progress-construction__slide swiper-slide">
+                                        <img loading="lazy" src="img/image12.webp" alt="">
+                                    </a>
+                                    <a href="img/image12.webp" data-fancybox="gallery1"
+                                        class="block-progress-construction__slide swiper-slide">
+                                        <img loading="lazy" src="img/image12.webp" alt="">
+                                    </a>
+                                    <a href="img/image12.webp" data-fancybox="gallery1"
+                                        class="block-progress-construction__slide swiper-slide">
+                                        <img loading="lazy" src="img/image12.webp" alt="">
+                                    </a>
+                                    <a href="img/image12.webp" data-fancybox="gallery1"
+                                        class="block-progress-construction__slide swiper-slide">
+                                        <img loading="lazy" src="img/image12.webp" alt="">
+                                    </a>
+                                    <a href="img/image12.webp" data-fancybox="gallery1"
+                                        class="block-progress-construction__slide swiper-slide">
+                                        <img loading="lazy" src="img/image12.webp" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="block-progress-construction__body">
+                                <div class="block-progress-construction__top">
+                                    <div class="block-progress-construction__pagination pagination"></div>
+                                    <div class="block-progress-construction__data">
+                                        май 2025
+                                    </div>
+                                </div>
+                                <div class="block-progress-construction__bottom">
+                                    <div class="block-progress-construction__arrow-prev arrow-prev white">
+                                        <svg aria-hidden="true" width="12" height="8">
+                                            <use xlink:href="img/sprite.svg#arrow1"></use>
+                                        </svg>
+                                    </div>
+                                    <a href="#" class="block-progress-construction__images js-open-gallery">
+                                        <div class="block-progress-construction__icon">
+                                            <img loading="lazy" src="img/images.svg" alt="">
+                                        </div>
+                                        <span>15 фото</span>
+                                    </a>
+                                    <div class="block-progress-construction__arrow-next arrow-next white">
+                                        <svg aria-hidden="true" width="12" height="8">
+                                            <use xlink:href="img/sprite.svg#arrow1"></use>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'blocks/genplan.njk' %}
+
+            {% include 'blocks/button-fixed.njk' %}
+
+        </main>
+        {% include 'blocks/footer.njk' %}
+    </div>
+    {% include 'blocks/scripts.njk' %}
+</body>
+
+</html>

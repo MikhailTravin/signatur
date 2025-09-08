@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>Партнерам и агентам</title>
+    {% include 'blocks/head.njk' %}
+</head>
+
+<body class="preload mp">
+    <div class="main-wrapper-outer">
+        {% include 'blocks/header.njk' %}
+        <main class="main">
+
+            <div class="block-partners">
+                <div class="container">
+                    <div class="block-partners__content">
+                        <img loading="lazy" src="img/image6.webp" alt="" class="block-partners__pic1">
+                        <img loading="lazy" src="img/image25.webp" alt="" class="block-partners__pic2">
+                        <h1 class="title2">
+                            Партнерам и агентам
+                        </h1>
+                        <div class="block-partners__body">
+                            <div class="block-partners__title">
+                                <span>Бонусы</span> для агентств недвижимости
+                            </div>
+                            <div class="cards">
+                                <div style="background: #d2d2d2; color: #0c2776;" class="cards__card">
+                                    <p>
+                                        Рекламные
+                                        и презентационные<br> материалы в исходном качестве
+                                    </p>
+                                    <img loading="lazy" src="img/icon4.svg" alt="">
+                                </div>
+                                <div style="background: #0c2776;" class="cards__card">
+                                    <p>
+                                        Совместное участие
+                                        в рекламных кампаниях
+                                        и медийная поддержка
+                                    </p>
+                                    <img loading="lazy" src="img/icon5.svg" alt="">
+                                </div>
+                                <div style="background: #cd7555;" class="cards__card">
+                                    <p>
+                                        Обучение нюансам продажи эксклюзивных проектов
+                                    </p>
+                                    <img loading="lazy" src="img/icon6.svg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-agents">
+                <div class="container">
+                    <div class="block-agents__content">
+                        <div class="block-agents__body">
+                            <div class="text">Сопровождение <span>сделки</span></div>
+                            <div class="block-agents__title">
+                                Мы приглашаем к сотрудничеству частных агентов и агентства недвижимости.
+                            </div>
+                            <p>
+                                Гарантируем сопровождение сделки с фиксацией клиента, достойное вознаграждение,
+                                своевременные выплаты комиссии и участие в брокер-турах
+                            </p>
+                            <div class="block-agents__text">
+                                Вознаграждение от 2%
+                            </div>
+                        </div>
+                        <div class="block-agents__image">
+                            <img src="img/image29.webp" alt="">
+                            <div class="block-agents__percent">
+                                от 2%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-chat-bot">
+                <img loading="lazy" src="img/image30.webp" alt="" class="block-chat-bot__pic">
+                <div class="container">
+                    <div class="block-chat-bot__content">
+                        <h2 class="title2">Чат-бот «Макрострой для партнеров»</h2>
+                        <div class="block-chat-bot__bottom">
+                            <p data-da=".block-chat-bot__content, 768, 1" class="text">
+                                Умный бот поможет вам создать клиента и отслеживать его статус 24/7. Также вы можете
+                                поделиться чат-ботом с другими агентами.
+                            </p>
+                            <a href="#" class="btn">
+                                <span>Перейти в чат</span>
+                                <svg aria-hidden="true" width="13" height="12">
+                                    <use xlink:href="img/sprite.svg#telegram"></use>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'blocks/button-fixed.njk' %}
+
+        </main>
+        {% include 'blocks/footer.njk' %}
+    </div>
+    {% include 'blocks/scripts.njk' %}
+</body>
+
+</html>

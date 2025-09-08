@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>Кладовые</title>
+    {% include 'blocks/head.njk' %}
+</head>
+
+<body class="preload mp">
+    <div class="main-wrapper-outer">
+        {% include 'blocks/header.njk' %}
+        <main class="main">
+
+            <div class="block-apartments storerooms">
+                <div class="container">
+                    <div class="heading-complex">
+                        <h1 class="title2">
+                            Кладовые
+                        </h1>
+                        <a href="#" class="heading-complex__link">
+                            <span>Смотреть квартиры</span>
+                            <div class="heading-complex__icon">
+                                <svg aria-hidden="true" width="12" height="8">
+                                    <use xlink:href="img/sprite.svg#arrow1"></use>
+                                </svg>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="block-apartments__content">
+                        <div class="filter-apartments">
+                            <div class="filter-apartments__body">
+                                <div class="filter-apartments__left">
+                                    <div class="filter-apartments__selects">
+                                        <div class="filter-apartments__select select2">
+                                            <div class="filter-apartments__title">Дом</div>
+                                            <select name="select2">
+                                                <option value="1" selected>№11</option>
+                                                <option value="2">№2</option>
+                                                <option value="3">№3</option>
+                                                <option value="4">№4</option>
+                                            </select>
+                                        </div>
+                                        <div class="filter-apartments__select select3">
+                                            <div class="filter-apartments__title">Этаж</div>
+                                            <select name="select3">
+                                                <option value="1" selected>4 этаж</option>
+                                                <option value="2">4 этаж №2</option>
+                                                <option value="3">4 этаж №3</option>
+                                                <option value="4">4 этаж №4</option>
+                                            </select>
+                                        </div>
+                                        <div data-da=".filter-apartments__left, 992, 2"
+                                            class="filter-apartments__column column-sorted">
+                                            <div class="filter-apartments__title">Сортировать по:</div>
+                                            <div class="filter-apartments__item">
+                                                <div class="options">
+                                                    <div class="options__item">
+                                                        <input hidden id="o_4" class="options__input" checked
+                                                            type="radio" value="4" name="option2">
+                                                        <label for="o_4" class="options__label">
+                                                            <span class="options__text">Площади</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="options__item">
+                                                        <input hidden id="o_5" class="options__input" type="radio"
+                                                            value="5" name="option2">
+                                                        <label for="o_5" class="options__label">
+                                                            <span class="options__text">Цене</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="options__item">
+                                                        <input checked hidden id="o_6" class="options__input"
+                                                            type="radio" value="6" name="option2">
+                                                        <label for="o_6" class="options__label">
+                                                            <span class="options__text">Этажу</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="filter-apartments__column column-range">
+                                        <div class="filter-apartments__title">Задайте стоимость, млн ₽</div>
+                                        <div class="filter-apartments__item">
+                                            <div class="filter-apartments__rating">
+                                                <div class="filter-apartments__inputs">
+                                                    <div class="filter-apartments__input">
+                                                        <span>от</span>
+                                                        6,7
+                                                    </div>
+                                                    <div data-da=".filter-apartments__rating, 768, 1"
+                                                        class="filter-apartments__price">
+                                                        <input autocomplete="off" type="text" name="form[]"
+                                                            placeholder="23 000 0000">
+                                                    </div>
+                                                    <div class="filter-apartments__input">
+                                                        <span>до</span>
+                                                        22,0
+                                                    </div>
+                                                </div>
+                                                <div class="filter-apartments__range"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a data-da=".filter-apartments, 992, last" href="#" class="btn">
+                                        <span>Показать</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block-apartments__body">
+                            <div class="block-apartments__cards">
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="block-apartments__button btn">Загрузить еще</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'blocks/genplan.njk' %}
+
+            {% include 'blocks/forms.njk' %}
+
+            {% include 'blocks/button-fixed.njk' %}
+
+        </main>
+        {% include 'blocks/footer.njk' %}
+    </div>
+    {% include 'blocks/scripts.njk' %}
+</body>
+
+</html>

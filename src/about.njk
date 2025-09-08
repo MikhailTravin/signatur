@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>О нас</title>
+    {% include 'blocks/head.njk' %}
+</head>
+
+<body class="preload mp">
+    <div class="main-wrapper-outer">
+        {% include 'blocks/header.njk' %}
+        <main class="main">
+
+            <div class="block-about-intro">
+                <img src="img/image26.webp" alt="" class="block-about-intro__bg1">
+                <div class="container">
+                    <div class="block-about-intro__content">
+                        <div class="block-about-intro__left">
+                            <h1 class="title2">
+                                Мы стремимся быть настоящими градостроителями
+                            </h1>
+                            <p>
+                                Выстраиваем не только недвижимость,<br> но и взаимоотношения с жителями
+                            </p>
+                        </div>
+                        <div class="block-about-intro__right">
+                            <a href="files/videos/video.mp4" data-fancybox="video-gallery2"
+                                class="block-about-intro__video">
+                                <img loading="lazy" src="img/image27.webp" alt="">
+                                <div class="play">
+                                    <svg aria-hidden="true" width="16" height="18">
+                                        <use xlink:href="img/sprite.svg#play"></use>
+                                    </svg>
+                                </div>
+                            </a>
+                            <p>
+                                Прогуляемся по ЖК<br>
+                                «Октябренок» в городе Пионерский!
+                            </p>
+                            <a href="#" class="btn mini">
+                                <span>Скачать карточку компании</span>
+                                <svg aria-hidden="true" width="12" height="8">
+                                    <use xlink:href="img/sprite.svg#arrow1"></use>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-help">
+                <div class="container">
+                    <div class="block-help__content">
+                        <div class="cards">
+                            <div style="background: #d2d2d2; color: #0c2776;" class="cards__card">
+                                <p>
+                                    Пересилили<br>
+                                    из аварийного жилья<br>
+                                    более 140 семей
+                                </p>
+                                <img loading="lazy" src="img/icon4.svg" alt="">
+                            </div>
+                            <div style="background: #0c2776;" class="cards__card">
+                                <p>
+                                    Финансируем<br>
+                                    футбольную команду<br>
+                                    “Юность”
+                                </p>
+                                <img loading="lazy" src="img/icon5.svg" alt="">
+                            </div>
+                            <div style="background: #cd7555;" class="cards__card">
+                                <p>
+                                    Помогаем социальному пансионату<br>
+                                    “Сосновая усадьба”
+                                </p>
+                                <img loading="lazy" src="img/icon6.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-about">
+                <div class="container">
+                    <div class="block-about__content">
+                        <div class="block-about__body">
+                            <div class="block-about__column column1">
+                                <div class="block-about__title">
+                                    Специализируясь на строительстве жилых комплексов, мы стараемся сочетать
+                                    <span>комфорт</span>,
+                                    <span>стиль</span>
+                                    и <span>доступность.</span>
+                                </div>
+                            </div>
+                            <div class="block-about__column">
+                                <div class="block-about__number">
+                                    183,725.7
+                                    <span>м²</span>
+                                </div>
+                                <p>
+                                    <span>Общая</span> площадь
+                                </p>
+                            </div>
+                            <div class="block-about__column">
+                                <div class="block-about__number">
+                                    121,073.3
+                                    <span>м²</span>
+                                </div>
+                                <p>
+                                    <span>Жилая</span> площадь
+                                </p>
+                            </div>
+                            <div class="block-about__column">
+                                <div class="block-about__number">
+                                    2,960
+                                </div>
+                                <p>
+                                    <span>Квартир</span>
+                                </p>
+                            </div>
+                        </div>
+                        <img loading="lazy" src="img/image28.webp" alt="" class="block-about__pic1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-documents">
+                <div class="container">
+                    <div class="block-documents__content">
+                        <h2 class="title2">
+                            Сертификация<br> и уставные<br> документы
+                        </h2>
+                        <div class="block-documents__body">
+                            <a href="#" class="block-documents__column">
+                                <span>Сертификат №1</span>
+                                <div class="block-documents__icon">
+                                    <svg aria-hidden="true" width="12" height="8">
+                                        <use xlink:href="img/sprite.svg#arrow1"></use>
+                                    </svg>
+                                </div>
+                            </a>
+                            <a href="#" class="block-documents__column">
+                                <span>Сертификат №1</span>
+                                <div class="block-documents__icon">
+                                    <svg aria-hidden="true" width="12" height="8">
+                                        <use xlink:href="img/sprite.svg#arrow1"></use>
+                                    </svg>
+                                </div>
+                            </a>
+                            <a href="#" class="block-documents__column">
+                                <span>Сертификат №1</span>
+                                <div class="block-documents__icon">
+                                    <svg aria-hidden="true" width="12" height="8">
+                                        <use xlink:href="img/sprite.svg#arrow1"></use>
+                                    </svg>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'blocks/forms.njk' %}
+
+            {% include 'blocks/other-projects.njk' %}
+
+            {% include 'blocks/button-fixed.njk' %}
+
+        </main>
+        {% include 'blocks/footer.njk' %}
+    </div>
+    {% include 'blocks/scripts.njk' %}
+</body>
+
+</html>

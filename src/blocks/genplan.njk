@@ -4,9 +4,9 @@
             <div class="block-genplan__body">
                 <div class="block-genplan__content-container step1">
                     <div class="block-genplan__image">
-                        <img loading="lazy" src="img/image3.webp" alt="">
+                        <img width="1200" height="631" loading="lazy" src="img/image3.webp" alt="">
                     </div>
-                    <svg class="block-genplan__svg" viewBox="0 0 1200 631" fill="none"
+                    <svg width="1200" height="631" class="block-genplan__svg" viewBox="0 0 1200 631" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path data-id="r1" class="block-genplan__path path1"
                             d="M779.317 207.765L671.515 272.554H668.972L663.379 278.725L835.761 382.08L992.379 272.554L845.931 201.08L811.862 225.248L779.317 207.765Z" />
@@ -101,9 +101,9 @@
                 </div>
                 <div class="block-genplan__content-container step2">
                     <div class="block-genplan__image">
-                        <img loading="lazy" src="img/image1.webp" alt="">
+                        <img width="1200" height="631" loading="lazy" src="img/image1.webp" alt="">
                     </div>
-                    <svg class="block-genplan__svg" viewBox="0 0 1200 631" fill="none"
+                    <svg width="1200" height="631" class="block-genplan__svg" viewBox="0 0 1200 631" fill="none"
                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                         <path data-id="h1" class="block-genplan__path path-blue"
                             d="M343.5 138L339 86.5L347.5 79.5L349.5 78.5L358.5 69.5V67.5L360.5 66.5L363.5 68.5V72L364.5 72.5V71L365.5 70L366.5 71V72.5L367.5 73L369 72.5L370 73.5L379 71V63L380.5 62L390.5 67.5L402.5 51L414.5 58L417 57.5V49.5L418 48.5L425 52.5V56L427 55L428.5 56.5V64L435.5 61.5V59.5L445.5 52.5V48L446.5 47.5L449 49.5L454.5 44V41L456 40L461.5 43.5L464 42.5L465 43.5V45.5L467 45V42.5L472 40.5L473 41V43L474.5 44L487.5 40L490.5 45L493 44.5V34.5L495 33.5L498.5 36L503 29.5L532 45L542.5 54V67L541 67.5V66L540 65L535.5 66V69.5L526.5 78L527.5 106L469.5 122V124L477 122L485 139L486 157L477 152.5L466 169.5V198.5L443.5 206L343.5 138Z" />
@@ -169,6 +169,28 @@
                         </button>
                     </div>
                     <div data-da=".block-genplan__content, 768" class="block-genplan__popups">
+                        <div data-id="h6" class="floors-block-genplan mob">
+                            <button type="button" class="block-genplan-popup__close">
+                                <svg aria-hidden="true" width="13" height="13">
+                                    <use xlink:href="img/sprite.svg#close"></use>
+                                </svg>
+                            </button>
+                            <button data-floor="4" class="floors-block-genplan__button"><span>4 этаж</span></button>
+                            <button data-floor="3" class="floors-block-genplan__button"><span>3 этаж</span></button>
+                            <button data-floor="2" class="floors-block-genplan__button"><span>2 этаж</span></button>
+                            <button data-floor="1" class="floors-block-genplan__button"><Span>1 этаж</Span></button>
+                        </div>
+                        <div data-id="h5" class="floors-block-genplan mob">
+                            <button type="button" class="block-genplan-popup__close">
+                                <svg aria-hidden="true" width="13" height="13">
+                                    <use xlink:href="img/sprite.svg#close"></use>
+                                </svg>
+                            </button>
+                            <button data-floor="4" class="floors-block-genplan__button"><span>4 этаж</span></button>
+                            <button data-floor="3" class="floors-block-genplan__button"><span>3 этаж</span></button>
+                            <button data-floor="2" class="floors-block-genplan__button"><span>2 этаж</span></button>
+                            <button data-floor="1" class="floors-block-genplan__button"><Span>1 этаж</Span></button>
+                        </div>
                         <div data-id-popup="h1" class="block-genplan-popup" style="top: 5%; left: 38%;">
                             <button type="button" class="block-genplan-popup__close">
                                 <svg aria-hidden="true" width="13" height="13">
@@ -214,8 +236,15 @@
                                         </ul>
                                     </div>
                                     <div class="block-genplan-popup__buttons">
-                                        <a href="#" class="block-genplan-popup__button btn">
+                                        <a href="#" class="block-genplan-popup__button choose-apartment btn">
                                             <span>Выбрать квартиру</span>
+                                            <svg aria-hidden="true" width="12" height="9">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" data-id="popup-floor"
+                                            class="block-genplan-popup__button choose-floor btn">
+                                            <span>Выбрать этаж</span>
                                             <svg aria-hidden="true" width="12" height="9">
                                                 <use xlink:href="img/sprite.svg#arrow1"></use>
                                             </svg>
@@ -272,8 +301,15 @@
                                         </ul>
                                     </div>
                                     <div class="block-genplan-popup__buttons">
-                                        <a href="#" class="block-genplan-popup__button btn">
+                                        <a href="#" class="block-genplan-popup__button choose-apartment btn">
                                             <span>Выбрать квартиру</span>
+                                            <svg aria-hidden="true" width="12" height="9">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" data-id="popup-floor"
+                                            class="block-genplan-popup__button choose-floor btn">
+                                            <span>Выбрать этаж</span>
                                             <svg aria-hidden="true" width="12" height="9">
                                                 <use xlink:href="img/sprite.svg#arrow1"></use>
                                             </svg>
@@ -330,8 +366,15 @@
                                         </ul>
                                     </div>
                                     <div class="block-genplan-popup__buttons">
-                                        <a href="#" class="block-genplan-popup__button btn">
+                                        <a href="#" class="block-genplan-popup__button choose-apartment btn">
                                             <span>Выбрать квартиру</span>
+                                            <svg aria-hidden="true" width="12" height="9">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" data-id="popup-floor"
+                                            class="block-genplan-popup__button choose-floor btn">
+                                            <span>Выбрать этаж</span>
                                             <svg aria-hidden="true" width="12" height="9">
                                                 <use xlink:href="img/sprite.svg#arrow1"></use>
                                             </svg>
@@ -388,8 +431,15 @@
                                         </ul>
                                     </div>
                                     <div class="block-genplan-popup__buttons">
-                                        <a href="#" class="block-genplan-popup__button btn">
+                                        <a href="#" class="block-genplan-popup__button choose-apartment btn">
                                             <span>Выбрать квартиру</span>
+                                            <svg aria-hidden="true" width="12" height="9">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" data-id="popup-floor"
+                                            class="block-genplan-popup__button choose-floor btn">
+                                            <span>Выбрать этаж</span>
                                             <svg aria-hidden="true" width="12" height="9">
                                                 <use xlink:href="img/sprite.svg#arrow1"></use>
                                             </svg>
@@ -446,8 +496,15 @@
                                         </ul>
                                     </div>
                                     <div class="block-genplan-popup__buttons">
-                                        <a href="#" class="block-genplan-popup__button btn">
+                                        <a href="#" class="block-genplan-popup__button choose-apartment btn">
                                             <span>Выбрать квартиру</span>
+                                            <svg aria-hidden="true" width="12" height="9">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" data-id="popup-floor"
+                                            class="block-genplan-popup__button choose-floor btn">
+                                            <span>Выбрать этаж</span>
                                             <svg aria-hidden="true" width="12" height="9">
                                                 <use xlink:href="img/sprite.svg#arrow1"></use>
                                             </svg>
@@ -504,8 +561,15 @@
                                         </ul>
                                     </div>
                                     <div class="block-genplan-popup__buttons">
-                                        <a href="#" class="block-genplan-popup__button btn">
+                                        <a href="#" data-id="dom6"
+                                            class="block-genplan-popup__button choose-apartment btn">
                                             <span>Выбрать квартиру</span>
+                                            <svg aria-hidden="true" width="12" height="9">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" data-id="dom6" class="block-genplan-popup__button choose-floor btn">
+                                            <span>Выбрать этаж</span>
                                             <svg aria-hidden="true" width="12" height="9">
                                                 <use xlink:href="img/sprite.svg#arrow1"></use>
                                             </svg>
@@ -562,8 +626,15 @@
                                         </ul>
                                     </div>
                                     <div class="block-genplan-popup__buttons">
-                                        <a href="#" class="block-genplan-popup__button btn">
+                                        <a href="#" class="block-genplan-popup__button choose-apartment btn">
                                             <span>Выбрать квартиру</span>
+                                            <svg aria-hidden="true" width="12" height="9">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" data-id="popup-floor"
+                                            class="block-genplan-popup__button choose-floor btn">
+                                            <span>Выбрать этаж</span>
                                             <svg aria-hidden="true" width="12" height="9">
                                                 <use xlink:href="img/sprite.svg#arrow1"></use>
                                             </svg>
@@ -620,8 +691,15 @@
                                         </ul>
                                     </div>
                                     <div class="block-genplan-popup__buttons">
-                                        <a href="#" class="block-genplan-popup__button btn">
+                                        <a href="#" class="block-genplan-popup__button choose-apartment btn">
                                             <span>Выбрать квартиру</span>
+                                            <svg aria-hidden="true" width="12" height="9">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" data-id="popup-floor"
+                                            class="block-genplan-popup__button choose-floor btn">
+                                            <span>Выбрать этаж</span>
                                             <svg aria-hidden="true" width="12" height="9">
                                                 <use xlink:href="img/sprite.svg#arrow1"></use>
                                             </svg>
@@ -678,8 +756,15 @@
                                         </ul>
                                     </div>
                                     <div class="block-genplan-popup__buttons">
-                                        <a href="#" class="block-genplan-popup__button btn">
+                                        <a href="#" class="block-genplan-popup__button choose-apartment btn">
                                             <span>Выбрать квартиру</span>
+                                            <svg aria-hidden="true" width="12" height="9">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" data-id="popup-floor"
+                                            class="block-genplan-popup__button choose-floor btn">
+                                            <span>Выбрать этаж</span>
                                             <svg aria-hidden="true" width="12" height="9">
                                                 <use xlink:href="img/sprite.svg#arrow1"></use>
                                             </svg>
@@ -736,8 +821,15 @@
                                         </ul>
                                     </div>
                                     <div class="block-genplan-popup__buttons">
-                                        <a href="#" class="block-genplan-popup__button btn">
+                                        <a href="#" class="block-genplan-popup__button choose-apartment btn">
                                             <span>Выбрать квартиру</span>
+                                            <svg aria-hidden="true" width="12" height="9">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" data-id="popup-floor"
+                                            class="block-genplan-popup__button choose-floor btn">
+                                            <span>Выбрать этаж</span>
                                             <svg aria-hidden="true" width="12" height="9">
                                                 <use xlink:href="img/sprite.svg#arrow1"></use>
                                             </svg>
@@ -794,8 +886,15 @@
                                         </ul>
                                     </div>
                                     <div class="block-genplan-popup__buttons">
-                                        <a href="#" class="block-genplan-popup__button btn">
+                                        <a href="#" class="block-genplan-popup__button choose-apartment btn">
                                             <span>Выбрать квартиру</span>
+                                            <svg aria-hidden="true" width="12" height="9">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" data-id="popup-floor"
+                                            class="block-genplan-popup__button choose-floor btn">
+                                            <span>Выбрать этаж</span>
                                             <svg aria-hidden="true" width="12" height="9">
                                                 <use xlink:href="img/sprite.svg#arrow1"></use>
                                             </svg>
@@ -852,8 +951,15 @@
                                         </ul>
                                     </div>
                                     <div class="block-genplan-popup__buttons">
-                                        <a href="#" class="block-genplan-popup__button btn">
+                                        <a href="#" class="block-genplan-popup__button choose-apartment btn">
                                             <span>Выбрать квартиру</span>
+                                            <svg aria-hidden="true" width="12" height="9">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                        <a href="#" data-id="popup-floor"
+                                            class="block-genplan-popup__button choose-floor btn">
+                                            <span>Выбрать этаж</span>
                                             <svg aria-hidden="true" width="12" height="9">
                                                 <use xlink:href="img/sprite.svg#arrow1"></use>
                                             </svg>
@@ -862,6 +968,422 @@
                                             <span>Показать кладовые</span>
                                         </a>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-id="h6" class="block-genplan__content-container step3">
+                    <div data-floor="4" class="block-genplan__images _active">
+                        <div class="block-genplan__image">
+                            <img loading="lazy" style="width: 531px; height: 550px;" src="img/image31.webp" alt="">
+                        </div>
+                        <svg width="531" height="550" class="block-genplan__svg" viewBox="0 0 531 550" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <!--Подъезды-->
+                            <path data-id="p1" class="block-genplan__path p" d="M466.5 410.5H393V480H466.5V410.5Z" />
+                            <path data-id="p2" class="block-genplan__path p" d="M274 410H200V480.5H274V410Z" />
+                            <path data-id="p3" class="block-genplan__path p"
+                                d="M140.5 363.5H86V398H73V481.5H111.5V530H140.5V363.5Z" />
+                            <path data-id="p4" class="block-genplan__path p" d="M153 59.5H82V126.5H153V59.5Z" />
+                            <!--Подъезды-->
+                            <path data-id="kv31" class="block-genplan__path kv"
+                                d="M153.5 0.5H81.5V58.5H141.5V30H153.5V0.5Z" />
+                            <path data-id="kv32" class="block-genplan__path kv"
+                                d="M67 0H6.5V4.5H1V28H6.5V67.5H1V92H6.5V126.5L67 125.5V0Z" />
+                            <path data-id="kv33" class="block-genplan__path kv"
+                                d="M7 156.5V126.5L66.5 125.5V189H7V181.5H1V156.5H7Z" />
+                            <path data-id="kv34" class="block-genplan__path kv"
+                                d="M153 126H81.5V185H141.5V154H153V126Z" />
+                            <path data-id="kv35" class="block-genplan__path kv"
+                                d="M67 189.5H6.5V192.5H1V216H6.5V250.5H67V189.5Z" />
+                            <path data-id="kv36" class="block-genplan__path kv"
+                                d="M153.5 185.5H81.5V250.5H141V217H153.5V185.5Z" />
+                            <path data-id="kv37" class="block-genplan__path kv"
+                                d="M131.5 251.5H18.5V301.5H131.5V251.5Z" />
+                            <path data-id="kv38" class="block-genplan__path kv"
+                                d="M72 302H7V334.5H1.5V358.5H7V365H72V302Z" />
+                            <path data-id="kv39" class="block-genplan__path kv"
+                                d="M152.5 339V302H86V362.5H141V339H152.5Z" />
+                            <path data-id="kv40" class="block-genplan__path kv"
+                                d="M7 365V367H1V391H7V422.5H72.5V365H7Z" />
+                            <path data-id="kv41" class="block-genplan__path kv"
+                                d="M72.5 423H6.5V456H1V480H6.5V481.5H72.5V423Z" />
+                            <path data-id="kv43" class="block-genplan__path kv"
+                                d="M111 482H6.5V518.5H0.5V542H6.5V544.5H111V482Z" />
+                            <path data-id="kv44" class="block-genplan__path kv" d="M200 424.5H141.5V477H200V424.5Z" />
+                            <path data-id="kv45" class="block-genplan__path kv"
+                                d="M141.5 544V477H200V479.5H204.5V544H141.5Z" />
+                            <path data-id="kv46" class="block-genplan__path kv"
+                                d="M305.5 489.5H205V543.5H208.5V549H233.5V543.5H240V549H266V543.5H272V549H298V543.5H305.5V489.5Z" />
+                            <path data-id="kv47" class="block-genplan__path kv"
+                                d="M333.5 424H274V472.5H317V489.5H305.5V529H333.5V424Z" />
+                            <path data-id="kv48" class="block-genplan__path kv" d="M392.5 424H333.5V533H392.5V424Z" />
+                            <path data-id="kv49" class="block-genplan__path kv"
+                                d="M498 489.5H392.5V544H401.5V549H426.5V544H432.5V549H457.5V544H465V549H490V544H498V489.5Z" />
+                            <path data-id="kv50" class="block-genplan__path kv"
+                                d="M530 424H466.5V472.5H509.5V489.5H498V532H530V424Z" />
+                        </svg>
+                    </div>
+                    <div data-floor="3" class="block-genplan__images">
+                        <div class="block-genplan__image">
+                            <img loading="lazy" style="width: 531px; height: 550px;" src="img/image31.webp" alt="">
+                        </div>
+                        <svg width="531" height="550" class="block-genplan__svg" viewBox="0 0 531 550" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <!--Подъезды-->
+                            <path data-id="p1" class="block-genplan__path p" d="M466.5 410.5H393V480H466.5V410.5Z" />
+                            <path data-id="p2" class="block-genplan__path p" d="M274 410H200V480.5H274V410Z" />
+                            <path data-id="p3" class="block-genplan__path p"
+                                d="M140.5 363.5H86V398H73V481.5H111.5V530H140.5V363.5Z" />
+                            <path data-id="p4" class="block-genplan__path p" d="M153 59.5H82V126.5H153V59.5Z" />
+                            <!--Подъезды-->
+                            <path data-id="kv31" class="block-genplan__path kv"
+                                d="M153.5 0.5H81.5V58.5H141.5V30H153.5V0.5Z" />
+                            <path data-id="kv32" class="block-genplan__path kv"
+                                d="M67 0H6.5V4.5H1V28H6.5V67.5H1V92H6.5V126.5L67 125.5V0Z" />
+                            <path data-id="kv33" class="block-genplan__path kv"
+                                d="M7 156.5V126.5L66.5 125.5V189H7V181.5H1V156.5H7Z" />
+                            <path data-id="kv34" class="block-genplan__path kv"
+                                d="M153 126H81.5V185H141.5V154H153V126Z" />
+                            <path data-id="kv35" class="block-genplan__path kv"
+                                d="M67 189.5H6.5V192.5H1V216H6.5V250.5H67V189.5Z" />
+                            <path data-id="kv36" class="block-genplan__path kv"
+                                d="M153.5 185.5H81.5V250.5H141V217H153.5V185.5Z" />
+                            <path data-id="kv37" class="block-genplan__path kv"
+                                d="M131.5 251.5H18.5V301.5H131.5V251.5Z" />
+                            <path data-id="kv38" class="block-genplan__path kv"
+                                d="M72 302H7V334.5H1.5V358.5H7V365H72V302Z" />
+                            <path data-id="kv39" class="block-genplan__path kv"
+                                d="M152.5 339V302H86V362.5H141V339H152.5Z" />
+                            <path data-id="kv40" class="block-genplan__path kv"
+                                d="M7 365V367H1V391H7V422.5H72.5V365H7Z" />
+                            <path data-id="kv41" class="block-genplan__path kv"
+                                d="M72.5 423H6.5V456H1V480H6.5V481.5H72.5V423Z" />
+                            <path data-id="kv43" class="block-genplan__path kv"
+                                d="M111 482H6.5V518.5H0.5V542H6.5V544.5H111V482Z" />
+                            <path data-id="kv44" class="block-genplan__path kv" d="M200 424.5H141.5V477H200V424.5Z" />
+                            <path data-id="kv45" class="block-genplan__path kv"
+                                d="M141.5 544V477H200V479.5H204.5V544H141.5Z" />
+                            <path data-id="kv46" class="block-genplan__path kv"
+                                d="M305.5 489.5H205V543.5H208.5V549H233.5V543.5H240V549H266V543.5H272V549H298V543.5H305.5V489.5Z" />
+                            <path data-id="kv47" class="block-genplan__path kv"
+                                d="M333.5 424H274V472.5H317V489.5H305.5V529H333.5V424Z" />
+                            <path data-id="kv48" class="block-genplan__path kv" d="M392.5 424H333.5V533H392.5V424Z" />
+                            <path data-id="kv49" class="block-genplan__path kv"
+                                d="M498 489.5H392.5V544H401.5V549H426.5V544H432.5V549H457.5V544H465V549H490V544H498V489.5Z" />
+                            <path data-id="kv50" class="block-genplan__path kv"
+                                d="M530 424H466.5V472.5H509.5V489.5H498V532H530V424Z" />
+                        </svg>
+                    </div>
+                    <div data-floor="2" class="block-genplan__images">
+                        <div class="block-genplan__image">
+                            <img loading="lazy" style="width: 531px; height: 550px;" src="img/image31.webp" alt="">
+                        </div>
+                        <svg width="531" height="550" class="block-genplan__svg" viewBox="0 0 531 550" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <!--Подъезды-->
+                            <path data-id="p1" class="block-genplan__path p" d="M466.5 410.5H393V480H466.5V410.5Z" />
+                            <path data-id="p2" class="block-genplan__path p" d="M274 410H200V480.5H274V410Z" />
+                            <path data-id="p3" class="block-genplan__path p"
+                                d="M140.5 363.5H86V398H73V481.5H111.5V530H140.5V363.5Z" />
+                            <path data-id="p4" class="block-genplan__path p" d="M153 59.5H82V126.5H153V59.5Z" />
+                            <!--Подъезды-->
+                            <path data-id="kv31" class="block-genplan__path kv"
+                                d="M153.5 0.5H81.5V58.5H141.5V30H153.5V0.5Z" />
+                            <path data-id="kv32" class="block-genplan__path kv"
+                                d="M67 0H6.5V4.5H1V28H6.5V67.5H1V92H6.5V126.5L67 125.5V0Z" />
+                            <path data-id="kv33" class="block-genplan__path kv"
+                                d="M7 156.5V126.5L66.5 125.5V189H7V181.5H1V156.5H7Z" />
+                            <path data-id="kv34" class="block-genplan__path kv"
+                                d="M153 126H81.5V185H141.5V154H153V126Z" />
+                            <path data-id="kv35" class="block-genplan__path kv"
+                                d="M67 189.5H6.5V192.5H1V216H6.5V250.5H67V189.5Z" />
+                            <path data-id="kv36" class="block-genplan__path kv"
+                                d="M153.5 185.5H81.5V250.5H141V217H153.5V185.5Z" />
+                            <path data-id="kv37" class="block-genplan__path kv"
+                                d="M131.5 251.5H18.5V301.5H131.5V251.5Z" />
+                            <path data-id="kv38" class="block-genplan__path kv"
+                                d="M72 302H7V334.5H1.5V358.5H7V365H72V302Z" />
+                            <path data-id="kv39" class="block-genplan__path kv"
+                                d="M152.5 339V302H86V362.5H141V339H152.5Z" />
+                            <path data-id="kv40" class="block-genplan__path kv"
+                                d="M7 365V367H1V391H7V422.5H72.5V365H7Z" />
+                            <path data-id="kv41" class="block-genplan__path kv"
+                                d="M72.5 423H6.5V456H1V480H6.5V481.5H72.5V423Z" />
+                            <path data-id="kv43" class="block-genplan__path kv"
+                                d="M111 482H6.5V518.5H0.5V542H6.5V544.5H111V482Z" />
+                            <path data-id="kv44" class="block-genplan__path kv" d="M200 424.5H141.5V477H200V424.5Z" />
+                            <path data-id="kv45" class="block-genplan__path kv"
+                                d="M141.5 544V477H200V479.5H204.5V544H141.5Z" />
+                            <path data-id="kv46" class="block-genplan__path kv"
+                                d="M305.5 489.5H205V543.5H208.5V549H233.5V543.5H240V549H266V543.5H272V549H298V543.5H305.5V489.5Z" />
+                            <path data-id="kv47" class="block-genplan__path kv"
+                                d="M333.5 424H274V472.5H317V489.5H305.5V529H333.5V424Z" />
+                            <path data-id="kv48" class="block-genplan__path kv" d="M392.5 424H333.5V533H392.5V424Z" />
+                            <path data-id="kv49" class="block-genplan__path kv"
+                                d="M498 489.5H392.5V544H401.5V549H426.5V544H432.5V549H457.5V544H465V549H490V544H498V489.5Z" />
+                            <path data-id="kv50" class="block-genplan__path kv"
+                                d="M530 424H466.5V472.5H509.5V489.5H498V532H530V424Z" />
+                        </svg>
+                    </div>
+                    <div data-floor="1" class="block-genplan__images">
+                        <div class="block-genplan__image">
+                            <img loading="lazy" style="width: 531px; height: 550px;" src="img/image31.webp" alt="">
+                        </div>
+                        <svg width="531" height="550" class="block-genplan__svg" viewBox="0 0 531 550" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <!--Подъезды-->
+                            <path data-id="p1" class="block-genplan__path p" d="M466.5 410.5H393V480H466.5V410.5Z" />
+                            <path data-id="p2" class="block-genplan__path p" d="M274 410H200V480.5H274V410Z" />
+                            <path data-id="p3" class="block-genplan__path p"
+                                d="M140.5 363.5H86V398H73V481.5H111.5V530H140.5V363.5Z" />
+                            <path data-id="p4" class="block-genplan__path p" d="M153 59.5H82V126.5H153V59.5Z" />
+                            <!--Подъезды-->
+                            <path data-id="kv31" class="block-genplan__path kv"
+                                d="M153.5 0.5H81.5V58.5H141.5V30H153.5V0.5Z" />
+                            <path data-id="kv32" class="block-genplan__path kv"
+                                d="M67 0H6.5V4.5H1V28H6.5V67.5H1V92H6.5V126.5L67 125.5V0Z" />
+                            <path data-id="kv33" class="block-genplan__path kv"
+                                d="M7 156.5V126.5L66.5 125.5V189H7V181.5H1V156.5H7Z" />
+                            <path data-id="kv34" class="block-genplan__path kv"
+                                d="M153 126H81.5V185H141.5V154H153V126Z" />
+                            <path data-id="kv35" class="block-genplan__path kv"
+                                d="M67 189.5H6.5V192.5H1V216H6.5V250.5H67V189.5Z" />
+                            <path data-id="kv36" class="block-genplan__path kv"
+                                d="M153.5 185.5H81.5V250.5H141V217H153.5V185.5Z" />
+                            <path data-id="kv37" class="block-genplan__path kv"
+                                d="M131.5 251.5H18.5V301.5H131.5V251.5Z" />
+                            <path data-id="kv38" class="block-genplan__path kv"
+                                d="M72 302H7V334.5H1.5V358.5H7V365H72V302Z" />
+                            <path data-id="kv39" class="block-genplan__path kv"
+                                d="M152.5 339V302H86V362.5H141V339H152.5Z" />
+                            <path data-id="kv40" class="block-genplan__path kv"
+                                d="M7 365V367H1V391H7V422.5H72.5V365H7Z" />
+                            <path data-id="kv41" class="block-genplan__path kv"
+                                d="M72.5 423H6.5V456H1V480H6.5V481.5H72.5V423Z" />
+                            <path data-id="kv43" class="block-genplan__path kv"
+                                d="M111 482H6.5V518.5H0.5V542H6.5V544.5H111V482Z" />
+                            <path data-id="kv44" class="block-genplan__path kv" d="M200 424.5H141.5V477H200V424.5Z" />
+                            <path data-id="kv45" class="block-genplan__path kv"
+                                d="M141.5 544V477H200V479.5H204.5V544H141.5Z" />
+                            <path data-id="kv46" class="block-genplan__path kv"
+                                d="M305.5 489.5H205V543.5H208.5V549H233.5V543.5H240V549H266V543.5H272V549H298V543.5H305.5V489.5Z" />
+                            <path data-id="kv47" class="block-genplan__path kv"
+                                d="M333.5 424H274V472.5H317V489.5H305.5V529H333.5V424Z" />
+                            <path data-id="kv48" class="block-genplan__path kv" d="M392.5 424H333.5V533H392.5V424Z" />
+                            <path data-id="kv49" class="block-genplan__path kv"
+                                d="M498 489.5H392.5V544H401.5V549H426.5V544H432.5V549H457.5V544H465V549H490V544H498V489.5Z" />
+                            <path data-id="kv50" class="block-genplan__path kv"
+                                d="M530 424H466.5V472.5H509.5V489.5H498V532H530V424Z" />
+                        </svg>
+                    </div>
+                    <div class="floors-block-genplan">
+                        <button type="button" class="block-genplan-popup__close">
+                            <svg aria-hidden="true" width="13" height="13">
+                                <use xlink:href="img/sprite.svg#close"></use>
+                            </svg>
+                        </button>
+                        <button data-floor="4" class="floors-block-genplan__button _active"><span>4 этаж</span></button>
+                        <button data-floor="3" class="floors-block-genplan__button"><span>3 этаж</span></button>
+                        <button data-floor="2" class="floors-block-genplan__button"><span>2 этаж</span></button>
+                        <button data-floor="1" class="floors-block-genplan__button"><Span>1 этаж</Span></button>
+                    </div>
+                    <div class="block-genplan-popup popup-floor">
+                        <button type="button" class="block-genplan-popup__close">
+                            <svg aria-hidden="true" width="13" height="13">
+                                <use xlink:href="img/sprite.svg#close"></use>
+                            </svg>
+                        </button>
+                        <div class="block-genplan-popup__content">
+                            <div class="block-genplan-popup__body">
+                                <div class="block-genplan-popup__top">
+                                    <ul>
+                                        <li>
+                                            <div class="block-genplan-popup__name">Срок сдачи: </div>
+                                            <div class="block-genplan-popup__value">4 квартал 2027</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="block-genplan-popup__rooms">
+                                    <ul>
+                                        <li>
+                                            <div class="block-genplan-popup__room">
+                                                3 комн
+                                            </div>
+                                            <div class="block-genplan-popup__price">
+                                                от 22 150 000 руб.
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="block-genplan-popup__room">
+                                                2 комн
+                                            </div>
+                                            <div class="block-genplan-popup__price">
+                                                от 10 430 000 руб.
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="block-genplan-popup__room">
+                                                13 кладовых
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="block-genplan-popup__buttons">
+                                    <a href="#" class="block-genplan-popup__button btn">
+                                        <span>Показать кладовые</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="block-genplan__tips">
+                        <div class="block-genplan__path entrances-path p" style="top: 13%; left: 41%;">
+                            <span>
+                                4
+                                <svg aria-hidden="true" width="18" height="18">
+                                    <use xlink:href="img/sprite.svg#entrances"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="block-genplan__path entrances-path p" style="top: 63%; left: 40%;">
+                            <span>
+                                3
+                                <svg aria-hidden="true" width="18" height="18">
+                                    <use xlink:href="img/sprite.svg#entrances"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="block-genplan__path entrances-path p up" style="bottom: 10%; left: 37%;">
+                            <span>
+                                3
+                                <svg aria-hidden="true" width="18" height="18">
+                                    <use xlink:href="img/sprite.svg#entrances"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="block-genplan__path entrances-path p down" style="top: 58%; left: 46.3%;">
+                            <span>
+                                2
+                                <svg aria-hidden="true" width="18" height="18">
+                                    <use xlink:href="img/sprite.svg#entrances"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="block-genplan__path entrances-path p down" style="top: 58%; left: 62%;">
+                            <span>
+                                1
+                                <svg aria-hidden="true" width="18" height="18">
+                                    <use xlink:href="img/sprite.svg#entrances"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <button data-id="kv31" type="button" class="block-genplan__tippy tippy-floor"
+                            style="top: 0%; left: 35.5%;">
+                            <span>№31</span>
+                        </button>
+                        <button data-id="kv32" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 6%; left: 29.5%;">
+                            <span>№32</span>
+                        </button>
+                        <button data-id="kv33" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 20%; left: 29.5%;">
+                            <span>№33</span>
+                        </button>
+                        <button data-id="kv34" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 20%; left: 35.5%;">
+                            <span>№34</span>
+                        </button>
+                        <button data-id="kv35" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 30%; left: 29.5%;">
+                            <span>№35</span>
+                        </button>
+                        <button data-id="kv36" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 30%; left: 35.5%;">
+                            <span>№36</span>
+                        </button>
+                        <button data-id="kv37" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 39%; left: 33%;">
+                            <span>№37</span>
+                        </button>
+                        <button data-id="kv38" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 48%; left: 29.5%;">
+                            <span>№38</span>
+                        </button>
+                        <button data-id="kv39" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 48%; left: 35.5%;">
+                            <span>№39</span>
+                        </button>
+                        <button data-id="kv40" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 58%; left: 29.5%;">
+                            <span>№40</span>
+                        </button>
+                        <button data-id="kv41" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 67%; left: 29.5%;">
+                            <span>№41</span>
+                        </button>
+                        <button data-id="kv43" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 77%; left: 29.5%;">
+                            <span>№43</span>
+                        </button>
+                        <button data-id="kv44" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 67%; left: 40.8%;">
+                            <span>№44</span>
+                        </button>
+                        <button data-id="kv45" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 76%; left: 40.8%;">
+                            <span>№45</span>
+                        </button>
+                        <button data-id="kv46" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 77%; left: 47.8%;">
+                            <span>№46</span>
+                        </button>
+                        <button data-id="kv47" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 67%; left: 51.8%;">
+                            <span>№47</span>
+                        </button>
+                        <button data-id="kv48" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 71.5%; left: 56.7%;">
+                            <span>№48</span>
+                        </button>
+                        <button data-id="kv49" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 77%; left: 63.5%;">
+                            <span>№49</span>
+                        </button>
+                        <button data-id="kv50" type="button" class="block-genplan__tippy  tippy-floor"
+                            style="top: 67%; left: 68%;">
+                            <span>№50</span>
+                        </button>
+                    </div>
+                    <div class="block-genplan__popups">
+                        <div data-id-popup="kv32" class="block-genplan-popup" style="top: 19%; left: 18%;">
+                            <div class="card-apartments">
+                                <div class="card-apartments__top">
+                                    <div class="card-apartments__titles">
+                                        <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                        <div class="card-apartments__price">13 175 000 ₽</div>
+                                    </div>
+                                    <div class="card-apartments__tag">
+                                        Комфорт
+                                    </div>
+                                </div>
+                                <div class="card-apartments__image">
+                                    <img loading="lazy" src="img/image23.webp" alt="">
+                                </div>
+                                <div class="card-apartments__bottom">
+                                    <ul>
+                                        <li>Жилая площадь - 65м² </li>
+                                        <li>Общая площадь - 85м²</li>
+                                        <li>Этаж - 4</li>
+                                        <li>Высота потолков - 3м</li>
+                                    </ul>
+                                    <a href="#" class="btn btn-bg">
+                                        <span>Связаться</span>
+                                        <svg aria-hidden="true" width="12" height="8">
+                                            <use xlink:href="img/sprite.svg#arrow1"></use>
+                                        </svg>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -897,6 +1419,184 @@
                     </span>
                 </a>
             </div>
+            <div class="block-genplan__choose-floors">
+                <div data-id="h6" class="block-genplan__choose-floors-mob">
+                    <div data-floor="4" class="choose-floor-mob">
+                        <div class="choose-floor-mob__top">
+                            <button type="button" class="block-genplan__title title-choose-floor">
+                                <div class="block-genplan__icon">
+                                    <svg aria-hidden="true" width="12" height="8">
+                                        <use xlink:href="img/sprite.svg#arrow1"></use>
+                                    </svg>
+                                </div>
+                                <span>Выбор этажа</span>
+                            </button>
+                            <button type="button" class="block-genplan-popup__close title-choose-close">
+                                <svg aria-hidden="true" width="13" height="13">
+                                    <use xlink:href="img/sprite.svg#close"></use>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="choose-floor-mob__content">
+                            <div class="choose-floor-mob__body">
+                                <div class="choose-floor-mob__entrance">
+                                    <svg aria-hidden="true" width="18" height="18">
+                                        <use xlink:href="img/sprite.svg#entrances"></use>
+                                    </svg>
+                                    <span>Подьезд №1</span>
+                                </div>
+                                <div class="choose-floor-mob__columns">
+                                    <a href="#" class="card-apartments">
+                                        <div class="card-apartments__image">
+                                            <img loading="lazy" src="img/image23.webp" alt="">
+                                        </div>
+                                        <div class="card-apartments__right">
+                                            <div class="card-apartments__top">
+                                                <div class="card-apartments__titles">
+                                                    <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                                    <div class="card-apartments__price">13 175 000 ₽</div>
+                                                </div>
+                                            </div>
+                                            <div class="card-apartments__bottom">
+                                                <ul>
+                                                    <li>Жилая площадь - 65м² </li>
+                                                    <li>Общая площадь - 85м²</li>
+                                                    <li>Этаж - 4</li>
+                                                    <li>Высота потолков - 3м</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="card-apartments">
+                                        <div class="card-apartments__image">
+                                            <img loading="lazy" src="img/image23.webp" alt="">
+                                        </div>
+                                        <div class="card-apartments__right">
+                                            <div class="card-apartments__top">
+                                                <div class="card-apartments__titles">
+                                                    <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                                    <div class="card-apartments__price">13 175 000 ₽</div>
+                                                </div>
+                                            </div>
+                                            <div class="card-apartments__bottom">
+                                                <ul>
+                                                    <li>Жилая площадь - 65м² </li>
+                                                    <li>Общая площадь - 85м²</li>
+                                                    <li>Этаж - 4</li>
+                                                    <li>Высота потолков - 3м</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="card-apartments">
+                                        <div class="card-apartments__image">
+                                            <img loading="lazy" src="img/image23.webp" alt="">
+                                        </div>
+                                        <div class="card-apartments__right">
+                                            <div class="card-apartments__top">
+                                                <div class="card-apartments__titles">
+                                                    <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                                    <div class="card-apartments__price">13 175 000 ₽</div>
+                                                </div>
+                                            </div>
+                                            <div class="card-apartments__bottom">
+                                                <ul>
+                                                    <li>Жилая площадь - 65м² </li>
+                                                    <li>Общая площадь - 85м²</li>
+                                                    <li>Этаж - 4</li>
+                                                    <li>Высота потолков - 3м</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="choose-floor-mob__body">
+                                <div class="choose-floor-mob__entrance">
+                                    <svg aria-hidden="true" width="18" height="18">
+                                        <use xlink:href="img/sprite.svg#entrances"></use>
+                                    </svg>
+                                    <span>Подьезд №2</span>
+                                </div>
+                                <div class="choose-floor-mob__columns">
+                                    <a href="#" class="card-apartments">
+                                        <div class="card-apartments__image">
+                                            <img loading="lazy" src="img/image23.webp" alt="">
+                                        </div>
+                                        <div class="card-apartments__right">
+                                            <div class="card-apartments__top">
+                                                <div class="card-apartments__titles">
+                                                    <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                                    <div class="card-apartments__price">13 175 000 ₽</div>
+                                                </div>
+                                            </div>
+                                            <div class="card-apartments__bottom">
+                                                <ul>
+                                                    <li>Жилая площадь - 65м² </li>
+                                                    <li>Общая площадь - 85м²</li>
+                                                    <li>Этаж - 4</li>
+                                                    <li>Высота потолков - 3м</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="card-apartments">
+                                        <div class="card-apartments__image">
+                                            <img loading="lazy" src="img/image23.webp" alt="">
+                                        </div>
+                                        <div class="card-apartments__right">
+                                            <div class="card-apartments__top">
+                                                <div class="card-apartments__titles">
+                                                    <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                                    <div class="card-apartments__price">13 175 000 ₽</div>
+                                                </div>
+                                            </div>
+                                            <div class="card-apartments__bottom">
+                                                <ul>
+                                                    <li>Жилая площадь - 65м² </li>
+                                                    <li>Общая площадь - 85м²</li>
+                                                    <li>Этаж - 4</li>
+                                                    <li>Высота потолков - 3м</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="card-apartments">
+                                        <div class="card-apartments__image">
+                                            <img loading="lazy" src="img/image23.webp" alt="">
+                                        </div>
+                                        <div class="card-apartments__right">
+                                            <div class="card-apartments__top">
+                                                <div class="card-apartments__titles">
+                                                    <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                                    <div class="card-apartments__price">13 175 000 ₽</div>
+                                                </div>
+                                            </div>
+                                            <div class="card-apartments__bottom">
+                                                <ul>
+                                                    <li>Жилая площадь - 65м² </li>
+                                                    <li>Общая площадь - 85м²</li>
+                                                    <li>Этаж - 4</li>
+                                                    <li>Высота потолков - 3м</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-floor="3" class="block-genplan__choose-floor-mob">
+
+                    </div>
+                    <div data-floor="2" class="block-genplan__choose-floor-mob">
+
+                    </div>
+                    <div data-floor="1" class="block-genplan__choose-floor-mob">
+
+                    </div>
+                </div>
+            </div>
             <div class="fullsreen-genplan-hint">
                 <div class="fullsreen-genplan-hint__icon">
                     <img src="img/arrows1.svg" alt="">
@@ -922,6 +1622,14 @@
                 </div>
                 <span>Выбор дома</span>
             </button>
+            <button type="button" class="block-genplan__title title-romms">
+                <div class="block-genplan__icon">
+                    <svg aria-hidden="true" width="12" height="8">
+                        <use xlink:href="img/sprite.svg#arrow1"></use>
+                    </svg>
+                </div>
+                <span>Дом №6</span>
+            </button>
             <div class="block-genplan__bottom">
                 <div class="block-genplan__descr">
                     <div class="block-genplan__compass">
@@ -931,12 +1639,23 @@
                         От уютных до просторных квартир <span>с антресолями и террасами</span>
                     </p>
                 </div>
-                <a href="#" class="block-genplan__filter btn">
-                    <span>Подбор по параметрам</span>
-                    <svg aria-hidden="true" width="9" height="10">
-                        <use xlink:href="img/sprite.svg#filter"></use>
-                    </svg>
-                </a>
+                <div class="block-genplan__buttons">
+                    <div class="switch-genplan">
+                        <div class="switch-genplan__title">Показать подьезды</div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-switch-background">
+                                <span class="toggle-switch-handle"></span>
+                            </span>
+                        </label>
+                    </div>
+                    <a href="#" class="block-genplan__filter btn">
+                        <span>Подбор по параметрам</span>
+                        <svg aria-hidden="true" width="9" height="10">
+                            <use xlink:href="img/sprite.svg#filter"></use>
+                        </svg>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
