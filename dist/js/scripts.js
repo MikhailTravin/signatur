@@ -452,7 +452,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleSteps(true, false); // Всегда возвращаемся к step2 на мобильных
                 return;
               }
-
               // Если активен любой step3, возвращаемся к step2
               const activeStep3 = document.querySelector('.block-genplan__content-container.step3._active');
               if (activeStep3) {
@@ -460,17 +459,17 @@ document.addEventListener('DOMContentLoaded', () => {
               }
             });
           }
-
           // УБИРАЕМ класс choice-home при переходе на step3
           document.documentElement.classList.remove('choice-home');
-
           currentContainer = targetStep3;
-
+          // Добавляем активный класс к заголовку "Дом №6"
+          if (titleRooms) {
+            titleRooms.classList.add('_active');
+          }
           // Добавляем класс _active к switch-genplan
           if (switchGenplan) {
             switchGenplan.classList.add('_active');
           }
-
           // Скрываем zoom-genplan при активации step3
           const zoomGenplan = document.querySelector('.zoom-genplan');
           if (zoomGenplan) {
