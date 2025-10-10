@@ -156,8 +156,9 @@ function saveOriginalImageSizes() {
   const images = document.querySelectorAll('.block-genplan__image img');
   images.forEach(img => {
     if (!img.dataset.originalWidth) {
-      img.dataset.originalWidth = img.style.width || '';
-      img.dataset.originalHeight = img.style.height || '';
+      const rect = img.getBoundingClientRect();
+      img.dataset.originalWidth = rect.width.toString();
+      img.dataset.originalHeight = rect.height.toString();
     }
   });
 }
@@ -176,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const switchGenplan = document.querySelector('.switch-genplan');
     const switchToggle = document.querySelector('.toggle-switch input[type="checkbox"]');
     const fullscreenBtn = document.querySelector('.fullsreen-genplan__button');
-    const fullscreenHint = document.querySelector('.fullsreen-genplan-hint');
     const fullscreenContainer = document.querySelector('[data-fullscreen-container]');
     const content = document.querySelector('.block-genplan__content');
     const svgs = document.querySelectorAll('.block-genplan__svg');
@@ -256,97 +256,79 @@ document.addEventListener('DOMContentLoaded', () => {
       return content.getBoundingClientRect();
     }
 
-    // ОБНОВЛЕННАЯ ФУНКЦИЯ: Изменять размеры SVG и изображений ТОЛЬКО в полноэкранном режиме
+    // Функция обновления размеров SVG
     function updateSvgsSize() {
-      // Для мобильных устройств не меняем размеры
       if (isMobileDevice()) return;
 
-      // Проверяем, находимся ли мы в полноэкранном режиме
       if (!document.fullscreenElement) {
         return;
       }
 
-      // Для step3: НЕ меняем размеры SVG и изображений
+      const containerRect = fullscreenContainer.getBoundingClientRect();
+
       if (currentContainer.classList.contains('step3')) {
-        // Убедимся, что у SVG нет width и height
-        const step3Svgs = currentContainer.querySelectorAll('.block-genplan__svg');
-        step3Svgs.forEach(svg => {
-          svg.removeAttribute('width');
-          svg.removeAttribute('height');
-        });
-
-        // Восстанавливаем оригинальные размеры изображений
-        const step3Images = currentContainer.querySelectorAll('.block-genplan__image img');
-        step3Images.forEach(img => {
-          img.style.width = img.dataset.originalWidth || '';
-          img.style.height = img.dataset.originalHeight || '';
-        });
-
         return;
       }
 
-      // Для step1 и step2: обновляем все SVG
-      const rect = getContainerRect();
-
       svgs.forEach(svg => {
-        // Проверяем, что SVG принадлежит текущему активному контейнеру
         if (currentContainer.contains(svg) || svg.closest('.block-genplan__content-container') === currentContainer) {
-          svg.setAttribute('width', Math.round(rect.width));
-          svg.setAttribute('height', Math.round(rect.height));
+          svg.setAttribute('width', Math.round(containerRect.width));
+          svg.setAttribute('height', Math.round(containerRect.height));
         }
       });
 
-      // Для step1 и step2: обновляем все изображения внутри активного контейнера
       const images = currentContainer.querySelectorAll('.block-genplan__image img');
       images.forEach(img => {
-        img.style.width = `${Math.round(rect.width)}px`;
-        img.style.height = `${Math.round(rect.height)}px`;
+        img.style.width = `${Math.round(containerRect.width)}px`;
+        img.style.height = `${Math.round(containerRect.height)}px`;
       });
     }
 
     // Функция сброса стилей
     function resetFullscreenStyles() {
       if (fullscreenContainer) {
-        fullscreenContainer.style.width = '';
-        fullscreenContainer.style.height = '';
-      }
-      if (content) {
-        content.style.width = '';
-        content.style.height = '';
+        fullscreenContainer.classList.remove('fullscreen-active');
       }
 
-      // Убираем width и height у всех SVG
-      svgs.forEach(svg => {
+      const step1Svgs = document.querySelectorAll('.step1 .block-genplan__svg');
+      const step2Svgs = document.querySelectorAll('.step2 .block-genplan__svg');
+
+      step1Svgs.forEach(svg => {
         svg.removeAttribute('width');
         svg.removeAttribute('height');
       });
 
-      // Сбрасываем инлайновые стили width/height у изображений, восстанавливая оригинальные размеры
-      const images = document.querySelectorAll('.block-genplan__image img');
-      images.forEach(img => {
-        img.style.width = img.dataset.originalWidth || '';
-        img.style.height = img.dataset.originalHeight || '';
+      step2Svgs.forEach(svg => {
+        svg.removeAttribute('width');
+        svg.removeAttribute('height');
       });
 
-      // Восстанавливаем оригинальные позиции
-      popups.forEach(popup => {
-        popup.style.left = popup.dataset.originalLeft;
-        popup.style.top = popup.dataset.originalTop;
-        popup.style.right = popup.dataset.originalRight;
-        popup.style.bottom = popup.dataset.originalBottom;
+      const step1Images = document.querySelectorAll('.step1 .block-genplan__image img');
+      const step2Images = document.querySelectorAll('.step2 .block-genplan__image img');
+
+      step1Images.forEach(img => {
+        img.style.width = '';
+        img.style.height = '';
+        img.style.objectFit = '';
       });
-      tippies.forEach(tippy => {
-        tippy.style.left = tippy.dataset.originalLeft;
-        tippy.style.top = tippy.dataset.originalTop;
-        tippy.style.right = tippy.dataset.originalRight;
-        tippy.style.bottom = tippy.dataset.originalBottom;
+
+      step2Images.forEach(img => {
+        img.style.width = '';
+        img.style.height = '';
+        img.style.objectFit = '';
       });
     }
 
     // Обновить трансформацию
     function updateTransform() {
       if (currentContainer && !isMobileDevice()) {
-        currentContainer.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        let currentScale = scale;
+
+        if (currentContainer.classList.contains('step3') && document.fullscreenElement) {
+          currentScale = 1;
+        }
+
+        currentContainer.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
       }
     }
 
@@ -361,8 +343,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Масштабирование от точки
     function zoomToPoint(scaleFactor, clientX, clientY) {
-      // Отключаем масштабирование на мобильных
       if (isMobileDevice()) return;
+
+      if (currentContainer.classList.contains('step3') && document.fullscreenElement) {
+        return;
+      }
 
       const newScale = Math.min(Math.max(scale * scaleFactor, minScale), maxScale);
       const zoomRatio = newScale / scale;
@@ -387,150 +372,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Переключение шагов
-    function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null) {
-      // Сначала скрываем все контейнеры
-      contentContainerStep1.classList.remove('_active');
-      contentContainerStep2.classList.remove('_active');
-
-      // Скрываем все step3
-      document.querySelectorAll('.block-genplan__content-container.step3').forEach(step3 => {
-        step3.classList.remove('_active');
-      });
-
-      titleGenplan.classList.remove('_active');
-      titleHouse.classList.remove('_active');
-      if (titleRooms) titleRooms.classList.remove('_active');
-
-      if (showStep2 || showStep3) {
-        titleGenplan.classList.add('hidden');
-      } else {
-        titleGenplan.classList.remove('hidden');
-      }
-
-      // Убираем задержку и сразу показываем нужный шаг
-      if (showStep3) {
-        // БЛОКИРУЕМ переход к step3 на мобильных устройствах
-        if (isMobileDevice()) {
-          // На мобильных вместо step3 показываем step2
-          contentContainerStep2.classList.add('_active');
-          titleHouse.classList.add('_active');
-          document.documentElement.classList.add('choice-home');
-          currentContainer = contentContainerStep2;
-
-          // Убираем класс _active у switch-genplan
-          if (switchGenplan) {
-            switchGenplan.classList.remove('_active');
-          }
-
-          // Показываем zoom-genplan
-          const zoomGenplan = document.querySelector('.zoom-genplan');
-          if (zoomGenplan) {
-            zoomGenplan.classList.remove('hidden');
-          }
-
-          return; // Прерываем выполнение функции
-        }
-
-        // Находим нужный step3 по data-id
-        let targetStep3;
-        if (targetHouseId) {
-          targetStep3 = document.querySelector(`.block-genplan__content-container.step3[data-id="${targetHouseId}"]`);
-        } else {
-          // Если не указан targetHouseId, берем первый попавшийся step3
-          targetStep3 = document.querySelector('.block-genplan__content-container.step3');
-        }
-
-        if (targetStep3) {
-          // Активируем конкретный Step 3
-          targetStep3.classList.add('_active');
-          // Обработчик клика на заголовок "Дом №6" - переключается между step2 и step3
-          if (titleRooms) {
-            titleRooms.addEventListener('click', () => {
-              // На мобильных устройствах не переключаем на step3
-              if (isMobileDevice()) {
-                toggleSteps(true, false); // Всегда возвращаемся к step2 на мобильных
-                return;
-              }
-              // Если активен любой step3, возвращаемся к step2
-              const activeStep3 = document.querySelector('.block-genplan__content-container.step3._active');
-              if (activeStep3) {
-                toggleSteps(true, false); // Включаем step2, выключаем step3
-              }
-            });
-          }
-          // УБИРАЕМ класс choice-home при переходе на step3
-          document.documentElement.classList.remove('choice-home');
-          currentContainer = targetStep3;
-          // Добавляем активный класс к заголовку "Дом №6"
-          if (titleRooms) {
-            titleRooms.classList.add('_active');
-          }
-          // Добавляем класс _active к switch-genplan
-          if (switchGenplan) {
-            switchGenplan.classList.add('_active');
-          }
-          // Скрываем zoom-genplan при активации step3
-          const zoomGenplan = document.querySelector('.zoom-genplan');
-          if (zoomGenplan) {
-            zoomGenplan.classList.add('hidden');
-          }
-        }
-      } else if (showStep2) {
-        // Активируем Step 2
-        contentContainerStep2.classList.add('_active');
-        titleHouse.classList.add('_active');
-        // ДОБАВЛЯЕМ класс choice-home при переходе на step2
-        document.documentElement.classList.add('choice-home');
-        currentContainer = contentContainerStep2;
-
-        // Убираем класс _active у switch-genplan
-        if (switchGenplan) {
-          switchGenplan.classList.remove('_active');
-        }
-
-        // Показываем zoom-genplan при активации step2
-        const zoomGenplan = document.querySelector('.zoom-genplan');
-        if (zoomGenplan) {
-          zoomGenplan.classList.remove('hidden');
-        }
-      } else {
-        // Активируем Step 1
-        contentContainerStep1.classList.add('_active');
-        titleGenplan.classList.add('_active');
-        // УБИРАЕМ класс choice-home при возврате к step1
-        document.documentElement.classList.remove('choice-home');
-        currentContainer = contentContainerStep1;
-
-        // Убираем класс _active у switch-genplan
-        if (switchGenplan) {
-          switchGenplan.classList.remove('_active');
-        }
-
-        // Показываем zoom-genplan при активации step1
-        const zoomGenplan = document.querySelector('.zoom-genplan');
-        if (zoomGenplan) {
-          zoomGenplan.classList.remove('hidden');
-        }
-        setTimeout(() => {
-          initTippyFloorHandlers();
-          initFloorSelectionHandlers();
-        }, 100);
-      }
-
-      // Обновляем состояние подъездов при переключении шагов
-      updateEntrancesState();
-
-      resetTransformations();
-
-      // ОБНОВЛЯЕМ РАЗМЕРЫ ПРИ ПЕРЕХОДЕ МЕЖДУ ШАГАМИ В ПОЛНОЭКРАННОМ РЕЖИМЕ
-      if (document.fullscreenElement) {
-        updateSvgsSize();
-      }
-    }
-
     function resetTransformations() {
-      scale = 1;
+      if (currentContainer.classList.contains('step3') && document.fullscreenElement) {
+        scale = 1;
+      } else {
+        scale = 1;
+      }
       translateX = 0;
       translateY = 0;
       updateTransform();
@@ -557,32 +404,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // Обработчик клика на заголовок "Дом №6" - переключается между step2 и step3
     if (titleRooms) {
       titleRooms.addEventListener('click', () => {
-        // Если активен любой step3, возвращаемся к step2
         const activeStep3 = document.querySelector('.block-genplan__content-container.step3._active');
         if (activeStep3) {
-          toggleSteps(true, false); // Включаем step2, выключаем step3
+          toggleSteps(true, false);
         }
       });
     }
 
     // Обработчик кнопок "Выбрать квартиру" и "Выбрать этаж" в попапе
     document.querySelectorAll('.block-genplan-popup__buttons .btn').forEach(btn => {
-      // Используем data-атрибут вместо анализа текста
       if (btn.classList.contains('choose-apartment') || btn.classList.contains('choose-floor')) {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           e.preventDefault();
 
-          // Находим родительский попап, чтобы получить data-id-popup
           const popup = btn.closest('.block-genplan-popup');
           if (popup) {
             const houseId = popup.getAttribute('data-id-popup');
 
-            // Для мобильных устройств - показываем step2 вместо step3
             if (isMobileDevice()) {
-              toggleSteps(true, false); // Показываем step2
+              toggleSteps(true, false);
             } else {
-              // Для десктопа - стандартное поведение
               if (btn.classList.contains('choose-floor')) {
                 toggleSteps(false, true, houseId);
               } else if (btn.classList.contains('choose-apartment')) {
@@ -590,7 +432,6 @@ document.addEventListener('DOMContentLoaded', () => {
               }
             }
 
-            // Закрываем попап
             popup.classList.remove('_active');
             document.documentElement.classList.remove('popup-open');
           }
@@ -602,7 +443,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function initMobileDrag() {
       if (!isMobileDevice()) return;
 
-      // Обработчики для мобильной прокрутки
       container.addEventListener('mousedown', handleMobileDragStart);
       container.addEventListener('touchstart', handleMobileDragStart, { passive: false });
 
@@ -669,9 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initDesktopInteractions() {
       if (isMobileDevice()) return;
 
-      // МЫШЬ
       container.addEventListener('mousedown', (e) => {
-        // Разрешаем перетаскивание, если либо масштаб > 1, либо экран уже 1200px
         if (scale <= minScale && window.innerWidth >= 1200) return;
         if (e.target.closest('.block-genplan-popup') || e.target.closest('.block-genplan__tippy')) return;
         isDragging = true;
@@ -694,14 +532,6 @@ document.addEventListener('DOMContentLoaded', () => {
         container.classList.remove('dragging');
       });
 
-      container.addEventListener('wheel', (e) => {
-        if (e.target.closest('.block-genplan-popup')) return;
-        e.preventDefault();
-        const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
-        zoomToPoint(1 + delta, e.clientX, e.clientY);
-      }, { passive: false });
-
-      // TOUCH для десктопов (если поддерживается)
       container.addEventListener('touchstart', (e) => {
         if (e.target.closest('.block-genplan-popup') || e.target.closest('.block-genplan__tippy')) return;
         if (e.touches.length === 2) {
@@ -755,6 +585,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (zoomInBtn) {
       zoomInBtn.addEventListener('click', () => {
         if (isMobileDevice()) return;
+        if (currentContainer.classList.contains('step3') && document.fullscreenElement) {
+          return;
+        }
         const rect = container.getBoundingClientRect();
         zoomToPoint(1 + zoomStep, rect.left + rect.width / 2, rect.top + rect.height / 2);
       });
@@ -763,46 +596,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (zoomOutBtn) {
       zoomOutBtn.addEventListener('click', () => {
         if (isMobileDevice()) return;
+        if (currentContainer.classList.contains('step3') && document.fullscreenElement) {
+          return;
+        }
         const rect = container.getBoundingClientRect();
         zoomToPoint(1 - zoomStep, rect.left + rect.width / 2, rect.top + rect.height / 2);
       });
     }
 
     // === ПОЛНОЭКРАННЫЙ РЕЖИМ ===
-    if (fullscreenBtn && fullscreenHint && fullscreenContainer) {
-      let hintTimeout = null;
-      let scrollPosition = 0; // Для сохранения прокрутки
-
-      function hideHint() {
-        fullscreenHint.classList.remove('fullscreen-hint_active');
-        if (hintTimeout) clearTimeout(hintTimeout);
-      }
-
-      fullscreenHint.addEventListener('click', (e) => {
-        e.stopPropagation();
-        hideHint();
-      });
+    if (fullscreenBtn && fullscreenContainer) {
+      let scrollPosition = 0;
 
       fullscreenBtn.addEventListener('click', async () => {
         if (!document.fullscreenElement) {
-          // Сохраняем позицию прокрутки
           scrollPosition = window.scrollY;
           try {
             await fullscreenContainer.requestFullscreen();
-            // Фиксируем размеры
-            const rect = getContainerRect();
-            fullscreenContainer.style.width = `${rect.width}px`;
-            fullscreenContainer.style.height = `${rect.height}px`;
-            content.style.width = `${rect.width}px`;
-            content.style.height = `${rect.height}px`;
-
-            // Обновляем размеры SVG и изображений
+            fullscreenContainer.classList.add('fullscreen-active');
             updateSvgsSize();
-
             updateTransform();
             clampTranslation();
-            fullscreenHint.classList.add('fullscreen-hint_active');
-            hintTimeout = setTimeout(hideHint, 3000);
           } catch (err) {
             console.warn('Ошибка:', err);
           }
@@ -812,43 +626,168 @@ document.addEventListener('DOMContentLoaded', () => {
           } catch (err) {
             console.warn('Ошибка:', err);
           }
-          // Сбрасываем всё
           resetFullscreenStyles();
-          hideHint();
-          // Восстанавливаем позицию прокрутки
           setTimeout(() => {
             window.scrollTo(0, scrollPosition);
+          }, 100);
+
+          setTimeout(() => {
+            resetTransformations();
           }, 100);
         }
       });
 
-      // Обработка выхода через Esc
       document.addEventListener('fullscreenchange', () => {
         if (!document.fullscreenElement) {
+          fullscreenContainer.classList.remove('fullscreen-active');
           resetFullscreenStyles();
-          hideHint();
           setTimeout(() => {
             window.scrollTo(0, scrollPosition);
           }, 100);
 
-          // Обновляем состояние подъездов после выхода из полноэкранного режима
           setTimeout(() => {
             updateEntrancesState();
+            resetTransformations();
           }, 100);
         } else {
-          // При входе в полноэкранный режим обновляем размеры
+          fullscreenContainer.classList.add('fullscreen-active');
           updateSvgsSize();
+          setTimeout(() => {
+            resetTransformations();
+          }, 100);
         }
+      });
+    }
+
+    // Переключение шагов
+    function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null) {
+      contentContainerStep1.classList.remove('_active');
+      contentContainerStep2.classList.remove('_active');
+
+      document.querySelectorAll('.block-genplan__content-container.step3').forEach(step3 => {
+        step3.classList.remove('_active');
       });
 
-      // Скрытие подсказки при клике мимо
-      document.addEventListener('click', (e) => {
-        if (fullscreenHint.classList.contains('fullscreen-hint_active') &&
-          !e.target.closest('.fullsreen-genplan-hint') &&
-          !e.target.closest('.fullsreen-genplan__button')) {
-          hideHint();
+      titleGenplan.classList.remove('_active');
+      titleHouse.classList.remove('_active');
+      if (titleRooms) titleRooms.classList.remove('_active');
+
+      if (showStep2 || showStep3) {
+        titleGenplan.classList.add('hidden');
+      } else {
+        titleGenplan.classList.remove('hidden');
+      }
+
+      if (showStep3) {
+        if (isMobileDevice()) {
+          contentContainerStep2.classList.add('_active');
+          titleHouse.classList.add('_active');
+          document.documentElement.classList.add('choice-home');
+          currentContainer = contentContainerStep2;
+
+          if (switchGenplan) {
+            switchGenplan.classList.remove('_active');
+          }
+
+          const zoomGenplan = document.querySelector('.zoom-genplan');
+          if (zoomGenplan) {
+            zoomGenplan.classList.remove('hidden');
+          }
+
+          if (fullscreenBtn) {
+            fullscreenBtn.classList.remove('step3_genplan-button');
+          }
+
+          return;
         }
-      });
+
+        let targetStep3;
+        if (targetHouseId) {
+          targetStep3 = document.querySelector(`.block-genplan__content-container.step3[data-id="${targetHouseId}"]`);
+        } else {
+          targetStep3 = document.querySelector('.block-genplan__content-container.step3');
+        }
+
+        if (targetStep3) {
+          targetStep3.classList.add('_active');
+          if (titleRooms) {
+            titleRooms.addEventListener('click', () => {
+              if (isMobileDevice()) {
+                toggleSteps(true, false);
+                return;
+              }
+              const activeStep3 = document.querySelector('.block-genplan__content-container.step3._active');
+              if (activeStep3) {
+                toggleSteps(true, false);
+              }
+            });
+          }
+          document.documentElement.classList.remove('choice-home');
+          currentContainer = targetStep3;
+          if (titleRooms) {
+            titleRooms.classList.add('_active');
+          }
+          if (switchGenplan) {
+            switchGenplan.classList.add('_active');
+          }
+          const zoomGenplan = document.querySelector('.zoom-genplan');
+          if (zoomGenplan) {
+            zoomGenplan.classList.add('hidden');
+          }
+
+          if (fullscreenBtn) {
+            fullscreenBtn.classList.add('step3_genplan-button');
+          }
+        }
+      } else if (showStep2) {
+        contentContainerStep2.classList.add('_active');
+        titleHouse.classList.add('_active');
+        document.documentElement.classList.add('choice-home');
+        currentContainer = contentContainerStep2;
+
+        if (switchGenplan) {
+          switchGenplan.classList.remove('_active');
+        }
+
+        const zoomGenplan = document.querySelector('.zoom-genplan');
+        if (zoomGenplan) {
+          zoomGenplan.classList.remove('hidden');
+        }
+
+        if (fullscreenBtn) {
+          fullscreenBtn.classList.remove('step3_genplan-button');
+        }
+      } else {
+        contentContainerStep1.classList.add('_active');
+        titleGenplan.classList.add('_active');
+        document.documentElement.classList.remove('choice-home');
+        currentContainer = contentContainerStep1;
+
+        if (switchGenplan) {
+          switchGenplan.classList.remove('_active');
+        }
+
+        const zoomGenplan = document.querySelector('.zoom-genplan');
+        if (zoomGenplan) {
+          zoomGenplan.classList.remove('hidden');
+        }
+
+        if (fullscreenBtn) {
+          fullscreenBtn.classList.remove('step3_genplan-button');
+        }
+
+        setTimeout(() => {
+          initTippyFloorHandlers();
+          initFloorSelectionHandlers();
+        }, 100);
+      }
+
+      updateEntrancesState();
+      resetTransformations();
+
+      if (document.fullscreenElement) {
+        updateSvgsSize();
+      }
     }
 
     // === ПОПАПЫ ===
@@ -931,38 +870,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Обработчик клика на tippy-floor
     function initTippyFloorHandlers() {
-      // Обработчик клика на tippy-floor
       document.querySelectorAll('.tippy-floor').forEach(tippy => {
         tippy.addEventListener('click', (e) => {
           e.stopPropagation();
 
-          // Получаем data-id кнопки
           const tippyId = tippy.getAttribute('data-id');
           if (!tippyId) return;
 
-          // Находим соответствующий path с классом kv в ТЕКУЩЕМ АКТИВНОМ step3 контейнере
           const activeStep3 = document.querySelector('.block-genplan__content-container.step3._active');
           if (!activeStep3) return;
 
           const correspondingPath = activeStep3.querySelector(`.block-genplan__path.kv[data-id="${tippyId}"]`);
           if (!correspondingPath) return;
 
-          // Находим соответствующий попап квартиры
           const correspondingPopup = activeStep3.querySelector(`.block-genplan-popup[data-id-popup="${tippyId}"]`);
 
-          // Удаляем активный класс у всех tippy-floor, kv paths и попапов в ТЕКУЩЕМ контейнере
           activeStep3.querySelectorAll('.tippy-floor._active, .block-genplan__path.kv._active, .block-genplan-popup._active').forEach(el => {
             el.classList.remove('_active');
           });
 
-          // Убираем класс popup-open с документа, если он был
           document.documentElement.classList.remove('popup-open');
 
-          // Добавляем активный класс к текущим элементам
           tippy.classList.add('_active');
           correspondingPath.classList.add('_active');
 
-          // Если найден соответствующий попап, активируем его
           if (correspondingPopup) {
             correspondingPopup.classList.add('_active');
             document.documentElement.classList.add('popup-open');
@@ -970,14 +901,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
 
-      // Закрытие активных элементов при клике вне
       document.addEventListener('click', (e) => {
         const isTippy = e.target.closest('.tippy-floor');
         const isPath = e.target.classList.contains('block-genplan__path');
         const isPopup = e.target.closest('.block-genplan-popup');
 
         if (!isTippy && !isPath && !isPopup) {
-          // Убираем активные классы только в активном step3 контейнере
           const activeStep3 = document.querySelector('.block-genplan__content-container.step3._active');
           if (activeStep3) {
             activeStep3.querySelectorAll('.tippy-floor._active, .block-genplan__path.kv._active, .block-genplan-popup._active').forEach(el => {
@@ -988,7 +917,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Закрытие попапа по крестику (дополнительная обработка для попапов квартир)
       document.querySelectorAll('.block-genplan-popup__close').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -998,7 +926,6 @@ document.addEventListener('DOMContentLoaded', () => {
             popup.classList.remove('_active');
             document.documentElement.classList.remove('popup-open');
 
-            // Также убираем активные классы с соответствующих элементов
             const activeStep3 = document.querySelector('.block-genplan__content-container.step3._active');
             if (activeStep3 && id) {
               activeStep3.querySelectorAll(`[data-id="${id}"]._active`).forEach(el => {
@@ -1012,9 +939,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === ОБРАБОТЧИК ВЫБОРА ЭТАЖЕЙ НА МОБИЛЬНЫХ ===
     function initFloorSelectionHandlers() {
-      const floorPopup = document.querySelector('.popup-floor');
-      const floorPopupClose = document.querySelector('.floors-block-genplan.block-genplan-popup__close');
-
       // Обработчик для кнопок "Выбрать этаж" на мобильных
       document.querySelectorAll('.choose-floor').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -1022,7 +946,6 @@ document.addEventListener('DOMContentLoaded', () => {
           e.preventDefault();
 
           if (isMobileDevice()) {
-            // На мобильных - находим соответствующий блок выбора этажа
             const popup = btn.closest('.block-genplan-popup');
             if (popup) {
               const houseId = popup.getAttribute('data-id-popup');
@@ -1032,13 +955,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetFloors.classList.add('_active');
                 document.documentElement.classList.add('popup-floor-open');
 
-                // Закрываем основной попап
                 popup.classList.remove('_active');
                 document.documentElement.classList.remove('popup-open');
               }
             }
           } else {
-            // На десктопе - стандартное поведение (переходим сразу к step3)
             const popup = btn.closest('.block-genplan-popup');
             if (popup) {
               const houseId = popup.getAttribute('data-id-popup');
@@ -1077,21 +998,17 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       // Обработчик выбора конкретного этажа в мобильной версии
-      // Обработчик выбора конкретного этажа в мобильной версии
       document.querySelectorAll('.floors-block-genplan.mob .floors-block-genplan__button').forEach(button => {
         button.addEventListener('click', (e) => {
           e.stopPropagation();
           const floor = button.getAttribute('data-floor');
           const floorsContainer = button.closest('.floors-block-genplan.mob');
           const houseId = floorsContainer.getAttribute('data-id');
-          // Находим контейнер для выбора этажей этого дома
           const chooseFloorsContainer = document.querySelector(`.block-genplan__choose-floors-mob[data-id="${houseId}"]`);
           if (chooseFloorsContainer) {
-            // Скрываем все блоки этажей
             chooseFloorsContainer.querySelectorAll('.choose-floor-mob').forEach(floorBlock => {
               floorBlock.classList.remove('_active');
             });
-            // Показываем выбранный этаж
             const targetFloorBlock = chooseFloorsContainer.querySelector(`.choose-floor-mob[data-floor="${floor}"]`);
             if (targetFloorBlock) {
               targetFloorBlock.classList.add('_active');
@@ -1099,14 +1016,10 @@ document.addEventListener('DOMContentLoaded', () => {
               initMobileFloorSelectionHandlers();
             }
           }
-          // НЕ закрываем мобильный выбор этажей
-          // floorsContainer.classList.remove('_active');
-          // document.documentElement.classList.remove('popup-floor-open');
         });
       });
 
       document.addEventListener('click', (e) => {
-        // Закрытие по крестику
         if (e.target.closest('.block-genplan__choose-floors-mob .block-genplan-popup__close')) {
           const floorsContainer = e.target.closest('.block-genplan__choose-floors-mob');
           if (floorsContainer) {
@@ -1115,7 +1028,6 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
 
-        // Закрытие по клику вне
         if (!e.target.closest('.block-genplan__choose-floors-mob') &&
           !e.target.closest('.floors-block-genplan.mob') &&
           document.querySelector('.block-genplan__choose-floors-mob._active')) {
@@ -1128,20 +1040,17 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', (e) => {
           e.stopPropagation();
 
-          if (isMobileDevice()) return; // На мобильных этот обработчик не нужен
+          if (isMobileDevice()) return;
 
           const floor = button.getAttribute('data-floor');
           const step3Container = button.closest('.block-genplan__content-container.step3');
 
-          // Убираем активный класс у всех кнопок и изображений
           step3Container.querySelectorAll('.floors-block-genplan__button._active, .block-genplan__images._active').forEach(el => {
             el.classList.remove('_active');
           });
 
-          // Добавляем активный класс текущей кнопке
           button.classList.add('_active');
 
-          // Находим и активируем соответствующее изображение
           const targetImage = step3Container.querySelector(`.block-genplan__images[data-floor="${floor}"]`);
           if (targetImage) {
             targetImage.classList.add('_active');
@@ -1149,7 +1058,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
 
-      // Обработчик для кнопок закрытия в блоке планов этажей
       document.querySelectorAll('.block-genplan__choose-floors-mob .block-genplan-popup__close').forEach(closeBtn => {
         closeBtn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -1163,70 +1071,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Обработчики для кнопок выбора этажа и закрытия на мобильных устройствах
     function initMobileFloorSelectionHandlers() {
-      // Обработчик для кнопки "Выбор этажа" (возврат к выбору этажа)
-      // Обработчик для кнопки "Выбор этажа" (возврат к выбору этажа)
       document.querySelectorAll('.title-choose-floor').forEach(button => {
         button.addEventListener('click', (e) => {
           e.stopPropagation();
-          // Находим активный контейнер выбора этажей
           const activeFloorsContainer = document.querySelector('.block-genplan__choose-floors-mob._active');
           if (activeFloorsContainer) {
-            // Скрываем все блоки конкретных этажей
             activeFloorsContainer.querySelectorAll('.choose-floor-mob._active').forEach(floorBlock => {
               floorBlock.classList.remove('_active');
             });
-            // Закрываем весь контейнер выбора этажей
             activeFloorsContainer.classList.remove('_active');
-            // Убираем глобальный класс состояния
             document.documentElement.classList.remove('popup-floor-open');
           }
         });
       });
 
-      // Обработчик для кнопки закрытия (title-choose-close)
       document.querySelectorAll('.title-choose-close').forEach(closeButton => {
         closeButton.addEventListener('click', (e) => {
           e.stopPropagation();
-          // Находим родительский блок choose-floor-mob
           const floorBlock = closeButton.closest('.choose-floor-mob');
           if (floorBlock) {
             floorBlock.classList.remove('_active');
           }
-          // Находим родительский блок выбора этажей
           const floorsContainer = closeButton.closest('.block-genplan__choose-floors-mob');
           if (floorsContainer) {
             floorsContainer.classList.remove('_active');
-            // Получаем ID дома
             const houseId = floorsContainer.getAttribute('data-id');
             if (houseId) {
-              // Находим и закрываем соответствующий попап выбора этажей
               const mobileFloorsPopup = document.querySelector(`.floors-block-genplan.mob[data-id="${houseId}"]`);
               if (mobileFloorsPopup) {
                 mobileFloorsPopup.classList.remove('_active');
               }
             }
           }
-          // Также убираем активные классы с элементов генплана, если они есть
           document.querySelectorAll('.block-genplan__path.path-blue._active, .block-genplan__tippy._active').forEach(el => {
             el.classList.remove('_active');
           });
-          // Убираем глобальный класс состояния
           document.documentElement.classList.remove('popup-floor-open');
         });
       });
 
-      // Дополнительный обработчик для закрытия по клику вне области
       document.addEventListener('click', (e) => {
         if (!e.target.closest('.block-genplan__choose-floors-mob') &&
           !e.target.closest('.floors-block-genplan.mob') &&
           !e.target.closest('.choose-floor')) {
 
-          // Закрываем все блоки выбора этажей
           document.querySelectorAll('.block-genplan__choose-floors-mob._active, .choose-floor-mob._active').forEach(el => {
             el.classList.remove('_active');
           });
 
-          // Убираем активные классы с элементов генплана
           document.querySelectorAll('.block-genplan__path.path-blue._active, .block-genplan__tippy._active').forEach(el => {
             el.classList.remove('_active');
           });
@@ -1246,24 +1138,16 @@ document.addEventListener('DOMContentLoaded', () => {
       updateTransform();
 
       initMobileFloorSelectionHandlers();
-
-      // Инициализируем состояние подъездов при загрузке
       updateEntrancesState();
-
-      // Инициализируем обработчики для tippy-floor
       initTippyFloorHandlers();
-
-      // Инициализируем обработчики для выбора этажей
       initFloorSelectionHandlers();
     }
 
     init();
 
     window.addEventListener('resize', () => {
-      // Переинициализируем при изменении размера
       init();
 
-      // Обновляем размеры только в полноэкранном режиме
       if (document.fullscreenElement) {
         updateSvgsSize();
       }
@@ -1308,8 +1192,6 @@ function initFloorSwitching() {
 document.addEventListener('DOMContentLoaded', () => {
   initFloorSwitching();
 });
-
-
 
 //========================================================================================================================================================
 
@@ -1545,8 +1427,7 @@ if (document.querySelector('.block-intro__slider')) {
     observeParents: true,
     slidesPerView: 1,
     spaceBetween: 0,
-    speed: 800,
-    effect: 'fade',
+    speed: 400,
     loop: true,
     navigation: {
       prevEl: '.block-intro__arrow-prev',
@@ -1555,9 +1436,6 @@ if (document.querySelector('.block-intro__slider')) {
     autoplay: {
       delay: 3000,
       disableOnInteraction: false,
-    },
-    fadeEffect: {
-      crossFade: true,
     },
   });
 }
@@ -2406,3 +2284,81 @@ if (optionsClose) {
     });
   });
 }
+
+//========================================================================================================================================================
+
+// Функция для анимации счетчика
+function digitsCounter() {
+  function digitsCountersInit(digitsCountersItems) {
+    let digitsCounters = digitsCountersItems ? digitsCountersItems : document.querySelectorAll("[data-digits-counter]");
+    if (digitsCounters.length) {
+      digitsCounters.forEach(digitsCounter => {
+        if (digitsCounter.hasAttribute('data-go')) return;
+        digitsCounter.setAttribute('data-go', '');
+        digitsCounter.dataset.originalValue = digitsCounter.innerHTML;
+        digitsCounter.innerHTML = `0`;
+        digitsCountersAnimate(digitsCounter);
+      });
+    }
+  }
+
+  function digitsCountersAnimate(digitsCounter) {
+    let startTimestamp = null;
+    const duration = parseFloat(digitsCounter.dataset.digitsCounterSpeed) ? parseFloat(digitsCounter.dataset.digitsCounterSpeed) : 1000;
+
+    const originalValue = digitsCounter.dataset.originalValue;
+    const hasDecimal = originalValue.includes(',') || originalValue.includes('.');
+
+    const numericValue = parseFloat(originalValue.replace(',', '.'));
+
+    const decimalPlaces = hasDecimal ?
+      (originalValue.split(/[,.]/)[1] || '').length : 0;
+
+    const startPosition = 0;
+
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+
+      let currentValue = progress * (startPosition + numericValue);
+
+      if (decimalPlaces > 0) {
+        currentValue = parseFloat(currentValue.toFixed(decimalPlaces));
+      } else {
+        currentValue = Math.floor(currentValue);
+      }
+
+      digitsCounter.innerHTML = formatNumber(currentValue, decimalPlaces);
+
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        // В конце анимации устанавливаем точное исходное значение
+        digitsCounter.innerHTML = originalValue;
+        digitsCounter.removeAttribute('data-go');
+      }
+    };
+    window.requestAnimationFrame(step);
+  }
+
+  function formatNumber(value, decimalPlaces) {
+    if (decimalPlaces > 0) {
+      return value.toString().replace('.', ',');
+    } else {
+      return value.toString();
+    }
+  }
+
+  function digitsCounterAction(e) {
+    const entry = e.detail.entry;
+    const targetElement = entry.target;
+    if (targetElement.querySelectorAll("[data-digits-counter]").length) {
+      digitsCountersInit(targetElement.querySelectorAll("[data-digits-counter]"));
+    }
+  }
+
+  document.addEventListener("watcherCallback", digitsCounterAction);
+
+  digitsCountersInit();
+}
+digitsCounter();
