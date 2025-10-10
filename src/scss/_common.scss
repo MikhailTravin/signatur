@@ -21,21 +21,23 @@ body {
       background-color: rgba(8, 30, 22, 0.25);
     }
   }
-  .popup-floor-open &{
+  .popup-floor-open & {
     overflow: hidden;
   }
   .popup-open & {
     @media (max-width: 768px) {
-      &::before {
-        content: "";
-        cursor: pointer;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 6;
-        background: rgba(0, 0, 0, 0.65);
+      .block-genplan .container{
+        &::before {
+          content: "";
+          cursor: pointer;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 6;
+          background: rgba(0, 0, 0, 0.65);
+        }
       }
     }
   }

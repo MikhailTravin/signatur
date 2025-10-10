@@ -2,6 +2,24 @@
   .container {
     padding: 0px 0px 0px 0px;
     max-width: 1200px;
+    position: relative;
+  }
+  // .block-genplan__container-fullsreen
+
+  &__container-fullsreen {
+    position: relative;
+    width: 100%;
+    height: 631px;
+    &::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 65px;
+      z-index: 5;
+      background: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0) 100%);
+    }
   }
 
   // .block-genplan__content-container
@@ -48,7 +66,16 @@
       @media (max-width: 768px) {
         display: none;
       }
+      .block-genplan__images {
+        position: relative;
+        top: 50%;
+        transform: translate(0px, -50%);
+        width: 531px;
+        height: 550px;
+        margin: 0 auto;
+      }
       .block-genplan__image {
+        overflow: visible;
         @media (max-width: 768px) {
           display: none;
         }
@@ -56,8 +83,6 @@
       .block-genplan__svg {
         width: auto;
         height: auto;
-        left: 50%;
-        transform: translate(-50%, 0px);
         @media (max-width: 768px) {
           display: none;
         }
@@ -79,17 +104,7 @@
   &__content {
     position: relative;
     width: 100%;
-    height: 631px;
-    &::before {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 65px;
-      z-index: 5;
-      background: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0) 100%);
-    }
+    height: 100%;
   }
 
   // .block-genplan__body
@@ -289,6 +304,32 @@
       font-size: 22px;
       padding: 15px 13px;
       border-radius: 48px;
+    }
+  }
+
+  // .block-genplan__choose-floors-mob
+
+  &__choose-floors-mob {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #e8e8e8;
+    padding: 33px 15px;
+    z-index: 61;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    overflow: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    &._active {
+      opacity: 1;
+      pointer-events: auto;
     }
   }
 
@@ -522,46 +563,14 @@
     gap: 12px;
   }
 }
-
-// Убираем старые классы скрытия
 .block-genplan__content-container.step2,
 .title-house {
-  display: block; // Или flex, в зависимости от исходного значения
+  display: block;
 }
-
-// Активные состояния
 .block-genplan__content-container._active,
 .block-genplan__title._active {
   opacity: 1;
   visibility: visible;
-}
-
-.block-genplan {
-  // .block-genplan__choose-floors-mob
-
-  &__choose-floors-mob {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #e8e8e8;
-    padding: 33px 15px;
-    z-index: 61;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-    overflow: auto;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    &._active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-  }
 }
 .choose-floor-mob {
   display: flex;
@@ -660,7 +669,6 @@
     }
   }
 }
-
 .floors-block-genplan {
   position: absolute;
   left: 23px;
@@ -750,8 +758,8 @@
         }
       }
     }
-    @media (max-width: 768px){
-        height: 45px;
+    @media (max-width: 768px) {
+      height: 45px;
     }
   }
 }
@@ -879,6 +887,11 @@
     align-items: center;
     gap: 7px;
     transition: opacity 0.3s;
+    &.step3_genplan-button {
+      .fullsreen-genplan__title {
+        color: var(--theme-color-text-common);
+      }
+    }
     &:hover {
       opacity: 0.8;
     }
@@ -1723,7 +1736,7 @@
     font-size: 105px;
     line-height: 90%;
     letter-spacing: -0.07em;
-    gap: 5px;
+    gap: 10px;
     span {
       letter-spacing: 0em;
       font-size: 57px;
