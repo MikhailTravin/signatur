@@ -2362,3 +2362,19 @@ function digitsCounter() {
   digitsCountersInit();
 }
 digitsCounter();
+
+//========================================================================================================================================================
+
+const headerIcon = document.querySelector('.header__icon');
+
+if (headerIcon) {
+  headerIcon?.addEventListener('click', function () {
+    document.documentElement.classList.toggle('menu-open');
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.header__item') && !e.target.closest('.header__icon')) {
+      document.documentElement.classList.remove('menu-open');
+    }
+  });
+}
