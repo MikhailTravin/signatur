@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 20;
+    z-index: 50;
     // .header__content
 
     &__content {
@@ -34,6 +34,12 @@
             backdrop-filter: blur(13.600000381469727px);
             background: rgba(0, 0, 0, 0.4);
         }
+        .menu-open & {
+            &::before {
+                content: "";
+                opacity: 0;
+            }
+        }
     }
 
     // .header__logo
@@ -51,13 +57,32 @@
     // .header__menu
 
     &__menu {
-        position: relative;
-        z-index: 10;
+        position: fixed;
+        top: 96px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 96px);
+        z-index: 9;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        overflow: auto;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        .menu-open & {
+            opacity: 1;
+            pointer-events: auto;
+        }
     }
 
     // .header__icon
 
     &__icon {
+        position: relative;
+        z-index: 10;
         flex: 0 0 40px;
         display: flex;
         justify-content: center;
@@ -68,6 +93,82 @@
         background-color: #fff;
         cursor: pointer;
     }
+
+    // .header__item
+
+    &__item {
+        position: relative;
+        z-index: 10;
+        max-width: 228px;
+        margin: 0 auto;
+        padding: 0px 0px 20px 0px;
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+        @media (max-width: 768px) {
+            gap: 30px;
+        }
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            li {
+                display: flex;
+                a {
+                    display: flex;
+                    justify-content: center;
+                    width: 100%;
+                    text-align: center;
+                    font-family: var(--second-family);
+                    font-weight: 500;
+                    font-size: 19px;
+                    text-align: center;
+                    color: #fff;
+                    transition: opacity 0.3s;
+                    &:hover {
+                        opacity: 0.7;
+                    }
+                    &.active {
+                        pointer-events: none;
+                        text-decoration: underline;
+                        text-decoration-skip-ink: none;
+                    }
+                }
+            }
+        }
+    }
+
+    // .header__contacts
+
+    &__contacts {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin: 0px 9px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        padding: 12px 16px 17px 16px;
+        .btn {
+            padding: 5px 20px;
+            min-height: 30px;
+        }
+    }
+
+    // .header__phone
+
+    &__phone {
+        font-weight: 500;
+        font-size: 22px;
+        line-height: 120%;
+        letter-spacing: -0.02em;
+        text-align: center;
+        color: #fff;
+        transition: opacity 0.3s;
+        &:hover {
+            opacity: 0.7;
+        }
+    }
 }
 .icon-menu {
     position: relative;
@@ -75,6 +176,7 @@
     height: 16px;
     cursor: pointer;
     z-index: 5;
+    transition: all 0.3s ease 0s;
     span,
     &::before,
     &::after {

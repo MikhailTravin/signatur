@@ -11,14 +11,14 @@ body {
     overflow: hidden;
     &::before {
       content: "";
-      cursor: pointer;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 40;
-      background-color: rgba(8, 30, 22, 0.25);
+      backdrop-filter: blur(13.600000381469727px);
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 4;
     }
   }
   .popup-floor-open & {
@@ -26,7 +26,7 @@ body {
   }
   .popup-open & {
     @media (max-width: 768px) {
-      .block-genplan .container{
+      .block-genplan .container {
         &::before {
           content: "";
           cursor: pointer;
