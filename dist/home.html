@@ -425,9 +425,17 @@
 				<div class="block-life">
 					<div class="container">
 						<div class="block-life__content">
-							<h2 class="title2">
-								Жизнь в Сигнатуре
-							</h2>
+							<div class="block-life__heading">
+								<h2 class="title2">
+									Жизнь в Сигнатуре
+								</h2>
+								<a href="#" class="btn btn-bg">
+									<span>О ЖК</span>
+									<svg aria-hidden="true" width="12" height="8">
+										<use xlink:href="img/sprite.svg#arrow1"></use>
+									</svg>
+								</a>
+							</div>
 							<div class="block-life__body">
 								<div class="block-life__top">
 									<div class="left-top-block-life">
@@ -659,7 +667,8 @@
 								<div style="background: #cd7555;" class="block-info__column">
 									<div class="block-info__titles">
 										<div class="block-info__title">
-											<div data-digits-counter data-digits-counter-speed="1500">30</div><span>минут</span>
+											<div data-digits-counter data-digits-counter-speed="1500">30</div>
+											<span>минут</span>
 										</div>
 									</div>
 									<div class="block-info__subtitle">
@@ -669,7 +678,8 @@
 								<div style="background: #0c2776;" class="block-info__column">
 									<div class="block-info__titles">
 										<div class="block-info__title">
-											<div data-digits-counter data-digits-counter-speed="1500">20</div><span>минут</span>
+											<div data-digits-counter data-digits-counter-speed="1500">20</div>
+											<span>минут</span>
 										</div>
 									</div>
 									<div class="block-info__subtitle">
@@ -760,18 +770,21 @@
 										</div>
 
 									</div>
+									<!--при клике на data-id="h6" (Дом 6 - выбрать квартиру) открывается блок с data-id="h6"-->
 									<div data-id="h6" class="block-genplan__content-container step3">
+										<!--При переключении этажей(floors-block-genplan__button) меняется _active на нужный этаж-->
 										<div data-floor="4" class="block-genplan__images _active">
 											<div class="block-genplan__image">
 												<img loading="lazy" style="width: 531px; height: 550px;" src="img/image31.webp" alt="">
 											</div>
 											<svg width="531" height="550" class="block-genplan__svg" viewBox="0 0 531 550" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<!--Подъезды-->
+												<!--Подъезды(выделяем в фигме через инструмент)-->
 												<path data-id="p1" class="block-genplan__path p" d="M466.5 410.5H393V480H466.5V410.5Z" />
 												<path data-id="p2" class="block-genplan__path p" d="M274 410H200V480.5H274V410Z" />
 												<path data-id="p3" class="block-genplan__path p" d="M140.5 363.5H86V398H73V481.5H111.5V530H140.5V363.5Z" />
 												<path data-id="p4" class="block-genplan__path p" d="M153 59.5H82V126.5H153V59.5Z" />
-												<!--Подъезды-->
+												<!--Подъезды(выделяем в фигме через инструмент)-->
+												<!--Квартиры(выделяем в фигме через инструмент)-->
 												<path data-id="kv31" class="block-genplan__path kv" d="M153.5 0.5H81.5V58.5H141.5V30H153.5V0.5Z" />
 												<path data-id="kv32" class="block-genplan__path kv" d="M67 0H6.5V4.5H1V28H6.5V67.5H1V92H6.5V126.5L67 125.5V0Z" />
 												<path data-id="kv33" class="block-genplan__path kv" d="M7 156.5V126.5L66.5 125.5V189H7V181.5H1V156.5H7Z" />
@@ -791,7 +804,9 @@
 												<path data-id="kv48" class="block-genplan__path kv" d="M392.5 424H333.5V533H392.5V424Z" />
 												<path data-id="kv49" class="block-genplan__path kv" d="M498 489.5H392.5V544H401.5V549H426.5V544H432.5V549H457.5V544H465V549H490V544H498V489.5Z" />
 												<path data-id="kv50" class="block-genplan__path kv" d="M530 424H466.5V472.5H509.5V489.5H498V532H530V424Z" />
+												<!--Квартиры-->
 											</svg>
+											<!--Номера квартир и подьездов(позиционируем с помощью style в нужное место)-->
 											<div class="block-genplan__tips">
 												<div class="block-genplan__path entrances-path p" style="top: 15%; left: 29.5%;">
 													<span>
@@ -891,7 +906,9 @@
 													<span>№50</span>
 												</button>
 											</div>
+											<!--Описание квартир(позиционируем с помощью style в нужное место)-->
 											<div class="block-genplan__popups">
+												<!--Блок одной из квартир, при клике на data-id="kv32" у нас открывается соотвествующий блок data-id-popup="kv32" с нужный id-->
 												<div data-id-popup="kv32" class="block-genplan-popup" style="top: 14%; left: -18%;">
 													<div class="card-apartments">
 														<div class="card-apartments__top">
@@ -1020,6 +1037,7 @@
 												<path data-id="kv50" class="block-genplan__path kv" d="M530 424H466.5V472.5H509.5V489.5H498V532H530V424Z" />
 											</svg>
 										</div>
+										<!--При переключении этажей меняется _active-->
 										<div class="floors-block-genplan">
 											<button type="button" class="block-genplan-popup__close">
 												<svg aria-hidden="true" width="13" height="13">
@@ -1081,7 +1099,6 @@
 												</div>
 											</div>
 										</div>
-
 									</div>
 								</div>
 								<div class="zoom-genplan">
