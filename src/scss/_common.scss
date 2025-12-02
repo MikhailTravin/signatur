@@ -18,7 +18,7 @@ body {
       height: 100%;
       backdrop-filter: blur(13.600000381469727px);
       background: rgba(0, 0, 0, 0.55);
-      z-index: 4;
+      z-index: 200;
     }
   }
   .popup-floor-open & {
@@ -360,6 +360,9 @@ a {
     gap: 10px;
     &.column-rooms {
       flex: 1 1 100%;
+      @media (max-width: 768px) {
+        width: 296px;
+      }
       .options {
         display: grid;
         grid-template-columns: repeat(3, 1fr);

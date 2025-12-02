@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 50;
+    z-index: 300;
     // .header__content
 
     &__content {
@@ -62,7 +62,7 @@
         left: 0;
         width: 100%;
         height: calc(100vh - 96px);
-        z-index: 9;
+        z-index: 999;
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.3s;

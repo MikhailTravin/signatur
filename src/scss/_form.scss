@@ -60,6 +60,17 @@
     height: 23px;
     cursor: pointer;
     overflow: hidden;
+    &._active {
+        .toggle-switch-handle {
+            transform: translateX(18px);
+        }
+        .toggle-switch-background {
+            background-color: var(--theme-color-accent);
+        }
+        .toggle-switch-background .toggle-switch-handle {
+            transform: translateX(18px);
+        }
+    }
 }
 
 .toggle-switch input[type="checkbox"] {

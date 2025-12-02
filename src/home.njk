@@ -242,8 +242,12 @@
 
 			<div class="block-about-video">
 				<div class="block-about-video__video">
-					<video class="video" autoplay muted loop>
-						<source src="files/videos/video.mp4" type="video/mp4">
+					<video class="video video-pc" autoplay muted loop>
+						<source src="files/videos/video-pc.mp4" type="video/mp4">
+						Ваш браузер не поддерживает видео.
+					</video>
+					<video class="video video-mob" autoplay muted loop>
+						<source src="files/videos/video-mob.mp4" type="video/mp4">
 						Ваш браузер не поддерживает видео.
 					</video>
 					<div class="container">
@@ -272,7 +276,10 @@
 					<div class="block-about-video__body">
 						<div class="block-about-video__column">
 							<div class="block-about-video__title">
-								29.1 - 95.1
+								<div data-digits-counter data-digits-counter-format="." data-digits-counter-speed="2500"
+									data-original-value="29.1">29.1</div> -
+								<div data-digits-counter data-digits-counter-format="." data-digits-counter-speed="2500"
+									data-original-value="95.1">95.1</div>
 								<span>м²</span>
 							</div>
 							<div class="block-about-video__subtitle">Квартиры <span>от 13.3 млн</span></div>
@@ -524,6 +531,20 @@
 				</div>
 			</div>
 
+			<!--НОВЫЙ БЛОК-->
+			<div class="block-panorama">
+				<img src="img/panorama.webp" alt="" class="block-panorama__pic1">
+				<div class="container">
+					<div class="block-panorama__content">
+						<h2 class="title2">Панорама</h2>
+						<a href="#" class="block-panorama__button">
+							<img src="img/panorama-icon.svg" alt="">
+						</a>
+					</div>
+				</div>
+			</div>
+			<!--НОВЫЙ БЛОК-->
+
 			<div class="block-benefits">
 				<div class="container">
 					<div class="block-benefits__content">
@@ -603,7 +624,21 @@
 				<img class="block-map1__image" loading="lazy" src="img/map1.webp" alt="">
 				<div class="container">
 					<div class="block-map1__content">
-
+						<div class="block-genplan__title title-genplan">
+							<div class="block-genplan__icon">
+								<img src="img/signpost.svg" alt="">
+							</div>
+							<span>Построить маршрут</span>
+						</div>
+						<div class="switch-genplan">
+							<div class="switch-genplan__title">Разблокировать карту</div>
+							<label class="toggle-switch">
+								<input type="checkbox" onchange="mapActiveToggle()">
+								<span class="toggle-switch-background">
+									<span class="toggle-switch-handle"></span>
+								</span>
+							</label>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -668,7 +703,7 @@
 								<h2 class="title2">
 									Ход строительства
 								</h2>
-								<a data-da=".block-progress-construction__content, 992, last" href="#" class="btn">
+								<a href="#" class="btn desc">
 									<span>Подробнее о прогрессе</span>
 									<svg aria-hidden="true" width="9" height="10">
 										<use xlink:href="img/sprite.svg#plus"></use>
@@ -728,6 +763,12 @@
 								</div>
 							</div>
 						</div>
+						<a href="#" class="btn mob">
+							<span>Подробнее о прогрессе</span>
+							<svg aria-hidden="true" width="9" height="10">
+								<use xlink:href="img/sprite.svg#plus"></use>
+							</svg>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -875,6 +916,70 @@
 			{% include 'blocks/button-fixed.njk' %}
 		</main>
 		{% include 'blocks/footer.njk' %}
+	</div>
+	<div id="forms" aria-hidden="true" class="popup">
+		<div class="popup__wrapper">
+			<div class="popup__content">
+				<div data-close class="popup__close">
+					<svg aria-hidden="true" width="20" height="20">
+						<use xlink:href="img/sprite.svg#close"></use>
+					</svg>
+				</div>
+				<div class="block-forms__content">
+					<form action="#" class="form">
+						<div class="text">
+							Подобрать квартиру
+						</div>
+						<div class="form__body">
+							<div class="form__inputs">
+								<div class="form__left">
+									<div class="form__input">
+										<label for="name1">Укажите ваше имя</label>
+										<input id="name1" autocomplete="off" type="text" name="form[]" placeholder="Имя"
+											class="input">
+									</div>
+									<div class="form__input">
+										<label for="mail1">Укажите ваш E-mail</label>
+										<input data-required="email" id="mail1" autocomplete="off" type="text"
+											name="form[]" placeholder="Почта" class="input">
+									</div>
+									<div class="form__input">
+										<label for="tel1">Номер телефона</label>
+										<input data-required id="tel1" autocomplete="off" type="text" name="form[]"
+											placeholder="+7 (ХХХ) ХХХ-ХХ-ХХ" class="input tel">
+									</div>
+								</div>
+								<div class="form__right">
+									<div class="form__input">
+										<label for="text1">Коротко о пожеланиях</label>
+										<textarea id="text1" placeholder="Особенности"
+											class="input textarea"></textarea>
+									</div>
+									<div class="checkbox">
+										<input data-required id="c_1" class="checkbox__input" type="checkbox" value="1"
+											name="form[]">
+										<label for="c_1" class="checkbox__label">
+											<span class="checkbox__icon"></span>
+											<span class="checkbox__text">
+												Я согласен на обработку моих персональных данных. С политикой в
+												отношении
+												обработки персональных данных ознакомлен
+												и согласен.</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<button type="submit" class="btn">
+								<span>Отправить</span>
+								<svg aria-hidden="true" width="12" height="8">
+									<use xlink:href="img/sprite.svg#arrow1"></use>
+								</svg>
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
 	{% include 'blocks/scripts.njk' %}
 </body>
