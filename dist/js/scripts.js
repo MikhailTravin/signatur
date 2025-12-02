@@ -1,171 +1,18 @@
-const modules_flsModules = {};
-
-let bodyLockStatus = true;
-let bodyUnlock = (delay = 500) => {
-  if (bodyLockStatus) {
-    const lockPaddingElements = document.querySelectorAll("[data-lp]");
-    setTimeout((() => {
-      lockPaddingElements.forEach((lockPaddingElement => {
-        lockPaddingElement.style.paddingRight = "";
-      }));
-      document.body.style.paddingRight = "";
-      document.documentElement.classList.remove("lock");
-    }), delay);
-    bodyLockStatus = false;
-    setTimeout((function () {
-      bodyLockStatus = true;
-    }), delay);
-  }
-};
-let bodyLock = (delay = 500) => {
-  if (bodyLockStatus) {
-    const lockPaddingElements = document.querySelectorAll("[data-lp]");
-    const lockPaddingValue = window.innerWidth - document.body.offsetWidth + "px";
-    lockPaddingElements.forEach((lockPaddingElement => {
-      lockPaddingElement.style.paddingRight = lockPaddingValue;
-    }));
-    document.body.style.paddingRight = lockPaddingValue;
-    document.documentElement.classList.add("lock");
-    bodyLockStatus = false;
-    setTimeout((function () {
-      bodyLockStatus = true;
-    }), delay);
-  }
-};
-function functions_FLS(message) {
-  setTimeout((() => {
-    if (window.FLS) console.log(message);
-  }), 0);
-}
-
-let _slideUp = (target, duration = 500, showmore = 0) => {
-  if (!target.classList.contains("_slide")) {
-    target.classList.add("_slide");
-    target.style.transitionProperty = "height, margin, padding";
-    target.style.transitionDuration = duration + "ms";
-    target.style.height = `${target.offsetHeight}px`;
-    target.offsetHeight;
-    target.style.overflow = "hidden";
-    target.style.height = showmore ? `${showmore}px` : `0px`;
-    target.style.paddingTop = 0;
-    target.style.paddingBottom = 0;
-    target.style.marginTop = 0;
-    target.style.marginBottom = 0;
-    window.setTimeout((() => {
-      target.hidden = !showmore ? true : false;
-      !showmore ? target.style.removeProperty("height") : null;
-      target.style.removeProperty("padding-top");
-      target.style.removeProperty("padding-bottom");
-      target.style.removeProperty("margin-top");
-      target.style.removeProperty("margin-bottom");
-      !showmore ? target.style.removeProperty("overflow") : null;
-      target.style.removeProperty("transition-duration");
-      target.style.removeProperty("transition-property");
-      target.classList.remove("_slide");
-      document.dispatchEvent(new CustomEvent("slideUpDone", {
-        detail: {
-          target
-        }
-      }));
-    }), duration);
-  }
-};
-let _slideDown = (target, duration = 500, showmore = 0) => {
-  if (!target.classList.contains("_slide")) {
-    target.classList.add("_slide");
-    target.hidden = target.hidden ? false : null;
-    showmore ? target.style.removeProperty("height") : null;
-    let height = target.offsetHeight;
-    target.style.overflow = "hidden";
-    target.style.height = showmore ? `${showmore}px` : `0px`;
-    target.style.paddingTop = 0;
-    target.style.paddingBottom = 0;
-    target.style.marginTop = 0;
-    target.style.marginBottom = 0;
-    target.offsetHeight;
-    target.style.transitionProperty = "height, margin, padding";
-    target.style.transitionDuration = duration + "ms";
-    target.style.height = height + "px";
-    target.style.removeProperty("padding-top");
-    target.style.removeProperty("padding-bottom");
-    target.style.removeProperty("margin-top");
-    target.style.removeProperty("margin-bottom");
-    window.setTimeout((() => {
-      target.style.removeProperty("height");
-      target.style.removeProperty("overflow");
-      target.style.removeProperty("transition-duration");
-      target.style.removeProperty("transition-property");
-      target.classList.remove("_slide");
-      document.dispatchEvent(new CustomEvent("slideDownDone", {
-        detail: {
-          target
-        }
-      }));
-    }), duration);
-  }
-};
-let _slideToggle = (target, duration = 500) => {
-  if (target.hidden) return _slideDown(target, duration); else return _slideUp(target, duration);
-};
-
-function getHash() {
-  if (location.hash) { return location.hash.replace('#', ''); }
-}
-
-function dataMediaQueries(array, dataSetValue) {
-  const media = Array.from(array).filter(function (item) {
-    return item.dataset[dataSetValue];
-  });
-
-  if (media.length) {
-    const breakpointsArray = media.map(item => {
-      const params = item.dataset[dataSetValue];
-      const paramsArray = params.split(",");
-      return {
-        value: paramsArray[0],
-        type: paramsArray[1] ? paramsArray[1].trim() : "max",
-        item: item
-      };
-    });
-
-    const mdQueries = uniqArray(
-      breakpointsArray.map(item => `(${item.type}-width: ${item.value}px),${item.value},${item.type}`)
-    );
-
-    const mdQueriesArray = mdQueries.map(breakpoint => {
-      const [query, value, type] = breakpoint.split(",");
-      const matchMedia = window.matchMedia(query);
-      const itemsArray = breakpointsArray.filter(item => item.value === value && item.type === type);
-      return { itemsArray, matchMedia };
-    });
-
-    return mdQueriesArray;
-  }
-}
-
-function uniqArray(array) {
-  return array.filter(function (item, index, self) {
-    return self.indexOf(item) === index;
-  });
-}
-
-//========================================================================================================================================================
-
-
-
-//========================================================================================================================================================
-
 //Ползунок
 function rangeInit() {
   const ratingCalc = document.querySelector('.filter-apartments__range');
+  if (!ratingCalc) return;
+  const rangeStart = Number(ratingCalc.dataset.start);
+  const rangeMin = Number(ratingCalc.dataset.min);
+  const rangeMax = Number(ratingCalc.dataset.max);
   if (ratingCalc) {
 
     noUiSlider.create(ratingCalc, {
-      start: 23.0, // начальное значение
+      start: rangeStart || 23.0, // начальное значение
       connect: 'lower',
       range: {
-        'min': 6.7,
-        'max': 22.0
+        'min': rangeMin || 6.7,
+        'max': rangeMax || 22.0
       },
       format: wNumb({
         decimals: 1, // один знак после запятой
@@ -1181,25 +1028,29 @@ if (productCards) {
     const azimuthInputs = card.querySelectorAll(`.options-product-card .options__input[name="azimuth_${index + 1}"]`);
     const sunIcon = card.querySelector('.sun-line');
 
-    // 1. Получаем начальный угол из атрибута style элемента
-    const style = sunIcon.getAttribute('style');
-    const initialRotation = parseInt(style.match(/rotate\((\d+)deg\)/)[1]);
+    if (!sunIcon) return;
 
-    // 3. Рассчитываем позиции (движение по часовой стрелке)
-    // Для каждого варианта (Утро/День/Вечер) используем относительное смещение
+    const style = sunIcon.getAttribute('style');
+    if (!style) return;
+
+    const rotationMatch = style.match(/rotate\((\d+)deg\)/);
+    if (!rotationMatch) return;
+
+    const initialRotation = parseInt(rotationMatch[1]);
+
     azimuthInputs.forEach(input => {
       input.addEventListener('change', function () {
         if (this.checked) {
-          const azimuth = parseInt(this.value);
+          const nextElement = this.nextElementSibling;
+          const labelText = nextElement ? nextElement.textContent.trim() : '';
           let rotationAngle;
 
-          // Определяем, какое это время суток по значению
-          if (this.nextElementSibling.textContent.trim() === 'Утро') {
-            rotationAngle = initialRotation - 90; // смещаем на -90° от начального
-          } else if (this.nextElementSibling.textContent.trim() === 'Вечер') {
-            rotationAngle = initialRotation + 90; // смещаем на +90° от начального
+          if (labelText === 'Утро') {
+            rotationAngle = initialRotation - 90;
+          } else if (labelText === 'Вечер') {
+            rotationAngle = initialRotation + 90;
           } else {
-            rotationAngle = initialRotation; // оставляем как есть для Дня
+            rotationAngle = initialRotation;
           }
 
           sunIcon.style.transform = `rotate(${rotationAngle}deg)`;
@@ -1219,12 +1070,14 @@ if (sunPosition) {
   sunPosition.forEach(button => {
     button.addEventListener('click', function () {
       const parent = this.closest('.left-product-card');
+      if (!parent) return;
+
       const optionsCard = parent.querySelector('.options-product-card');
       const sunLine = parent.querySelector('.left-product-card__sun-line');
 
       this.classList.toggle('_active');
-      optionsCard.classList.toggle('_active');
-      sunLine.classList.toggle('_active');
+      if (optionsCard) optionsCard.classList.toggle('_active');
+      if (sunLine) sunLine.classList.toggle('_active');
     });
   });
 }
@@ -1234,6 +1087,8 @@ if (optionsClose) {
   optionsClose.forEach(closeButton => {
     closeButton.addEventListener('click', function () {
       const parent = this.closest('.left-product-card');
+      if (!parent) return;
+
       const optionsCard = parent.querySelector('.options-product-card');
       const sunLine = parent.querySelector('.left-product-card__sun-line');
       const sunPositionBtn = parent.querySelector('.sun-position');
@@ -1249,17 +1104,43 @@ if (optionsClose) {
 
 // Функция для анимации счетчика
 function digitsCounter() {
+  const VISIBLE_THRESHOLD = 0.5;
+
   function digitsCountersInit(digitsCountersItems) {
     let digitsCounters = digitsCountersItems ? digitsCountersItems : document.querySelectorAll("[data-digits-counter]");
     if (digitsCounters.length) {
       digitsCounters.forEach(digitsCounter => {
         if (digitsCounter.hasAttribute('data-go')) return;
-        digitsCounter.setAttribute('data-go', '');
-        digitsCounter.dataset.originalValue = digitsCounter.innerHTML;
-        digitsCounter.innerHTML = `0`;
-        digitsCountersAnimate(digitsCounter);
+
+        const element = digitsCounter.closest('[data-watch]') || digitsCounter;
+        if (!isElementVisible(element, VISIBLE_THRESHOLD)) {
+          return;
+        }
+
+        startCounterAnimation(digitsCounter);
       });
     }
+  }
+
+  function isElementVisible(element, threshold = 0.5) {
+    const rect = element.getBoundingClientRect();
+    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+
+    const visibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
+    const elementHeight = rect.height;
+
+    if (elementHeight === 0) return false;
+
+    const visibleRatio = visibleHeight / elementHeight;
+
+    return visibleRatio >= threshold && rect.top < windowHeight && rect.bottom > 0;
+  }
+
+  function startCounterAnimation(digitsCounter) {
+    digitsCounter.setAttribute('data-go', '');
+    digitsCounter.dataset.originalValue = digitsCounter.innerHTML;
+    digitsCounter.innerHTML = `0`;
+    digitsCountersAnimate(digitsCounter);
   }
 
   function digitsCountersAnimate(digitsCounter) {
@@ -1293,7 +1174,6 @@ function digitsCounter() {
       if (progress < 1) {
         window.requestAnimationFrame(step);
       } else {
-        // В конце анимации устанавливаем точное исходное значение
         digitsCounter.innerHTML = originalValue;
         digitsCounter.removeAttribute('data-go');
       }
@@ -1303,24 +1183,61 @@ function digitsCounter() {
 
   function formatNumber(value, decimalPlaces) {
     if (decimalPlaces > 0) {
-      return value.toString().replace('.', ',');
+      return value.toFixed(decimalPlaces).replace('.', ',');
     } else {
-      return value.toString();
+      return Math.floor(value).toString();
     }
   }
 
   function digitsCounterAction(e) {
     const entry = e.detail.entry;
     const targetElement = entry.target;
-    if (targetElement.querySelectorAll("[data-digits-counter]").length) {
-      digitsCountersInit(targetElement.querySelectorAll("[data-digits-counter]"));
+
+    if (entry.isIntersecting && entry.intersectionRatio >= VISIBLE_THRESHOLD) {
+      if (targetElement.querySelectorAll("[data-digits-counter]").length) {
+        digitsCountersInit(targetElement.querySelectorAll("[data-digits-counter]"));
+      }
+    }
+  }
+
+  function initIntersectionObserver() {
+    const counters = document.querySelectorAll("[data-digits-counter]");
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && entry.intersectionRatio >= VISIBLE_THRESHOLD) {
+            const counter = entry.target;
+            if (!counter.hasAttribute('data-go')) {
+              startCounterAnimation(counter);
+            }
+          }
+        });
+      }, {
+        threshold: VISIBLE_THRESHOLD
+      });
+
+      counters.forEach(counter => {
+        observer.observe(counter);
+      });
+    } else {
+      digitsCountersInit();
     }
   }
 
   document.addEventListener("watcherCallback", digitsCounterAction);
 
-  digitsCountersInit();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initIntersectionObserver);
+  } else {
+    initIntersectionObserver();
+  }
+
+  setTimeout(() => {
+    digitsCountersInit();
+  }, 100);
 }
+
 digitsCounter();
 
 //========================================================================================================================================================
