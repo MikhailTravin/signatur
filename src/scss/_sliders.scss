@@ -37,6 +37,7 @@
     position: relative;
     overflow: hidden;
     background: transparent;
+
     &.white {
         background-color: #fff;
         transition: opacity 0.3s;
@@ -70,31 +71,11 @@
         border-radius: 50%;
         border: 2px solid rgba(255, 255, 255, 0.4);
     }
-    &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 50%;
-        border: 2px solid #fff;
-        border-top-color: transparent;
-        border-left-color: transparent;
-        transform: rotate(0deg);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
 
     svg {
         fill: #fff;
-    }
-
-    &:hover {
-        &::before {
-            opacity: 1;
-            animation: spinAndFill 1s ease-in-out forwards;
-        }
+        position: relative;
+        z-index: 2;
     }
 }
 
@@ -104,15 +85,59 @@
     }
 }
 
-@keyframes spinAndFill {
+.arrow-next {
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        animation: loadingSpinner var(--animation-duration, 3000ms) linear infinite;
+        transform-origin: center;
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    &.loading::before {
+        opacity: 1;
+    }
+}
+
+@keyframes loadingSpinner {
     0% {
         transform: rotate(0deg);
-        border-top-color: transparent;
+        border-top-color: #fff;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
         border-left-color: transparent;
+    }
+    25% {
+        border-top-color: #fff;
+        border-right-color: #fff;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+    }
+    50% {
+        border-top-color: #fff;
+        border-right-color: #fff;
+        border-bottom-color: #fff;
+        border-left-color: transparent;
+    }
+    75% {
+        border-top-color: #fff;
+        border-right-color: #fff;
+        border-bottom-color: #fff;
+        border-left-color: #fff;
     }
     100% {
         transform: rotate(360deg);
         border-top-color: #fff;
+        border-right-color: #fff;
+        border-bottom-color: #fff;
         border-left-color: #fff;
     }
 }

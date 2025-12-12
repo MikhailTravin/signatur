@@ -14,7 +14,7 @@
         right: -285px;
         top: 50px;
         height: 510px;
-        width: auto;
+        width: 528px;
         transform: rotate(-30deg);
         @media (max-width: 1180px) {
             right: -320px;
@@ -22,6 +22,7 @@
         @media (max-width: 768px) {
             right: -220px;
             top: 43%;
+            width: 445px;
             height: 430px;
         }
         @media (max-width: 375px) {

@@ -1,6 +1,6 @@
 body::after {
     content: "";
-    backdrop-filter: blur(13.6000003815px); 
+    backdrop-filter: blur(13.6000003815px);
     position: fixed;
     width: 100%;
     height: 100%;
@@ -84,8 +84,104 @@ body::after {
     }
 }
 
-.popup{
-    .block-forms__content{
+.popup-sale {
+    .popup__content {
+        position: relative;
+        visibility: hidden;
+        transform: scale(0);
+        transition: transform 0.3s ease 0s;
+        width: 100%;
+        overflow: hidden;
+        max-width: 570px;
+        padding: 30px;
+        border-radius: 20px;
+        background-color: #fff;
+        @media (max-width: 600px) {
+            border-radius: 10px;
+            padding: 30px 20px;
+        }
+        .lock & {
+            visibility: visible;
+        }
+    }
+    .popup__close {
+        cursor: pointer;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 12;
+        opacity: 0.3;
+        transition: opacity 0.3s;
+        svg {
+            fill: var(--theme-color-text-common);
+        }
+        &:hover {
+            opacity: 1;
+        }
+        @media (max-width: 768px) {
+            top: 10px;
+            right: 10px;
+        }
+    }
+    // .popup-sale__content
 
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        @media (max-width: 600px) {
+            gap: 20px;
+        }
+        p {
+            font-family: var(--second-family);
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 100%;
+            color: rgba(0, 0, 0, 0.75);
+            text-align: center;
+            @media (max-width: 480px) {
+                font-size: 12px;
+            }
+            a {
+                color: var(--theme-color-accent);
+                transition: opacity 0.3s;
+                &:hover {
+                    opacity: 0.7;
+                }
+            }
+        }
+    }
+
+    // .popup-sale__images
+
+    &__images {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    // .popup-sale__title
+
+    &__title {
+        font-family: var(--second-family);
+        font-weight: 800;
+        font-size: 36px;
+        line-height: 106%;
+        letter-spacing: -0.03em;
+        @media (max-width: 768px) {
+            font-size: 28px;
+        }
+    }
+
+    // .popup-sale__pic1
+
+    &__pic1 {
+        width: 100%;
+        height: auto;
     }
 }
