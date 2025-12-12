@@ -20,8 +20,127 @@ let scale = 1;
 let translateX = 0;
 let translateY = 0;
 
+const minScale = 1;
+const maxScale = 4;
+const zoomStep = 0.3;
+let isDragging = false;
+let startX, startY;
+
+let touchStartDistance = 0;
+let lastScale = 1;
+let touchMode = null;
+let centerX = 0;
+let centerY = 0;
+
+let isMobileDragging = false;
+let startScrollLeft = 0;
+let startScrollTop = 0;
+let startMobileX = 0;
+let startMobileY = 0;
+
+const SVG_WIDTH = 1200;
+const SVG_HEIGHT = 631;
+
 function isMobileDevice() {
     return window.innerWidth < 1200;
+}
+
+function resetTransformations() {
+    if (currentContainer.classList.contains('step3')) {
+        scale = 1;
+        translateX = 0;
+        translateY = 0;
+    } else {
+        scale = minScale;
+        translateX = 0;
+        translateY = 0;
+    }
+    updateTransform();
+}
+
+function getCurrentContainerSize() {
+    if (!currentContainer) return { width: 0, height: 0 };
+
+    if (document.fullscreenElement) {
+        const fullscreenContainer = document.querySelector('[data-fullscreen-container]');
+        if (fullscreenContainer) {
+            const rect = fullscreenContainer.getBoundingClientRect();
+            return {
+                width: rect.width,
+                height: rect.height
+            };
+        }
+    }
+
+    const container = document.querySelector('.block-genplan__body');
+    if (container) {
+        return {
+            width: container.offsetWidth,
+            height: container.offsetHeight
+        };
+    }
+
+    return { width: 0, height: 0 };
+}
+
+function clampTranslation() {
+    if (!currentContainer || isMobileDevice()) return;
+    if (currentContainer.classList.contains('step3')) return;
+
+    const size = getCurrentContainerSize();
+
+    if (document.fullscreenElement) {
+        const containerWidth = size.width;
+        const containerHeight = size.height;
+
+        const scaledWidth = containerWidth * scale;
+        const scaledHeight = containerHeight * scale;
+
+        if (scaledWidth <= containerWidth && scaledHeight <= containerHeight) {
+            translateX = 0;
+            translateY = 0;
+            return;
+        }
+
+        const maxX = Math.max(0, (scaledWidth - containerWidth) / 2);
+        const maxY = Math.max(0, (scaledHeight - containerHeight) / 2);
+
+        translateX = Math.max(-maxX, Math.min(maxX, translateX));
+        translateY = Math.max(-maxY, Math.min(maxY, translateY));
+    } else {
+        const maxX = (scale - 1) * size.width / 2;
+        const maxY = (scale - 1) * size.height / 2;
+
+        translateX = Math.max(-maxX, Math.min(maxX, translateX));
+        translateY = Math.max(-maxY, Math.min(maxY, translateY));
+    }
+}
+
+function zoomToPoint(scaleFactor, clientX, clientY) {
+    if (isMobileDevice()) return;
+    if (currentContainer.classList.contains('step3')) return;
+
+    const newScale = Math.min(Math.max(scale * scaleFactor, minScale), maxScale);
+    const zoomRatio = newScale / scale;
+
+    let relativeX, relativeY;
+
+    if (document.fullscreenElement) {
+        const rect = currentContainer.getBoundingClientRect();
+        relativeX = clientX - rect.left;
+        relativeY = clientY - rect.top;
+    } else {
+        const rect = currentContainer.getBoundingClientRect();
+        relativeX = clientX - rect.left;
+        relativeY = clientY - rect.top;
+    }
+
+    translateX = relativeX - zoomRatio * (relativeX - translateX);
+    translateY = relativeY - zoomRatio * (relativeY - translateY);
+
+    scale = newScale;
+    clampTranslation();
+    updateTransform();
 }
 
 const houseSizeConfig = {
@@ -165,8 +284,12 @@ function updateTransform() {
     if (currentContainer && !isMobileDevice()) {
         let currentScale = scale;
 
-        if (currentContainer.classList.contains('step3') && document.fullscreenElement) {
+        if (currentContainer.classList.contains('step3')) {
             currentScale = 1;
+            translateX = 0;
+            translateY = 0;
+            currentContainer.style.transform = 'none';
+            return;
         }
 
         currentContainer.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
@@ -204,20 +327,16 @@ window.addEventListener('resize', function () {
 
 function renderStep1AndStep2() {
     if (!regionsData || !regionsData.length) return;
-
     const region = regionsData[0];
-
     const svg1 = document.querySelector('.step1 .block-genplan__svg');
     const tips1 = document.querySelector('.step1 .block-genplan__tips');
     const svg2 = document.querySelector('.step2 .block-genplan__svg');
     const tips2 = document.querySelector('.step2 .block-genplan__tips');
-
     const step2Image = document.querySelector('.step2 .block-genplan__image img');
     const step2ImageContainer = document.querySelector('.step2 .block-genplan__image');
 
     if (step2Image && region.GENPLAN_IMAGE) {
         step2Image.src = region.GENPLAN_IMAGE;
-
         if (!step2Image.dataset.originalWidth) {
             step2Image.dataset.originalWidth = step2Image.width || '1200';
             step2Image.dataset.originalHeight = step2Image.height || '631';
@@ -228,6 +347,17 @@ function renderStep1AndStep2() {
     tips1.innerHTML = '';
     svg2.innerHTML = '';
     tips2.innerHTML = '';
+
+    if (!svg1.dataset.originalViewBox) {
+        svg1.dataset.originalViewBox = '0 0 1200 631';
+        svg1.dataset.originalWidth = '1200';
+        svg1.dataset.originalHeight = '631';
+    }
+    if (!svg2.dataset.originalViewBox) {
+        svg2.dataset.originalViewBox = '0 0 1200 631';
+        svg2.dataset.originalWidth = '1200';
+        svg2.dataset.originalHeight = '631';
+    }
 
     const regionPaths = [
         {
@@ -255,9 +385,7 @@ function renderStep1AndStep2() {
 
     region.HOUSES.forEach(house => {
         const houseId = `h${house.ID}`;
-
         houseIdMapping.set(houseId, house.ID);
-
         if (house.SVG_PATH) {
             const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             path.setAttribute('data-id', houseId);
@@ -269,16 +397,20 @@ function renderStep1AndStep2() {
         const tippy = document.createElement('button');
         tippy.className = 'block-genplan__tippy';
         tippy.dataset.id = houseId;
-
         if (house.POS_TOP !== undefined) tippy.style.top = `${house.POS_TOP}%`;
         if (house.POS_RIGHT !== undefined) tippy.style.right = `${house.POS_RIGHT}%`;
         else if (house.POS_LEFT !== undefined) tippy.style.left = `${house.POS_LEFT}%`;
-
         tippy.innerHTML = `<span>${house.NAME}</span>`;
         tips2.appendChild(tippy);
     });
 
     saveOriginalImageSizes();
+
+    const step1 = document.querySelector('.block-genplan__content-container.step1');
+    if (step1 && !step1.classList.contains('_active')) {
+        step1.classList.add('_active');
+    }
+    updateCurrentContainer();
 }
 
 function renderPopups() {
@@ -296,7 +428,7 @@ function renderPopups() {
 
     regionPopup.innerHTML = `
         <button type="button" class="block-genplan-popup__close">
-            <svg aria-hidden="true" width="13" height="13"><use xlink:href="img/sprite.svg#close"></use></svg>
+            <svg aria-hidden="true" width="13" height="13"><use xlink:href="/img/sprite.svg#close"></use></svg>
         </button>
         <div class="block-genplan-popup__content">
             <div class="block-genplan-popup__body">
@@ -324,7 +456,7 @@ function renderPopups() {
                 <div class="block-genplan-popup__buttons">
                     <a href="#" class="block-genplan-popup__button btn btn-genplan">
                         <span>Выбрать дом</span>
-                        <svg aria-hidden="true" width="12" height="9"><use xlink:href="img/sprite.svg#arrow1"></use></svg>
+                        <svg aria-hidden="true" width="12" height="9"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
                     </a>
                 </div>
             </div>
@@ -348,7 +480,7 @@ function renderPopups() {
 
         housePopup.innerHTML = `
             <button type="button" class="block-genplan-popup__close">
-                <svg aria-hidden="true" width="13" height="13"><use xlink:href="img/sprite.svg#close"></use></svg>
+                <svg aria-hidden="true" width="13" height="13"><use xlink:href="/img/sprite.svg#close"></use></svg>
             </button>
             <div class="block-genplan-popup__content">
                 <div class="block-genplan-popup__body">
@@ -373,11 +505,11 @@ function renderPopups() {
                         ${!isComingSoon ? `
                             <a href="#" data-house-id="${originalHouseId}" class="block-genplan-popup__button choose-apartment btn">
                                 <span>Выбрать квартиру</span>
-                                <svg aria-hidden="true" width="12" height="9"><use xlink:href="img/sprite.svg#arrow1"></use></svg>
+                                <svg aria-hidden="true" width="12" height="9"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
                             </a>
                             <a href="#" data-house-id="${originalHouseId}" class="block-genplan-popup__button choose-floor btn">
                                 <span>Выбрать этаж</span>
-                                <svg aria-hidden="true" width="12" height="9"><use xlink:href="img/sprite.svg#arrow1"></use></svg>
+                                <svg aria-hidden="true" width="12" height="9"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
                             </a>
                             <a href="#" class="block-genplan-popup__button btn"><span>Показать кладовые</span></a>
                         ` : `
@@ -579,7 +711,6 @@ function createMobileFloorsPopup(houseId, visualHouseId) {
     const isComingSoon = houseData && houseData.COMING_SOON === 1;
 
     if (isComingSoon) {
-
         const popupsContainer = document.querySelector('.block-genplan__popups');
         const existingMessage = document.querySelector('.coming-soon-message');
         if (existingMessage) {
@@ -591,7 +722,7 @@ function createMobileFloorsPopup(houseId, visualHouseId) {
         messagePopup.innerHTML = `
             <button type="button" class="block-genplan-popup__close">
                 <svg aria-hidden="true" width="13" height="13">
-                    <use xlink:href="img/sprite.svg#close"></use>
+                    <use xlink:href="/img/sprite.svg#close"></use>
                 </svg>
             </button>
             <div class="block-genplan-popup__content">
@@ -637,7 +768,7 @@ function createMobileFloorsPopup(houseId, visualHouseId) {
     mobFloors.innerHTML = `
         <button type="button" class="block-genplan-popup__close">
             <svg aria-hidden="true" width="13" height="13">
-                <use xlink:href="img/sprite.svg#close"></use>
+                <use xlink:href="/img/sprite.svg#close"></use>
             </svg>
         </button>
         ${availableFloors.map(floor => `
@@ -686,14 +817,14 @@ function renderMobileFloorsBlock(houseId, selectedFloor = '4') {
                         <button type="button" class="block-genplan__title title-choose-floor">
                             <div class="block-genplan__icon">
                                 <svg aria-hidden="true" width="12" height="8">
-                                    <use xlink:href="img/sprite.svg#arrow1"></use>
+                                    <use xlink:href="/img/sprite.svg#arrow1"></use>
                                 </svg>
                             </div>
                             <span>Выбор этажа</span>
                         </button>
                         <button type="button" class="block-genplan-popup__close title-choose-close">
                             <svg aria-hidden="true" width="13" height="13">
-                                <use xlink:href="img/sprite.svg#close"></use>
+                                <use xlink:href="/img/sprite.svg#close"></use>
                             </svg>
                         </button>
                     </div>
@@ -753,7 +884,7 @@ function renderMobileFloorsBlock(houseId, selectedFloor = '4') {
                 <div class="choose-floor-mob__body">
                     <div class="choose-floor-mob__entrance">
                         <svg aria-hidden="true" width="18" height="18">
-                            <use xlink:href="img/sprite.svg#entrances"></use>
+                            <use xlink:href="/img/sprite.svg#entrances"></use>
                         </svg>
                         <span>Подъезд №${entrance.NUMBER}</span>
                     </div>
@@ -770,14 +901,14 @@ function renderMobileFloorsBlock(houseId, selectedFloor = '4') {
                     <button type="button" class="block-genplan__title title-choose-floor">
                         <div class="block-genplan__icon">
                             <svg aria-hidden="true" width="12" height="8">
-                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                <use xlink:href="/img/sprite.svg#arrow1"></use>
                             </svg>
                         </div>
                         <span>Выбор этажа</span>
                     </button>
                     <button type="button" class="block-genplan-popup__close title-choose-close">
                         <svg aria-hidden="true" width="13" height="13">
-                            <use xlink:href="img/sprite.svg#close"></use>
+                            <use xlink:href="/img/sprite.svg#close"></use>
                         </svg>
                     </button>
                 </div>
@@ -1057,7 +1188,7 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
                         <span>
                             ${entrance.NUMBER}
                             <svg aria-hidden="true" width="18" height="18">
-                                <use xlink:href="img/sprite.svg#entrances"></use>
+                                <use xlink:href="/img/sprite.svg#entrances"></use>
                             </svg>
                         </span>
                     `;
@@ -1110,7 +1241,7 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
                                 </ul>
                                 <a href="${ap.DETAIL_PAGE_URL}" class="btn btn-bg">
                                     <span>Подробнее</span>
-                                    <svg aria-hidden="true" width="12" height="8"><use xlink:href="img/sprite.svg#arrow1"></use></svg>
+                                    <svg aria-hidden="true" width="12" height="8"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
                                 </a>
                             </div>
                         </div>
@@ -1130,7 +1261,7 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
     floorsBlock.className = 'floors-block-genplan';
     floorsBlock.innerHTML = `
         <button type="button" class="block-genplan-popup__close">
-            <svg aria-hidden="true" width="13" height="13"><use xlink:href="img/sprite.svg#close"></use></svg>
+            <svg aria-hidden="true" width="13" height="13"><use xlink:href="/img/sprite.svg#close"></use></svg>
         </button>
         ${sortedFloors.map(f => `
             <button data-floor="${f.FLOOR}" class="floors-block-genplan__button${f.FLOOR === defaultFloor ? ' _active' : ''}">
@@ -1144,7 +1275,7 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
     infoPopup.className = 'block-genplan-popup popup-floor';
     infoPopup.innerHTML = `
         <button type="button" class="block-genplan-popup__close">
-            <svg aria-hidden="true" width="13" height="13"><use xlink:href="img/sprite.svg#close"></use></svg>
+            <svg aria-hidden="true" width="13" height="13"><use xlink:href="/img/sprite.svg#close"></use></svg>
         </button>
         <div class="block-genplan-popup__content">
             <div class="block-genplan-popup__body">
@@ -1197,10 +1328,8 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
     const visualHouseId = `h${houseId}`;
     toggleSteps(false, true, visualHouseId);
 
-    setTimeout(() => {
-        forceInitEntrancesToggle();
-        reinitToggleForNewHouse();
-    }, 200);
+    forceInitEntrancesToggle();
+    reinitToggleForNewHouse();
 }
 
 function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null) {
@@ -1304,21 +1433,17 @@ function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null)
         titleRooms?.classList.remove('hidden');
     }
 
-    setTimeout(() => {
-        updateCurrentContainer();
-        updateTransform();
-        if (window.resetTransformations) resetTransformations();
-        if (window.updateEntrancesState) updateEntrancesState();
-        updateEntrancesStateForAllHouses();
-    }, 100);
+    updateCurrentContainer();
+    updateTransform();
+    if (window.resetTransformations) resetTransformations();
+    if (window.updateEntrancesState) updateEntrancesState();
+    updateEntrancesStateForAllHouses();
 
     if (document.fullscreenElement) {
         updateSvgsSize();
     }
 
-    setTimeout(() => {
-        initToggleSwitchHandler();
-    }, 200);
+    initToggleSwitchHandler();
 }
 
 function initExistingHandlers() {
@@ -1362,9 +1487,7 @@ function initExistingHandlers() {
         }
     });
 
-    setTimeout(() => {
-        initToggleSwitchHandler();
-    }, 500);
+    initToggleSwitchHandler();
 
     initMainGenplanLogic();
 }
@@ -1413,7 +1536,6 @@ function updateEntrancesState() {
 
     const isChecked = switchToggle.checked;
 
-    // Добавляем/убираем класс _active для визуального отображения
     const toggleSwitch = document.querySelector('.toggle-switch');
     const background = document.querySelector('.toggle-switch-background');
     const handle = document.querySelector('.toggle-switch-handle');
@@ -1470,13 +1592,10 @@ function handleToggleSwitchClick(e) {
 
         const checkbox = document.querySelector('.toggle-switch input[type="checkbox"]');
         if (checkbox) {
-            // Переключаем состояние
             checkbox.checked = !checkbox.checked;
 
-            // Добавляем визуальные классы на правильные элементы
             const isChecked = checkbox.checked;
 
-            // Добавляем класс _active к переключателю и фону
             if (toggleSwitch) {
                 toggleSwitch.classList.toggle('_active', isChecked);
             }
@@ -1487,20 +1606,14 @@ function handleToggleSwitchClick(e) {
             if (background) background.classList.toggle('_active', isChecked);
             if (handle) handle.classList.toggle('_active', isChecked);
 
-            // Обновляем состояние подъездов
             updateEntrancesStateForAllHouses();
         }
     }
 }
 
 function initToggleSwitchHandler() {
-    // Удаляем старые обработчики
     document.removeEventListener('click', handleToggleSwitchClick);
-
-    // Добавляем новый обработчик
     document.addEventListener('click', handleToggleSwitchClick);
-
-    // Инициализируем начальное состояние
     setTimeout(updateEntrancesStateForAllHouses, 100);
 }
 
@@ -1508,7 +1621,6 @@ function initToggleSwitchAlternative() {
 }
 
 function forceInitEntrancesToggle() {
-    // Просто обновляем состояние, не клонируем элементы
     initToggleSwitchHandler();
     updateEntrancesStateForAllHouses();
 }
@@ -1525,18 +1637,14 @@ function refreshEntrancesState() {
 function initEntranceDelegation() {
     document.addEventListener('change', function (e) {
         if (e.target.matches('.toggle-switch input[type="checkbox"]')) {
-            setTimeout(() => {
-                updateEntrancesStateForAllHouses();
-            }, 50);
+            updateEntrancesStateForAllHouses();
         }
     });
 
     document.addEventListener('click', function (e) {
         const switchGenplan = e.target.closest('.switch-genplan');
         if (switchGenplan) {
-            setTimeout(() => {
-                updateEntrancesStateForAllHouses();
-            }, 50);
+            updateEntrancesStateForAllHouses();
         }
     });
 }
@@ -1547,6 +1655,132 @@ function updateCurrentContainer() {
         currentContainer = activeContainer;
         resetTransformations();
     }
+}
+
+function updateSvgsSize() {
+    if (!document.fullscreenElement) return;
+
+    const fullscreenContainer = document.querySelector('[data-fullscreen-container]');
+    if (!fullscreenContainer) return;
+
+    const containerRect = fullscreenContainer.getBoundingClientRect();
+    const screenWidth = Math.round(containerRect.width);
+    const screenHeight = Math.round(containerRect.height);
+
+    let activeContainer = document.querySelector('.block-genplan__content-container._active');
+    if (!activeContainer) {
+        activeContainer = document.querySelector('.block-genplan__content-container.step1');
+    }
+    if (!activeContainer) return;
+
+    if (activeContainer.classList.contains('step1') || activeContainer.classList.contains('step2')) {
+        const activeSvgs = activeContainer.querySelectorAll('.block-genplan__svg');
+        activeSvgs.forEach(svg => {
+            if (!svg.dataset.originalViewBox) {
+                svg.dataset.originalViewBox = svg.getAttribute('viewBox') || '0 0 1200 631';
+                svg.dataset.originalWidth = svg.getAttribute('width') || '1200';
+                svg.dataset.originalHeight = svg.getAttribute('height') || '631';
+            }
+
+            svg.setAttribute('width', screenWidth);
+            svg.setAttribute('height', screenHeight);
+            svg.setAttribute('viewBox', svg.dataset.originalViewBox);
+            svg.setAttribute('preserveAspectRatio', 'none');
+        });
+
+        const activeImages = activeContainer.querySelectorAll('.block-genplan__image img');
+        activeImages.forEach(img => {
+            img.style.width = `${screenWidth}px`;
+            img.style.height = `${screenHeight}px`;
+            img.style.maxWidth = 'none';
+            img.style.maxHeight = 'none';
+            img.style.objectFit = 'fill';
+        });
+
+        const activeImageContainers = activeContainer.querySelectorAll('.block-genplan__image');
+        activeImageContainers.forEach(container => {
+            container.style.width = `${screenWidth}px`;
+            container.style.height = `${screenHeight}px`;
+            container.style.position = 'relative';
+            container.style.overflow = 'hidden';
+        });
+
+        activeContainer.style.width = `${screenWidth}px`;
+        activeContainer.style.height = `${screenHeight}px`;
+
+        const svgContainer = activeContainer.querySelector('.block-genplan__svg-container');
+        if (svgContainer) {
+            svgContainer.style.width = `${screenWidth}px`;
+            svgContainer.style.height = `${screenHeight}px`;
+        }
+
+        resetTransformations();
+    }
+}
+
+function resetFullscreenStyles() {
+    const fullscreenContainer = document.querySelector('[data-fullscreen-container]');
+    if (fullscreenContainer) {
+        fullscreenContainer.classList.remove('fullscreen-active');
+    }
+
+    const step1Step2Containers = document.querySelectorAll('.block-genplan__content-container.step1, .block-genplan__content-container.step2');
+    const step3Containers = document.querySelectorAll('.block-genplan__content-container.step3');
+
+    step1Step2Containers.forEach(container => {
+        container.style.width = '';
+        container.style.height = '';
+
+        const svgs = container.querySelectorAll('.block-genplan__svg');
+        svgs.forEach(svg => {
+            if (svg.dataset.originalWidth) {
+                svg.setAttribute('width', svg.dataset.originalWidth);
+            }
+            if (svg.dataset.originalHeight) {
+                svg.setAttribute('height', svg.dataset.originalHeight);
+            }
+            if (svg.dataset.originalViewBox) {
+                svg.setAttribute('viewBox', svg.dataset.originalViewBox);
+            }
+            svg.removeAttribute('preserveAspectRatio');
+        });
+
+        const images = container.querySelectorAll('.block-genplan__image img');
+        images.forEach(img => {
+            img.style.cssText = '';
+            const originalWidth = img.dataset.originalWidth || '1200';
+            const originalHeight = img.dataset.originalHeight || '631';
+            img.style.width = `${originalWidth}px`;
+            img.style.height = `${originalHeight}px`;
+        });
+
+        const imageContainers = container.querySelectorAll('.block-genplan__image');
+        imageContainers.forEach(container => {
+            container.style.cssText = '';
+        });
+
+        const svgContainer = container.querySelector('.block-genplan__svg-container');
+        if (svgContainer) {
+            svgContainer.style.cssText = '';
+        }
+    });
+
+    step3Containers.forEach(container => {
+    });
+}
+
+function adjustTipsPositions() {
+    if (!document.fullscreenElement) return;
+
+    const activeContainer = document.querySelector('.block-genplan__content-container._active');
+    if (!activeContainer) return;
+
+    const tips = activeContainer.querySelectorAll('.block-genplan__tippy');
+    tips.forEach(tip => {
+        const originalTop = tip.style.top;
+        const originalRight = tip.style.right;
+        const originalLeft = tip.style.left;
+    });
 }
 
 function initMainGenplanLogic() {
@@ -1568,193 +1802,12 @@ function initMainGenplanLogic() {
         return;
     }
 
-    const SVG_WIDTH = 1200;
-    const SVG_HEIGHT = 631;
-
-    currentContainer = document.querySelector('.block-genplan__content-container._active') || contentContainerStep1;
-
-    const minScale = 1;
-    const maxScale = 4;
-    const zoomStep = 0.3;
-    let isDragging = false;
-    let startX, startY;
-
-    let touchStartDistance = 0;
-    let lastScale = 1;
-    let touchMode = null;
-    let centerX = 0;
-    let centerY = 0;
-
-    let isMobileDragging = false;
-    let startScrollLeft = 0;
-    let startScrollTop = 0;
-    let startMobileX = 0;
-    let startMobileY = 0;
-
-    function updateSvgsSize() {
-        if (!document.fullscreenElement) return;
-
-        const containerRect = fullscreenContainer.getBoundingClientRect();
-        const screenWidth = Math.round(containerRect.width);
-        const screenHeight = Math.round(containerRect.height);
-
-        const activeContainer = document.querySelector('.block-genplan__content-container._active');
-        if (!activeContainer) return;
-
-        // Только для step1 и step2 меняем размеры
-        if (activeContainer.classList.contains('step1') || activeContainer.classList.contains('step2')) {
-            // Обновляем размеры SVG
-            const activeSvgs = activeContainer.querySelectorAll('.block-genplan__svg');
-            activeSvgs.forEach(svg => {
-                svg.setAttribute('width', screenWidth);
-                svg.setAttribute('height', screenHeight);
-
-                // Сохраняем оригинальные пропорции viewBox
-                const originalViewBox = svg.getAttribute('viewBox') || '0 0 1200 631';
-                svg.setAttribute('viewBox', originalViewBox);
-
-                // Меняем на slice чтобы заполнить весь контейнер
-                svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-            });
-
-            // Обновляем размеры изображений - растягиваем на весь экран
-            const activeImages = activeContainer.querySelectorAll('.block-genplan__image img');
-            activeImages.forEach(img => {
-                img.style.width = `${screenWidth}px`;
-                img.style.height = `${screenHeight}px`;
-                img.style.objectFit = 'cover'; // cover чтобы заполнить весь контейнер
-                img.style.maxWidth = 'none';
-                img.style.maxHeight = 'none';
-
-                // Убираем центрирование, растягиваем на весь экран
-                img.style.position = 'static';
-                img.style.left = 'auto';
-                img.style.top = 'auto';
-                img.style.transform = 'none';
-            });
-
-            // Обновляем контейнеры изображений
-            const activeImageContainers = activeContainer.querySelectorAll('.block-genplan__image');
-            activeImageContainers.forEach(container => {
-                container.style.width = `${screenWidth}px`;
-                container.style.height = `${screenHeight}px`;
-                container.style.position = 'relative';
-                container.style.overflow = 'hidden';
-            });
-
-            // Обновляем transform контейнера
-            activeContainer.style.width = `${screenWidth}px`;
-            activeContainer.style.height = `${screenHeight}px`;
+    currentContainer = document.querySelector('.block-genplan__content-container._active');
+    if (!currentContainer) {
+        currentContainer = contentContainerStep1;
+        if (currentContainer && !currentContainer.classList.contains('_active')) {
+            currentContainer.classList.add('_active');
         }
-        // Для step3 - НИЧЕГО не делаем, оставляем как есть
-        else if (activeContainer.classList.contains('step3')) {
-            // Никаких изменений - все остается как на десктопе
-            return;
-        }
-    }
-
-    function resetFullscreenStyles() {
-        if (fullscreenContainer) {
-            fullscreenContainer.classList.remove('fullscreen-active');
-        }
-
-        const step1Step2Containers = document.querySelectorAll('.block-genplan__content-container.step1, .block-genplan__content-container.step2');
-        const step3Containers = document.querySelectorAll('.block-genplan__content-container.step3');
-
-        // Сбрасываем стили только для step1 и step2
-        step1Step2Containers.forEach(container => {
-            // Сбрасываем размеры контейнера
-            container.style.width = '';
-            container.style.height = '';
-
-            const svgs = container.querySelectorAll('.block-genplan__svg');
-            svgs.forEach(svg => {
-                svg.removeAttribute('width');
-                svg.removeAttribute('height');
-                svg.removeAttribute('preserveAspectRatio');
-            });
-
-            const images = container.querySelectorAll('.block-genplan__image img');
-            images.forEach(img => {
-                img.style.cssText = ''; // полный сброс стилей
-                // Восстанавливаем оригинальные размеры
-                const originalWidth = img.dataset.originalWidth || '1200';
-                const originalHeight = img.dataset.originalHeight || '631';
-                img.style.width = `${originalWidth}px`;
-                img.style.height = `${originalHeight}px`;
-            });
-
-            const imageContainers = container.querySelectorAll('.block-genplan__image');
-            imageContainers.forEach(container => {
-                container.style.cssText = '';
-            });
-        });
-
-        // Для step3 ничего не сбрасываем - все остается как есть
-        step3Containers.forEach(container => {
-            // Никаких изменений
-        });
-    }
-
-    // Также добавьте эту функцию для корректировки позиций подсказок
-    function adjustTipsPositions() {
-        if (!document.fullscreenElement) return;
-
-        const activeContainer = document.querySelector('.block-genplan__content-container._active');
-        if (!activeContainer) return;
-
-        const tips = activeContainer.querySelectorAll('.block-genplan__tippy');
-        tips.forEach(tip => {
-            // Получаем оригинальные позиции
-            const originalTop = tip.style.top;
-            const originalRight = tip.style.right;
-            const originalLeft = tip.style.left;
-
-            // Здесь можно добавить логику для корректировки позиций
-            // если нужно адаптировать под новый размер
-        });
-    }
-
-    function clampTranslation() {
-        if (!container || isMobileDevice()) return;
-
-        if (currentContainer.classList.contains('step1') || currentContainer.classList.contains('step2')) {
-            const maxX = (scale - 1) * container.offsetWidth / 2;
-            const maxY = (scale - 1) * container.offsetHeight / 2;
-            translateX = Math.max(-maxX, Math.min(maxX, translateX));
-            translateY = Math.max(-maxY, Math.min(maxY, translateY));
-        }
-    }
-
-    function zoomToPoint(scaleFactor, clientX, clientY) {
-        if (isMobileDevice()) return;
-
-        if (currentContainer.classList.contains('step3') && document.fullscreenElement) {
-            return;
-        }
-
-        const newScale = Math.min(Math.max(scale * scaleFactor, minScale), maxScale);
-        const zoomRatio = newScale / scale;
-        translateX = clientX - zoomRatio * (clientX - translateX);
-        translateY = clientY - zoomRatio * (clientY - translateY);
-        scale = newScale;
-        clampTranslation();
-        updateTransform();
-    }
-
-    // Также обновим функцию resetTransformations для step3
-    function resetTransformations() {
-        if (currentContainer.classList.contains('step3') && document.fullscreenElement) {
-            // Для step3 в полноэкранном режиме - сбрасываем трансформации но сохраняем оригинальные размеры
-            scale = 1;
-            translateX = 0;
-            translateY = 0;
-        } else {
-            scale = minScale;
-            translateX = 0;
-            translateY = 0;
-        }
-        updateTransform();
     }
 
     const zoomInBtn = document.querySelector('.zoom-genplan__up');
@@ -1763,24 +1816,28 @@ function initMainGenplanLogic() {
     if (zoomInBtn) {
         zoomInBtn.addEventListener('click', () => {
             if (isMobileDevice()) return;
-
             updateCurrentContainer();
+            if (currentContainer.classList.contains('step3')) return;
 
-            if (currentContainer.classList.contains('step3') && document.fullscreenElement) return;
-            const rect = container.getBoundingClientRect();
-            zoomToPoint(1 + zoomStep, rect.left + rect.width / 2, rect.top + rect.height / 2);
+            const rect = currentContainer.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            zoomToPoint(1 + zoomStep, centerX, centerY);
         });
     }
 
     if (zoomOutBtn) {
         zoomOutBtn.addEventListener('click', () => {
             if (isMobileDevice()) return;
-
             updateCurrentContainer();
+            if (currentContainer.classList.contains('step3')) return;
 
-            if (currentContainer.classList.contains('step3') && document.fullscreenElement) return;
-            const rect = container.getBoundingClientRect();
-            zoomToPoint(1 - zoomStep, rect.left + rect.width / 2, rect.top + rect.height / 2);
+            const rect = currentContainer.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            zoomToPoint(1 - zoomStep, centerX, centerY);
         });
     }
 
@@ -1793,13 +1850,9 @@ function initMainGenplanLogic() {
                 try {
                     await fullscreenContainer.requestFullscreen();
                     fullscreenContainer.classList.add('fullscreen-active');
-
-                    setTimeout(() => {
-                        updateSvgsSize();
-                        updateTransform();
-                        clampTranslation();
-                    }, 100);
-
+                    updateSvgsSize();
+                    updateTransform();
+                    clampTranslation();
                 } catch (err) {
                     console.warn('Ошибка:', err);
                 }
@@ -1812,22 +1865,17 @@ function initMainGenplanLogic() {
             }
         });
 
-        // Обновляем вызов в fullscreenchange
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement) {
                 fullscreenContainer.classList.remove('fullscreen-active');
                 resetFullscreenStyles();
-                setTimeout(() => {
-                    resetTransformations();
-                    updateEntrancesStateForAllHouses();
-                }, 100);
+                resetTransformations();
+                updateEntrancesStateForAllHouses();
             } else {
                 fullscreenContainer.classList.add('fullscreen-active');
-                setTimeout(() => {
-                    updateSvgsSize();
-                    adjustTipsPositions(); // добавляем корректировку позиций
-                    resetTransformations();
-                }, 100);
+                updateSvgsSize();
+                adjustTipsPositions();
+                resetTransformations();
             }
         });
     }
@@ -1840,19 +1888,22 @@ function initMainGenplanLogic() {
         } else {
             container.addEventListener('mousedown', (e) => {
                 updateCurrentContainer();
-
-                if (scale <= minScale && window.innerWidth >= 1200 && currentContainer.classList.contains('step1')) return;
-
+                if (currentContainer.classList.contains('step3')) return;
                 if (e.target.closest('.block-genplan-popup') || e.target.closest('.block-genplan__tippy')) return;
-                isDragging = true;
-                startX = e.clientX - translateX;
-                startY = e.clientY - translateY;
-                container.classList.add('dragging');
-                e.preventDefault();
+
+                if (scale > minScale || document.fullscreenElement) {
+                    isDragging = true;
+                    startX = e.clientX - translateX;
+                    startY = e.clientY - translateY;
+                    container.classList.add('dragging');
+                    e.preventDefault();
+                }
             });
 
             document.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
+                if (currentContainer.classList.contains('step3')) return;
+
                 translateX = e.clientX - startX;
                 translateY = e.clientY - startY;
                 clampTranslation();
@@ -1866,42 +1917,52 @@ function initMainGenplanLogic() {
 
             container.addEventListener('touchstart', (e) => {
                 updateCurrentContainer();
-
+                if (currentContainer.classList.contains('step3')) return;
                 if (e.target.closest('.block-genplan-popup') || e.target.closest('.block-genplan__tippy')) return;
+
                 if (e.touches.length === 2) {
                     touchMode = 'pinch';
                     const dx = e.touches[0].clientX - e.touches[1].clientX;
                     const dy = e.touches[0].clientY - e.touches[1].clientY;
                     touchStartDistance = Math.sqrt(dx * dx + dy * dy);
                     lastScale = scale;
-                    centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-                    centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-                } else if (e.touches.length === 1 && (scale > minScale || window.innerWidth < 1200)) {
+                    e.preventDefault();
+                } else if (e.touches.length === 1 && (scale > minScale || document.fullscreenElement)) {
                     touchMode = 'pan';
                     isDragging = true;
                     const touch = e.touches[0];
                     startX = touch.clientX - translateX;
                     startY = touch.clientY - translateY;
+                    e.preventDefault();
                 }
             }, { passive: false });
 
             container.addEventListener('touchmove', (e) => {
                 if (e.touches.length === 2 && touchMode === 'pinch') {
+                    if (currentContainer.classList.contains('step3')) return;
+
                     const dx = e.touches[0].clientX - e.touches[1].clientX;
                     const dy = e.touches[0].clientY - e.touches[1].clientY;
                     const distance = Math.sqrt(dx * dx + dy * dy);
+
                     if (touchStartDistance > 0) {
                         const pinchScale = distance / touchStartDistance;
+                        const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                        const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+
                         zoomToPoint(pinchScale, centerX, centerY);
-                        centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-                        centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                        touchStartDistance = distance;
                     }
+                    e.preventDefault();
                 } else if (e.touches.length === 1 && touchMode === 'pan') {
+                    if (currentContainer.classList.contains('step3')) return;
+
                     const touch = e.touches[0];
                     translateX = touch.clientX - startX;
                     translateY = touch.clientY - startY;
                     clampTranslation();
                     updateTransform();
+                    e.preventDefault();
                 }
             }, { passive: false });
 
@@ -1918,6 +1979,8 @@ function initMainGenplanLogic() {
     }
 
     function handleMobileDragStart(e) {
+        const activeContainer = document.querySelector('.block-genplan__content-container._active');
+        if (activeContainer && activeContainer.classList.contains('step3')) return;
         if (e.target.closest('.block-genplan-popup') || e.target.closest('.block-genplan__tippy')) return;
 
         isMobileDragging = true;
@@ -1935,7 +1998,6 @@ function initMainGenplanLogic() {
 
     function handleMobileDrag(e) {
         if (!isMobileDragging) return;
-
         const clientX = e.touches[0].clientX;
         const clientY = e.touches[0].clientY;
 
@@ -1944,7 +2006,6 @@ function initMainGenplanLogic() {
 
         container.scrollLeft = startScrollLeft + deltaX;
         container.scrollTop = startScrollTop + deltaY;
-
         e.preventDefault();
     }
 

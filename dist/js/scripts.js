@@ -1,11 +1,12 @@
 //Ползунок
 function rangeInit() {
   const ratingCalc = document.querySelector('.filter-apartments__range');
-  if (!ratingCalc) return;
-  const rangeStart = Number(ratingCalc.dataset.start);
-  const rangeMin = Number(ratingCalc.dataset.min);
-  const rangeMax = Number(ratingCalc.dataset.max);
+
   if (ratingCalc) {
+
+    const rangeStart = Number(ratingCalc.dataset.start);
+    const rangeMin = Number(ratingCalc.dataset.min);
+    const rangeMax = Number(ratingCalc.dataset.max);
 
     noUiSlider.create(ratingCalc, {
       start: rangeStart || 23.0, // начальное значение
@@ -234,17 +235,117 @@ if (document.querySelector('.block-intro__slider')) {
     observeParents: true,
     slidesPerView: 1,
     spaceBetween: 0,
-    speed: 400,
+    speed: 600,
     loop: true,
     navigation: {
       prevEl: '.block-intro__arrow-prev',
       nextEl: '.block-intro__arrow-next',
     },
     autoplay: {
-      delay: 3000,
+      delay: 3000, 
       disableOnInteraction: false,
     },
+    on: {
+      init: function () {
+        const totalCycleTime = this.params.autoplay.delay + this.params.speed;
+        updateArrowAnimationDuration(totalCycleTime);
+      },
+      autoplayStart: function () {
+        startArrowAnimation();
+      },
+      autoplayStop: function () {
+        stopArrowAnimation();
+      }
+    },
   });
+
+  function updateArrowAnimationDuration(totalCycleTime) {
+    const arrowNext = document.querySelector('.arrow-next');
+    if (arrowNext) {
+      arrowNext.style.setProperty('--animation-duration', `${totalCycleTime}ms`);
+
+      const style = document.createElement('style');
+      style.textContent = `
+        .arrow-next::before {
+          animation-duration: var(--animation-duration, 3600ms) !important;
+          animation-timing-function: linear !important;
+        }
+        
+        /* Делаем анимацию с паузой */
+        @keyframes loadingSpinnerWithPause {
+          0% {
+            transform: rotate(0deg);
+            border-top-color: #fff;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+          }
+          /* Анимация перехода (600ms) - 16.67% от 3600ms */
+          16.67% {
+            transform: rotate(90deg);
+            border-top-color: #fff;
+            border-right-color: #fff;
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+          }
+          33.33% {
+            transform: rotate(180deg);
+            border-top-color: #fff;
+            border-right-color: #fff;
+            border-bottom-color: #fff;
+            border-left-color: transparent;
+          }
+          50% {
+            transform: rotate(270deg);
+            border-top-color: #fff;
+            border-right-color: #fff;
+            border-bottom-color: #fff;
+            border-left-color: #fff;
+          }
+          66.67% {
+            transform: rotate(360deg);
+            border-top-color: #fff;
+            border-right-color: #fff;
+            border-bottom-color: #fff;
+            border-left-color: #fff;
+          }
+          /* Пауза (3000ms) - 83.33% от 3600ms */
+          100% {
+            transform: rotate(360deg);
+            border-top-color: #fff;
+            border-right-color: #fff;
+            border-bottom-color: #fff;
+            border-left-color: #fff;
+          }
+        }
+        
+        /* Альтернативный вариант: плавная анимация без паузы */
+        @keyframes loadingSpinnerContinuous {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
+
+  function startArrowAnimation() {
+    const arrowNext = document.querySelector('.arrow-next');
+    if (arrowNext) {
+      arrowNext.classList.add('loading');
+    }
+  }
+
+  function stopArrowAnimation() {
+    const arrowNext = document.querySelector('.arrow-next');
+    if (arrowNext) {
+      arrowNext.classList.remove('loading');
+    }
+  }
 }
 function positionArrows() {
   const item = document.querySelector('.block-intro__item');
@@ -262,7 +363,7 @@ function positionArrows() {
   arrows.style.right = `${right}px`;
   arrows.style.left = 'auto';
 }
-window.addEventListener('load', positionArrows);
+positionArrows();
 window.addEventListener('resize', positionArrows);
 
 
@@ -1255,3 +1356,14 @@ if (headerIcon) {
     }
   });
 }
+
+//========================================================================================================================================================
+
+let widgetClose = document.querySelector('.widget__close');
+if (widgetClose) {
+  widgetClose.addEventListener('click', function (event) {
+    event.stopPropagation();
+    this.closest('.widget').classList.add('hidden');
+  });
+}
+
