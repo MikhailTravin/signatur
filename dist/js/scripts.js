@@ -242,7 +242,7 @@ if (document.querySelector('.block-intro__slider')) {
       nextEl: '.block-intro__arrow-next',
     },
     autoplay: {
-      delay: 3000, 
+      delay: 3000,
       disableOnInteraction: false,
     },
     on: {
@@ -492,39 +492,53 @@ document.querySelectorAll('.js-open-gallery').forEach($link => {
 //========================================================================================================================================================
 
 //Видео
-const videos = document.querySelectorAll('.video');
+const videoContainers = document.querySelectorAll('.video');
 const buttons = document.querySelectorAll('.sound');
 
-if (videos) {
+if (videoContainers.length) {
+  const allVideoElements = document.querySelectorAll('.video-pc, .video-mob');
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      const video = entry.target;
+      const videos = entry.target.querySelectorAll('video');
 
       if (entry.isIntersecting) {
-        video.play().catch(e => console.warn("Автовоспроизведение заблокировано:", e));
+        videos.forEach(video => {
+          video.play().catch(e => console.warn("Автовоспроизведение заблокировано:", e));
+        });
       } else {
-        video.pause();
+        videos.forEach(video => {
+          video.pause();
+        });
       }
     });
   }, {
     threshold: 0.5
   });
 
-  videos.forEach(video => {
-    observer.observe(video);
+  videoContainers.forEach(container => {
+    observer.observe(container);
   });
 
   buttons.forEach((button, index) => {
     button.addEventListener('click', function () {
-      const video = videos[index];
+      const videoContainer = videoContainers[index];
 
-      if (video) {
-        if (video.muted) {
-          video.muted = false;
-          button.classList.add("_active");
-        } else {
-          video.muted = true;
-          button.classList.remove("_active");
+      if (videoContainer) {
+        const videos = videoContainer.querySelectorAll('video');
+
+        if (videos.length) {
+          const isCurrentlyMuted = videos[0].muted;
+
+          videos.forEach(video => {
+            video.muted = !isCurrentlyMuted;
+          });
+
+          if (isCurrentlyMuted) {
+            button.classList.add("_active");
+          } else {
+            button.classList.remove("_active");
+          }
         }
       }
     });
