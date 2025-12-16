@@ -242,14 +242,16 @@
 
 			<div class="block-about-video">
 				<div class="block-about-video__video">
-					<video class="video video-pc" autoplay muted loop>
-						<source src="files/videos/video-pc.mp4" type="video/mp4">
-						Ваш браузер не поддерживает видео.
-					</video>
-					<video class="video video-mob" autoplay muted loop>
-						<source src="files/videos/video-mob.mp4" type="video/mp4">
-						Ваш браузер не поддерживает видео.
-					</video>
+					<a href="files/videos/video-pc.mp4" data-fancybox="video1" class="video">
+						<video class="video video-pc" autoplay muted loop>
+							<source src="files/videos/video-pc2.mp4" type="video/mp4">
+							Ваш браузер не поддерживает видео.
+						</video>
+						<video class="video video-mob" autoplay muted loop>
+							<source src="files/videos/video-mob2.mp4" type="video/mp4">
+							Ваш браузер не поддерживает видео.
+						</video>
+					</a>
 					<div class="container">
 						<div class="block-about-video__buttons">
 							<div class="block-about-video__left">
@@ -924,7 +926,7 @@
 					<p>В новый год с новой квартирой</p>
 				</div>
 			</div>
-			
+
 		</main>
 		{% include 'blocks/footer.njk' %}
 	</div>
