@@ -1562,9 +1562,9 @@ a {
   letter-spacing: -0.03em;
 }
 .filter-apartments__left {
-  -webkit-box-flex: 0;
-      -ms-flex: 0 1 592px;
-          flex: 0 1 592px;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 592px;
+          flex: 1 1 592px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2590,6 +2590,9 @@ a {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
   gap: 12px;
 }
 
@@ -2829,6 +2832,300 @@ a {
   .floors-block-genplan__button {
     height: 45px;
   }
+}
+
+.genplan-button-objects {
+  z-index: 30;
+}
+.choice-home .genplan-button-objects {
+  display: none;
+}
+.choice-floor .genplan-button-objects {
+  display: none;
+}
+.genplan-button-objects .switch-genplan {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  opacity: 1;
+  border-radius: 11px;
+  padding: 10px 10px 10px 15px;
+  pointer-events: auto;
+  position: relative;
+}
+.genplan-button-objects .switch-genplan::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(12.4459619522px);
+  background: rgba(0, 0, 0, 0.65);
+}
+.genplan-button-objects .switch-genplan__title {
+  position: relative;
+  z-index: 10;
+  font-family: var(--second-family);
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: -0.03em;
+}
+.genplan-button-objects .toggle-switch {
+  position: relative;
+  z-index: 10;
+  width: 34px;
+  height: 20px;
+}
+.genplan-button-objects .toggle-switch .toggle-switch-handle {
+  bottom: -2.5px;
+  left: 0px;
+}
+.genplan-button-objects .toggle-switch-background {
+  top: 3px;
+  height: calc(100% - 6px);
+  overflow: visible;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.genplan-button-objects .toggle-switch input[type=checkbox]:checked + .toggle-switch-background {
+  background-color: rgba(242, 171, 103, 0.5);
+}
+.genplan-button-objects .toggle-switch input[type=checkbox]:checked + .toggle-switch-background .toggle-switch-handle {
+  background-color: rgb(242, 171, 103);
+  -webkit-transform: translateX(13px);
+          transform: translateX(13px);
+}
+
+.block-genplan-objects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: opacity 0.3;
+  transition: opacity 0.3;
+}
+.block-genplan-objects::-moz-selection {
+  background: none;
+}
+.block-genplan-objects::selection, .block-genplan-objects::-moz-selection {
+  background: none;
+}
+.block-genplan-objects.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.block-genplan-objects__column {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 15px;
+}
+.block-genplan-objects__column.active .block-genplan__tippy {
+  opacity: 0;
+}
+.block-genplan-objects__column.active .block-genplan-objects__popup {
+  opacity: 1;
+  pointer-events: auto;
+}
+.block-genplan-objects__column.column-white .block-genplan-objects__icon {
+  background-color: #fff;
+}
+.block-genplan-objects__column.column-green .block-genplan-objects__icon {
+  background-color: #00ff26;
+}
+.block-genplan-objects__column.column-green .block-genplan__tippy {
+  text-transform: none;
+  color: #fff;
+  background-color: #0c2776;
+  border-radius: 0px;
+}
+.block-genplan-objects__column.column-green .block-genplan__tippy::before {
+  content: "";
+  top: -8px;
+  bottom: auto;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 10px solid #0c2776;
+  border-top: none;
+}
+.block-genplan-objects__column.column-left {
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+.block-genplan-objects__column.column-left .block-genplan__tippy::before {
+  content: "";
+  left: 12px;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
+}
+.block-genplan-objects__column.column-left .block-genplan-objects__icon {
+  margin: 0px 0px 0px 5px;
+}
+.block-genplan-objects__column.column-right {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.block-genplan-objects__column.column-right .block-genplan__tippy::before {
+  content: "";
+  left: auto;
+  top: 50%;
+  right: -16px;
+  -webkit-transform: translate(0, -50%);
+          transform: translate(0, -50%);
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 10px solid #fff;
+}
+.block-genplan-objects__column.block-genplan-objects-column {
+  cursor: pointer;
+}
+.block-genplan-objects__column .block-genplan__tippy {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+  position: relative;
+  min-width: 70px;
+  padding: 8px 11px;
+  z-index: 41;
+  pointer-events: auto;
+  text-transform: uppercase;
+}
+@media (max-width: 768px) {
+  .block-genplan-objects__column .block-genplan__tippy {
+    font-size: 16px;
+  }
+}
+.block-genplan-objects__icon {
+  background-color: #ffb26b;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+  z-index: 30;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+@media (max-width: 768px) {
+  .block-genplan-objects__icon {
+    width: 30px;
+    height: 30px;
+  }
+}
+.block-genplan-objects__icon svg {
+  fill: #0c2776;
+}
+@media (max-width: 768px) {
+  .block-genplan-objects__icon svg {
+    height: 17px;
+    width: auto;
+  }
+}
+.block-genplan-objects__popup {
+  position: absolute;
+  border-radius: 9px;
+  padding: 15px 15px 20px;
+  background: #fff;
+  width: 268px;
+  z-index: 40;
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+  opacity: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  pointer-events: none;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 30px;
+}
+.block-genplan-objects__popup ul li {
+  border-radius: 4px;
+  padding: 8px 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 10px;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background: #ededed;
+}
+.block-genplan-objects__top {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 10px;
+}
+.block-genplan-objects__top p {
+  font-family: var(--second-family);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 109%;
+  color: #000;
+}
+.block-genplan-objects__title {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 85%;
+  color: #0c2776;
+}
+.block-genplan-objects__name {
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: -0.03em;
+  color: rgba(0, 0, 0, 0.65);
+}
+.block-genplan-objects__data {
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: -0.03em;
+  text-align: right;
+  color: #000;
 }
 
 .zoom-genplan {
@@ -6908,7 +7205,12 @@ a {
   background-color: #fff;
 }
 .block-apartments.storerooms .filter-apartments {
-  max-width: 645px;
+  width: 645px;
+}
+@media (max-width: 768px) {
+  .block-apartments.storerooms .filter-apartments {
+    width: 100%;
+  }
 }
 @media (max-width: 768px) {
   .block-apartments.storerooms .heading-complex {

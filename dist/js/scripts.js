@@ -1,5 +1,7 @@
 //Ползунок
+rangeInit();
 function rangeInit() {
+
   const ratingCalc = document.querySelector('.filter-apartments__range');
 
   if (ratingCalc) {
@@ -34,14 +36,17 @@ function rangeInit() {
     priceInput.value = initialAmount.toLocaleString('ru-RU');
   }
 
+  // Слайдер 1: Стоимость недвижимости
   const ratingCalc2 = document.querySelector('.filter-apartments__range1');
   if (ratingCalc2) {
+    const priceInput = document.querySelector('#property-price-input');
+
     noUiSlider.create(ratingCalc2, {
-      start: 3665000, // начальное значение
+      start: 3665000,
       connect: 'lower',
       range: {
-        'min': 1000000, // минимальная стоимость 
-        'max': 10000000 // максимальная стоимость
+        'min': 1000000,
+        'max': 10000000
       },
       format: {
         to: function (value) {
@@ -53,19 +58,30 @@ function rangeInit() {
       }
     });
 
-    const priceInput = document.querySelector('.filter-apartments__price.price1 input');
-
     ratingCalc2.noUiSlider.on('update', function (values, handle) {
       const value = Math.round(values[handle]);
       priceInput.value = value.toLocaleString('ru-RU');
+      updateCalc();
+    });
+
+    priceInput.addEventListener('input', function () {
+      let value = parseInt(this.value.replace(/\s+/g, '')) || 1000000;
+
+      if (value < 1000000) value = 1000000;
+      if (value > 10000000) value = 10000000;
+
+      ratingCalc2.noUiSlider.set(value);
+      this.value = value.toLocaleString('ru-RU');
+      updateCalc();
     });
   }
 
+  // Слайдер 2: Первоначальный взнос
   const ratingCalc3 = document.querySelector('.filter-apartments__range2');
-  const priceInput2 = document.querySelector('.filter-apartments__price.price2 input');
+  const priceInput2 = document.querySelector('#down-payment-input');
   const buttons2 = document.querySelectorAll('.range2 .filter-apartments__button');
 
-  if (ratingCalc3) {
+  if (ratingCalc3 && priceInput2) {
     noUiSlider.create(ratingCalc3, {
       start: 5,
       connect: 'lower',
@@ -87,6 +103,7 @@ function rangeInit() {
     ratingCalc3.noUiSlider.on('update', function (values, handle) {
       const value = Math.round(values[handle]);
       priceInput2.value = value;
+      updateCalc();
 
       buttons2.forEach(btn => {
         btn.classList.remove('active');
@@ -104,6 +121,7 @@ function rangeInit() {
 
       ratingCalc3.noUiSlider.set(value);
       this.value = value;
+      updateCalc();
     });
 
     buttons2.forEach(button => {
@@ -111,15 +129,21 @@ function rangeInit() {
         const percentage = parseInt(this.getAttribute('data-number'));
         ratingCalc3.noUiSlider.set(percentage);
         priceInput2.value = percentage;
+
+        buttons2.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+
+        updateCalc();
       });
     });
   }
 
+  // Слайдер 3: Срок кредита
   const ratingCalc4 = document.querySelector('.filter-apartments__range3');
-  const priceInput3 = document.querySelector('.filter-apartments__price.price3 input');
+  const priceInput3 = document.querySelector('#loan-term-input');
   const buttons3 = document.querySelectorAll('.range3 .filter-apartments__button');
 
-  if (ratingCalc4) {
+  if (ratingCalc4 && priceInput3) {
     noUiSlider.create(ratingCalc4, {
       start: 5,
       connect: 'lower',
@@ -141,6 +165,7 @@ function rangeInit() {
     ratingCalc4.noUiSlider.on('update', function (values, handle) {
       const value = Math.round(values[handle]);
       priceInput3.value = value;
+      updateCalc();
 
       buttons3.forEach(btn => {
         btn.classList.remove('active');
@@ -158,22 +183,29 @@ function rangeInit() {
 
       ratingCalc4.noUiSlider.set(value);
       this.value = value;
+      updateCalc();
     });
 
     buttons3.forEach(button => {
       button.addEventListener('click', function () {
-        const percentage = parseInt(this.getAttribute('data-number'));
-        ratingCalc4.noUiSlider.set(percentage);
-        priceInput3.value = percentage;
+        const years = parseInt(this.getAttribute('data-number'));
+        ratingCalc4.noUiSlider.set(years);
+        priceInput3.value = years;
+
+        buttons3.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+
+        updateCalc();
       });
     });
   }
 
+  // Слайдер 4: Процентная ставка
   const ratingCalc5 = document.querySelector('.filter-apartments__range4');
-  const priceInput4 = document.querySelector('.range4 .filter-apartments__price input');
+  const priceInput4 = document.querySelector('#interest-rate-input');
   const buttons4 = document.querySelectorAll('.range4 .filter-apartments__button');
 
-  if (ratingCalc5) {
+  if (ratingCalc5 && priceInput4) {
     noUiSlider.create(ratingCalc5, {
       start: 7.3,
       connect: 'lower',
@@ -194,7 +226,8 @@ function rangeInit() {
 
     ratingCalc5.noUiSlider.on('update', function (values, handle) {
       const value = parseFloat(values[handle]).toFixed(1);
-      priceInput4.value = value;
+      priceInput4.value = value.replace('.', ',');
+      updateCalc();
 
       buttons4.forEach(btn => {
         btn.classList.remove('active');
@@ -212,20 +245,119 @@ function rangeInit() {
       if (value > 16) value = 16;
 
       ratingCalc5.noUiSlider.set(value);
-      this.value = value.toFixed(1);
+      this.value = value.toFixed(1).replace('.', ',');
+      updateCalc();
     });
 
     buttons4.forEach(button => {
       button.addEventListener('click', function () {
-        const percentage = parseFloat(this.getAttribute('data-number'));
-        ratingCalc5.noUiSlider.set(percentage);
-        priceInput4.value = percentage.toFixed(1);
+        const rate = parseFloat(this.getAttribute('data-number'));
+        ratingCalc5.noUiSlider.set(rate);
+        priceInput4.value = rate.toFixed(1).replace('.', ',');
+
+        buttons4.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+
+        updateCalc();
       });
     });
   }
 
+  updateCalc();
 }
-rangeInit()
+
+// Калькулятор
+function updateCalc() {
+  const propertyCostInput = document.querySelector('#property-price-input');
+  const loanTermInput = document.querySelector('#loan-term-input');
+  const interestRateInput = document.querySelector('#interest-rate-input');
+  const downPaymentInput = document.querySelector('#down-payment-input');
+
+  if (propertyCostInput && loanTermInput && interestRateInput && downPaymentInput) {
+    let propertyCostStr = propertyCostInput.value;
+    let loanTermYears = parseFloat(loanTermInput.value);
+    let interestRate = parseFloat(interestRateInput.value.replace(',', '.'));
+    let initialPaymentPercent = parseFloat(downPaymentInput.value);
+
+    let monthlyPayment = document.querySelector('#monthly-payment');
+    let loanAmount = document.querySelector('#loan-amount');
+    let requiredIncome = document.querySelector('#required-income');
+
+    try {
+      let val = calculateMortgagePayment(
+        propertyCostStr,
+        loanTermYears,
+        interestRate,
+        initialPaymentPercent
+      );
+
+      monthlyPayment.innerHTML = val.monthlyPayment + ' ₽';
+      loanAmount.innerHTML = val.loanAmount + ' ₽';
+      requiredIncome.innerHTML = val.requiredIncome + ' ₽';
+    } catch (error) {
+      console.error('Ошибка расчета:', error);
+    }
+  }
+}
+
+function calculateMortgagePayment(
+  propertyCostStr,      // строка вида "3 665 000"
+  loanTermYears,        // срок кредита в годах
+  interestRate,         // годовая процентная ставка (%)
+  initialPaymentPercent // первоначальный взнос в процентах
+) {
+  // Преобразуем стоимость недвижимости в число
+  const propertyCost = parseFloat(propertyCostStr.replace(/\s+/g, ''));
+
+  // Проверки
+  if (isNaN(propertyCost) || propertyCost <= 0) {
+    throw new Error("Некорректно указана стоимость недвижимости.");
+  }
+
+  if (initialPaymentPercent <= 0 || initialPaymentPercent >= 100) {
+    throw new Error("Первоначальный взнос должен быть больше 0% и меньше 100%");
+  }
+
+  if (isNaN(loanTermYears) || loanTermYears <= 0) {
+    throw new Error("Некорректный срок кредита");
+  }
+
+  if (isNaN(interestRate) || interestRate <= 0) {
+    throw new Error("Некорректная процентная ставка");
+  }
+
+  // Рассчитываем сумму первоначального взноса
+  const initialPaymentAmount = propertyCost * (initialPaymentPercent / 100);
+
+  // Сумма кредита
+  const loanAmount = propertyCost - initialPaymentAmount;
+
+  if (loanAmount <= 0) {
+    throw new Error("Первоначальный взнос не может быть больше стоимости недвижимости");
+  }
+
+  // Месячная процентная ставка
+  const monthlyRate = interestRate / 100 / 12;
+
+  // Количество месяцев
+  const numberOfPayments = loanTermYears * 12;
+
+  // Расчёт аннуитетного платежа
+  const payment =
+    loanAmount *
+    (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
+    (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+
+  // Необходимый доход (предположим, что платёж составляет 40% от дохода)
+  const requiredIncome = payment / 0.4;
+
+  return {
+    loanAmount: new Intl.NumberFormat("ru-RU").format(Math.round(loanAmount)),
+    monthlyPayment: new Intl.NumberFormat("ru-RU").format(Math.round(payment)),
+    requiredIncome: new Intl.NumberFormat("ru-RU").format(Math.round(requiredIncome)),
+    initialPayment: new Intl.NumberFormat("ru-RU").format(Math.round(initialPaymentAmount))
+  };
+}
 
 //========================================================================================================================================================
 

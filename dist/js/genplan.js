@@ -256,7 +256,7 @@ const popupPositionConfig = {
     },
     'h13': {
         bottom: '10%',
-        right: '28%'
+        right: '48%'
     },
     'h14': {
         bottom: '10%',
@@ -305,8 +305,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderStep1AndStep2();
         renderPopups();
 
-        initToggleSwitchHandler();
-        initToggleSwitchAlternative();
+        if (regionsData && regionsData.length && regionsData[0].HOUSES) {
+            regionsData[0].HOUSES.forEach(house => {
+                setTimeout(() => {
+                    if (!loadedHouses.has(house.ID.toString())) {
+                        fetchHouse(house.ID).then(data => {
+                            loadedHouses.set(house.ID.toString(), data);
+                        }).catch(err => {
+                            console.warn('Не удалось предзагрузить дом', house.ID, err);
+                        });
+                    }
+                }, 100);
+            });
+        }
+
+        initEntranceToggleSwitchHandler();
+        initObjectsToggleSwitch();
         initPopupHandlers();
         initMobileFloorHandlers();
         initExistingHandlers();
@@ -317,12 +331,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 document.addEventListener('visibilitychange', function () {
     if (!document.hidden) {
-        setTimeout(refreshEntrancesState, 100);
+        refreshEntrancesState;
     }
 });
 
 window.addEventListener('resize', function () {
-    setTimeout(refreshEntrancesState, 100);
+    refreshEntrancesState;
 });
 
 function renderStep1AndStep2() {
@@ -361,7 +375,7 @@ function renderStep1AndStep2() {
 
     const regionPaths = [
         {
-            d: 'M779.317 207.765L671.515 272.554H668.972L663.379 278.725L835.761 382.08L992.379 272.554L845.931 201.08L811.862 225.248L779.317 207.765Z',
+            d: 'M774.317 232.765L666.515 297.554H663.972L658.379 303.725L830.761 407.08L987.379 297.554L840.931 226.08L806.862 250.248L774.317 232.765Z',
             class: 'path1',
             id: 'r1'
         }
@@ -588,16 +602,7 @@ function initPopupHandlers() {
                         document.documentElement.classList.remove('popup-open');
                     }
 
-                    if (!loadedHouses.has(houseId)) {
-                        fetchHouse(houseId).then(houseData => {
-                            loadedHouses.set(houseId, houseData);
-                            createMobileFloorsPopup(houseId, visualHouseId);
-                        }).catch(err => {
-                            console.error('Ошибка загрузки дома:', err);
-                        });
-                    } else {
-                        createMobileFloorsPopup(houseId, visualHouseId);
-                    }
+                    createMobileFloorsPopup(houseId, visualHouseId);
                 } else {
                     const popup = chooseFloorBtn.closest('.block-genplan-popup');
                     loadAndRenderStep3(houseId).then(() => {
@@ -752,18 +757,10 @@ function createMobileFloorsPopup(houseId, visualHouseId) {
         existingFloorsPopup.remove();
     }
 
-    const houseDetailedData = loadedHouses.get(houseId.toString());
-    let availableFloors = [4, 3, 2, 1];
-
-    if (houseDetailedData && houseDetailedData.FLOORS) {
-        availableFloors = houseDetailedData.FLOORS.map(f => parseInt(f.FLOOR))
-            .filter(f => !isNaN(f))
-            .sort((a, b) => b - a);
-    }
-
     const mobFloors = document.createElement('div');
     mobFloors.className = 'floors-block-genplan mob _active';
     mobFloors.dataset.id = visualHouseId;
+    mobFloors.dataset.originalId = houseId;
 
     mobFloors.innerHTML = `
         <button type="button" class="block-genplan-popup__close">
@@ -771,11 +768,18 @@ function createMobileFloorsPopup(houseId, visualHouseId) {
                 <use xlink:href="/img/sprite.svg#close"></use>
             </svg>
         </button>
-        ${availableFloors.map(floor => `
-            <button data-floor="${floor}" class="floors-block-genplan__button">
-                <span>${floor} этаж</span>
-            </button>
-        `).join('')}
+        <button data-floor="4" class="floors-block-genplan__button">
+            <span>4 этаж</span>
+        </button>
+        <button data-floor="3" class="floors-block-genplan__button">
+            <span>3 этаж</span>
+        </button>
+        <button data-floor="2" class="floors-block-genplan__button">
+            <span>2 этаж</span>
+        </button>
+        <button data-floor="1" class="floors-block-genplan__button">
+            <span>1 этаж</span>
+        </button>
     `;
 
     const popupsContainer = document.querySelector('.block-genplan__popups');
@@ -784,6 +788,14 @@ function createMobileFloorsPopup(houseId, visualHouseId) {
     }
 
     document.documentElement.classList.add('popup-open');
+
+    if (!loadedHouses.has(houseId.toString())) {
+        fetchHouse(houseId).then(houseData => {
+            loadedHouses.set(houseId.toString(), houseData);
+        }).catch(err => {
+            console.error('Ошибка загрузки дома:', err);
+        });
+    }
 }
 
 function renderMobileFloorsBlock(houseId, selectedFloor = '4') {
@@ -839,27 +851,49 @@ function renderMobileFloorsBlock(houseId, selectedFloor = '4') {
 
         const apartmentsByEntrance = {};
 
-        houseData.ENTRANCES.forEach(entrance => {
-            apartmentsByEntrance[entrance.NUMBER] = [];
-        });
-
         floorData.APARTMENTS.forEach(apartment => {
-            const entranceNumber = apartment.ENTRANCE || '1';
-            if (apartmentsByEntrance[entranceNumber]) {
-                apartmentsByEntrance[entranceNumber].push(apartment);
-            } else {
-                apartmentsByEntrance['1'].push(apartment);
+            let entranceNumber = '1';
+
+            if (apartment.ENTRANCE !== undefined && apartment.ENTRANCE !== null) {
+                if (typeof apartment.ENTRANCE === 'string') {
+                    entranceNumber = apartment.ENTRANCE.trim();
+                } else if (typeof apartment.ENTRANCE === 'number') {
+                    entranceNumber = apartment.ENTRANCE.toString();
+                }
             }
+
+            if (!entranceNumber || entranceNumber === '') {
+                entranceNumber = '1';
+            }
+
+            if (!apartmentsByEntrance[entranceNumber]) {
+                apartmentsByEntrance[entranceNumber] = [];
+            }
+
+            apartmentsByEntrance[entranceNumber].push(apartment);
         });
 
-        const entranceSections = houseData.ENTRANCES.map(entrance => {
-            const entranceApartments = apartmentsByEntrance[entrance.NUMBER] || [];
+        const entranceNumbers = Object.keys(apartmentsByEntrance);
+        entranceNumbers.sort((a, b) => {
+            const numA = parseInt(a) || 0;
+            const numB = parseInt(b) || 0;
+            return numA - numB;
+        });
+
+        const entranceSections = entranceNumbers.map(entranceNumber => {
+            const entranceApartments = apartmentsByEntrance[entranceNumber] || [];
 
             if (entranceApartments.length === 0) {
                 return '';
             }
 
-            const apartmentsHtml = entranceApartments.map(ap => `
+            const sortedApartments = entranceApartments.sort((a, b) => {
+                const numA = parseInt(a.NUMBER_APARTMENT) || 0;
+                const numB = parseInt(b.NUMBER_APARTMENT) || 0;
+                return numA - numB;
+            });
+
+            const apartmentsHtml = sortedApartments.map(ap => `
                 <a href="${ap.DETAIL_PAGE_URL}" class="card-apartments">
                     <div class="card-apartments__image">
                         <img loading="lazy" src="${ap.IMAGE}" alt="${ap.NAME}">
@@ -886,7 +920,7 @@ function renderMobileFloorsBlock(houseId, selectedFloor = '4') {
                         <svg aria-hidden="true" width="18" height="18">
                             <use xlink:href="/img/sprite.svg#entrances"></use>
                         </svg>
-                        <span>Подъезд №${entrance.NUMBER}</span>
+                        <span>Подъезд №${entranceNumber}</span>
                     </div>
                     <div class="choose-floor-mob__columns">
                         ${apartmentsHtml}
@@ -968,12 +1002,73 @@ function initMobileFloorHandlers() {
             const floor = floorBtn.dataset.floor;
             const floorsPopup = floorBtn.closest('.floors-block-genplan.mob');
             const visualHouseId = floorsPopup.dataset.id;
-            const originalHouseId = visualHouseId.replace('h', '');
+            const originalHouseId = floorsPopup.dataset.originalId || visualHouseId.replace('h', '');
 
             floorsPopup.classList.remove('_active');
             document.documentElement.classList.remove('popup-open');
 
-            renderMobileFloorsBlock(originalHouseId, floor);
+            if (loadedHouses.has(originalHouseId)) {
+                renderMobileFloorsBlock(originalHouseId, floor);
+            } else {
+                const loadingBlock = document.createElement('div');
+                loadingBlock.className = 'block-genplan__choose-floors-mob _active loading';
+                loadingBlock.innerHTML = `
+            <div class="choose-floor-mob _active">
+                <div class="choose-floor-mob__top">
+                    <button type="button" class="block-genplan__title title-choose-floor">
+                        <div class="block-genplan__icon">
+                            <svg aria-hidden="true" width="12" height="8">
+                                <use xlink:href="/img/sprite.svg#arrow1"></use>
+                            </svg>
+                        </div>
+                        <span>Загрузка...</span>
+                    </button>
+                </div>
+                <div class="choose-floor-mob__content">
+                    <div class="loading-message">Загружаем данные...</div>
+                </div>
+            </div>
+        `;
+
+                const chooseFloorsContainer = document.querySelector('.block-genplan__choose-floors');
+                if (chooseFloorsContainer) {
+                    chooseFloorsContainer.appendChild(loadingBlock);
+                }
+
+                fetchHouse(originalHouseId).then(houseData => {
+                    loadedHouses.set(originalHouseId.toString(), houseData);
+                    loadingBlock.remove();
+                    renderMobileFloorsBlock(originalHouseId, floor);
+                }).catch(err => {
+                    console.error('Ошибка загрузки дома:', err);
+                    loadingBlock.innerHTML = `
+                <div class="choose-floor-mob _active">
+                    <div class="choose-floor-mob__top">
+                        <button type="button" class="block-genplan__title title-choose-floor">
+                            <div class="block-genplan__icon">
+                                <svg aria-hidden="true" width="12" height="8">
+                                    <use xlink:href="/img/sprite.svg#arrow1"></use>
+                                </svg>
+                            </div>
+                            <span>Ошибка</span>
+                        </button>
+                    </div>
+                    <div class="choose-floor-mob__content">
+                        <div class="error-message">Не удалось загрузить данные</div>
+                        <button class="retry-btn btn">Повторить</button>
+                    </div>
+                </div>
+            `;
+
+                    loadingBlock.querySelector('.retry-btn')?.addEventListener('click', () => {
+                        fetchHouse(originalHouseId).then(houseData => {
+                            loadedHouses.set(originalHouseId.toString(), houseData);
+                            loadingBlock.remove();
+                            renderMobileFloorsBlock(originalHouseId, floor);
+                        });
+                    });
+                });
+            }
             return;
         }
 
@@ -1318,7 +1413,7 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
 
     initFloorSwitching();
 
-    const switchToggle = document.querySelector('.toggle-switch input[type="checkbox"]');
+    const switchToggle = document.querySelector('.switch-genplan.entrance-switch input[type="checkbox"]');
     if (switchToggle) {
         switchToggle.removeEventListener('change', updateEntrancesState);
         switchToggle.addEventListener('change', updateEntrancesState);
@@ -1443,7 +1538,7 @@ function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null)
         updateSvgsSize();
     }
 
-    initToggleSwitchHandler();
+    initEntranceToggleSwitchHandler();
 }
 
 function initExistingHandlers() {
@@ -1456,7 +1551,7 @@ function initExistingHandlers() {
         if (titleGenplan) {
             titleGenplan.classList.remove('hidden');
         }
-        setTimeout(updateEntrancesStateForAllHouses, 100);
+        updateEntrancesStateForAllHouses;
     });
 
     titleRooms?.addEventListener('click', () => {
@@ -1464,7 +1559,7 @@ function initExistingHandlers() {
         if (activeStep3) {
             toggleSteps(true, false);
         }
-        setTimeout(updateEntrancesStateForAllHouses, 100);
+        updateEntrancesStateForAllHouses;
     });
 
     document.addEventListener('click', (e) => {
@@ -1487,7 +1582,7 @@ function initExistingHandlers() {
         }
     });
 
-    initToggleSwitchHandler();
+    initEntranceToggleSwitchHandler();
 
     initMainGenplanLogic();
 }
@@ -1531,14 +1626,14 @@ function saveOriginalImageSizes() {
 }
 
 function updateEntrancesState() {
-    const switchToggle = document.querySelector('.toggle-switch input[type="checkbox"]');
+    const switchToggle = document.querySelector('.switch-genplan.entrance-switch input[type="checkbox"]');
     if (!switchToggle) return;
 
     const isChecked = switchToggle.checked;
 
-    const toggleSwitch = document.querySelector('.toggle-switch');
-    const background = document.querySelector('.toggle-switch-background');
-    const handle = document.querySelector('.toggle-switch-handle');
+    const toggleSwitch = document.querySelector('.switch-genplan.entrance-switch .toggle-switch');
+    const background = document.querySelector('.switch-genplan.entrance-switch .toggle-switch-background');
+    const handle = document.querySelector('.switch-genplan.entrance-switch .toggle-switch-handle');
 
     if (toggleSwitch) toggleSwitch.classList.toggle('_active', isChecked);
     if (background) background.classList.toggle('_active', isChecked);
@@ -1557,7 +1652,7 @@ function updateEntrancesState() {
 }
 
 function updateEntrancesStateForAllHouses() {
-    const switchToggle = document.querySelector('.toggle-switch input[type="checkbox"]');
+    const switchToggle = document.querySelector('.switch-genplan.entrance-switch input[type="checkbox"]');
     if (!switchToggle) return;
 
     const isChecked = switchToggle.checked;
@@ -1580,17 +1675,17 @@ function updateEntrancesStateForAllHouses() {
     updateEntrancesState();
 }
 
-function handleToggleSwitchClick(e) {
-    const toggleSwitch = e.target.closest('.toggle-switch');
-    const switchGenplan = e.target.closest('.switch-genplan');
-    const toggleSwitchBackground = e.target.closest('.toggle-switch-background');
-    const toggleSwitchHandle = e.target.closest('.toggle-switch-handle');
+function handleEntranceToggleSwitchClick(e) {
+    const toggleSwitch = e.target.closest('.entrance-switch .toggle-switch');
+    const switchGenplan = e.target.closest('.switch-genplan.entrance-switch');
+    const toggleSwitchBackground = e.target.closest('.entrance-switch .toggle-switch-background');
+    const toggleSwitchHandle = e.target.closest('.entrance-switch .toggle-switch-handle');
 
     if (toggleSwitch || switchGenplan || toggleSwitchBackground || toggleSwitchHandle) {
         e.preventDefault();
         e.stopPropagation();
 
-        const checkbox = document.querySelector('.toggle-switch input[type="checkbox"]');
+        const checkbox = document.querySelector('.switch-genplan.entrance-switch input[type="checkbox"]');
         if (checkbox) {
             checkbox.checked = !checkbox.checked;
 
@@ -1600,8 +1695,8 @@ function handleToggleSwitchClick(e) {
                 toggleSwitch.classList.toggle('_active', isChecked);
             }
 
-            const background = document.querySelector('.toggle-switch-background');
-            const handle = document.querySelector('.toggle-switch-handle');
+            const background = document.querySelector('.switch-genplan.entrance-switch .toggle-switch-background');
+            const handle = document.querySelector('.switch-genplan.entrance-switch .toggle-switch-handle');
 
             if (background) background.classList.toggle('_active', isChecked);
             if (handle) handle.classList.toggle('_active', isChecked);
@@ -1611,17 +1706,54 @@ function handleToggleSwitchClick(e) {
     }
 }
 
-function initToggleSwitchHandler() {
-    document.removeEventListener('click', handleToggleSwitchClick);
-    document.addEventListener('click', handleToggleSwitchClick);
-    setTimeout(updateEntrancesStateForAllHouses, 100);
+function initEntranceToggleSwitchHandler() {
+    document.removeEventListener('click', handleEntranceToggleSwitchClick);
+    document.addEventListener('click', handleEntranceToggleSwitchClick);
+    updateEntrancesStateForAllHouses;
 }
 
-function initToggleSwitchAlternative() {
+function initObjectsToggleSwitch() {
+    const toggleSwitchObjects = document.querySelector('.genplan-button-objects input[type="checkbox"]');
+    const blockGenplanObjects = document.querySelector('.block-genplan-objects');
+    const toggleSwitchElement = document.querySelector('.genplan-button-objects .toggle-switch');
+
+    if (!toggleSwitchObjects || !blockGenplanObjects) return;
+
+    const isChecked = toggleSwitchObjects.checked;
+    blockGenplanObjects.classList.toggle('active', isChecked);
+    if (toggleSwitchElement) {
+        toggleSwitchElement.classList.toggle('_active', isChecked);
+    }
+
+    toggleSwitchObjects.addEventListener('change', function (e) {
+        const isChecked = e.target.checked;
+        blockGenplanObjects.classList.toggle('active', isChecked);
+        if (toggleSwitchElement) {
+            toggleSwitchElement.classList.toggle('_active', isChecked);
+        }
+    });
+
+    const switchContainer = document.querySelector('.genplan-button-objects .switch-genplan');
+    if (switchContainer) {
+        switchContainer.addEventListener('click', function (e) {
+            if (!e.target.matches('input[type="checkbox"]')) {
+                e.preventDefault();
+                toggleSwitchObjects.checked = !toggleSwitchObjects.checked;
+
+                const isChecked = toggleSwitchObjects.checked;
+                blockGenplanObjects.classList.toggle('active', isChecked);
+                if (toggleSwitchElement) {
+                    toggleSwitchElement.classList.toggle('_active', isChecked);
+                }
+
+                toggleSwitchObjects.dispatchEvent(new Event('change'));
+            }
+        });
+    }
 }
 
 function forceInitEntrancesToggle() {
-    initToggleSwitchHandler();
+    initEntranceToggleSwitchHandler();
     updateEntrancesStateForAllHouses();
 }
 
@@ -1636,13 +1768,13 @@ function refreshEntrancesState() {
 
 function initEntranceDelegation() {
     document.addEventListener('change', function (e) {
-        if (e.target.matches('.toggle-switch input[type="checkbox"]')) {
+        if (e.target.matches('.switch-genplan.entrance-switch input[type="checkbox"]')) {
             updateEntrancesStateForAllHouses();
         }
     });
 
     document.addEventListener('click', function (e) {
-        const switchGenplan = e.target.closest('.switch-genplan');
+        const switchGenplan = e.target.closest('.switch-genplan.entrance-switch');
         if (switchGenplan) {
             updateEntrancesStateForAllHouses();
         }
@@ -2019,7 +2151,7 @@ function initMainGenplanLogic() {
     window.addEventListener('resize', () => {
         init();
         if (document.fullscreenElement) {
-            setTimeout(updateSvgsSize, 50);
+            updateSvgsSize;
         }
         clampTranslation();
         updateTransform();
@@ -2029,4 +2161,33 @@ function initMainGenplanLogic() {
     window.updateEntrancesState = updateEntrancesState;
     window.toggleSteps = toggleSteps;
     window.updateSvgsSize = updateSvgsSize;
+}
+
+const objectsColumns = document.querySelectorAll('.block-genplan-objects-column');
+if (objectsColumns) {
+    objectsColumns.forEach(column => {
+        column.addEventListener('click', function (e) {
+            if (e.target.closest('.block-genplan__tippy')) {
+                return;
+            }
+
+            const isActive = this.classList.contains('active');
+
+            objectsColumns.forEach(col => {
+                col.classList.remove('active');
+            });
+
+            if (!isActive) {
+                this.classList.add('active');
+            }
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.block-genplan-objects-column')) {
+            objectsColumns.forEach(col => {
+                col.classList.remove('active');
+            });
+        }
+    });
 }

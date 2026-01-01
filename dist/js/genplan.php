@@ -1,0 +1,257 @@
+<div class="block-genplan">
+    <div class="container">
+        <div class="block-genplan__container-fullsreen" data-fullscreen-container>
+            <div class="block-genplan__content">
+                <div class="block-genplan__body">
+                    <!-- step1: Регионы -->
+                    <div class="block-genplan__content-container step1">
+                        <div class="block-genplan__image">
+                            <img width="1200" height="631" loading="lazy" src="<?= SITE_TEMPLATE_PATH ?>/img/imagef3.webp" alt="">
+                        </div>
+                        <svg width="1200" height="631" class="block-genplan__svg" viewBox="0 0 1200 631" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Будет заполнено динамически -->
+                        </svg>
+                        <div class="block-genplan__tips">
+                            <!-- Будет заполнено динамически -->
+                        </div>
+                        <div class="block-genplan-objects">
+                            <div style="top:2%; left:25%;" class="block-genplan-objects__column column-white">
+                                <div class="block-genplan__tippy"><span>Парк</span></div>
+                                <div class="block-genplan-objects__icon">
+                                    <svg aria-hidden="true" width="25" height="22">
+                                        <use xlink:href="/local/templates/makro/img/sprite.svg#forest"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div style="top:44%; left:41.5%;"
+                                class="block-genplan-objects__column column-white block-genplan-objects-column">
+                                <div class="block-genplan__tippy"><span>Школа</span></div>
+                                <div style="bottom: 60%; left: 50%; transform: translate(-50%, 0);"
+                                    class="block-genplan-objects__popup">
+                                    <div class="block-genplan-objects__top">
+                                        <div class="block-genplan-objects__title">Школа</div>
+                                        <p>
+                                            Семейный парк, это квартал, где чтят семейные ценности. Название квартала
+                                            семейный парк говорит нам о наличии зеленых зон, мест для отдыха и прогулок,
+                                        </p>
+                                    </div>
+                                    <ul>
+                                        <li>
+                                            <div class="block-genplan-objects__name">Срок сдачи: </div>
+                                            <div class="block-genplan-objects__data">4 квартал 2027</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="block-genplan-objects__icon">
+                                    <svg aria-hidden="true" width="26" height="23">
+                                        <use xlink:href="/local/templates/makro/img/sprite.svg#school"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div style="top:65%; left:51%;" class="block-genplan-objects__column column-white">
+                                <div class="block-genplan__tippy"><span>Детский сад</span></div>
+                                <div class="block-genplan-objects__icon">
+                                    <svg aria-hidden="true" width="26" height="22">
+                                        <use xlink:href="/local/templates/makro/img/sprite.svg#kindergarten"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div style="top:45%; left:82%;" class="block-genplan-objects__column column-white">
+                                <div class="block-genplan__tippy"><span>SPA</span></div>
+                                <div class="block-genplan-objects__icon">
+                                    <svg aria-hidden="true" width="25" height="19">
+                                        <use xlink:href="/local/templates/makro/img/sprite.svg#spa"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div style="top:52%; left:87%;"
+                                class="block-genplan-objects__column column-white column-left">
+                                <div class="block-genplan__tippy"><span>Супермаркет</span></div>
+                                <div class="block-genplan-objects__icon">
+                                    <svg aria-hidden="true" width="24" height="22">
+                                        <use xlink:href="/local/templates/makro/img/sprite.svg#supermarket"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div style="top:67%; left:74.5%;"
+                                class="block-genplan-objects__column column-white column-right">
+                                <div class="block-genplan__tippy"><span>Автомойка</span></div>
+                                <div class="block-genplan-objects__icon">
+                                    <svg aria-hidden="true" width="20" height="23">
+                                        <use xlink:href="/local/templates/makro/img/sprite.svg#car-wash"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div style="top:67%; left:82.5%;" class="block-genplan-objects__column column-green">
+                                <div class="block-genplan-objects__icon">
+                                    <svg aria-hidden="true" width="21" height="23">
+                                        <use xlink:href="/local/templates/makro/img/sprite.svg#entry"></use>
+                                    </svg>
+                                </div>
+                                <div class="block-genplan__tippy"><span>Въезд в жилой комплекс</span></div>
+                            </div>
+                            <div style="top:2%; left:43%;" class="block-genplan-objects__column">
+                                <div class="block-genplan-objects__icon">
+                                    <svg aria-hidden="true" width="20" height="24">
+                                        <use xlink:href="/local/templates/makro/img/sprite.svg#auto-repair"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div style="top:46%; left:34.5%;" class="block-genplan-objects__column">
+                                <div class="block-genplan-objects__icon">
+                                    <svg aria-hidden="true" width="22" height="22">
+                                        <use xlink:href="/local/templates/makro/img/sprite.svg#football"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div style="top:46%; left:34.5%;" class="block-genplan-objects__column">
+                                <div class="block-genplan-objects__icon">
+                                    <svg aria-hidden="true" width="22" height="22">
+                                        <use xlink:href="/local/templates/makro/img/sprite.svg#football"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div style="top:44%; left:49%;" class="block-genplan-objects__column">
+                                <div class="block-genplan-objects__icon">
+                                    <svg aria-hidden="true" width="26" height="26">
+                                        <use xlink:href="/local/templates/makro/img/sprite.svg#tennis"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div style="top:56%; left:78%;" class="block-genplan-objects__column">
+                                <div class="block-genplan-objects__icon">
+                                    <svg aria-hidden="true" width="21" height="23">
+                                        <use xlink:href="/local/templates/makro/img/sprite.svg#entry"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- step2: Дома -->
+                    <div class="block-genplan__content-container step2">
+                        <div class="block-genplan__image">
+                            <img width="1200" height="631" loading="lazy" src="<?= SITE_TEMPLATE_PATH ?>/img/image1.webp" alt="">
+                        </div>
+                        <svg width="1200" height="631" class="block-genplan__svg" viewBox="0 0 1200 631" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Будет заполнено динамически -->
+                        </svg>
+                        <div class="block-genplan__tips">
+                            <!-- Будет заполнено динамически -->
+                        </div>
+                    </div>
+
+                    <!-- step3: будет создаваться JS по запросу -->
+                </div>
+
+                <!-- UI Controls -->
+                <div class="zoom-genplan">
+                    <button class="zoom-genplan__down">
+                        <svg aria-hidden="true" width="13" height="5">
+                            <use xlink:href="<?= SITE_TEMPLATE_PATH ?>/img/sprite.svg#minus"></use>
+                        </svg>
+                    </button>
+                    <button class="zoom-genplan__up">
+                        <svg aria-hidden="true" width="13" height="13">
+                            <use xlink:href="<?= SITE_TEMPLATE_PATH ?>/img/sprite.svg#plus"></use>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="fullsreen-genplan">
+                    <button class="fullsreen-genplan__button">
+                        <span class="fullsreen-genplan__title">Развернуть на весь экран</span>
+                        <span class="fullsreen-genplan__icon">
+                            <svg aria-hidden="true" width="11" height="11">
+                                <use xlink:href="<?= SITE_TEMPLATE_PATH ?>/img/sprite.svg#fullscreen"></use>
+                            </svg>
+                        </span>
+                    </button>
+                    <a href="https://kuula.co/share/hgcfZ/collection/71Yf7?logo=1&amp;info=1&amp;fs=1&amp;vr=0&amp;thumbs=1&amp;inst=ru&amp;iosfs=1" class="panorama">
+                        <span><img src="<?= SITE_TEMPLATE_PATH ?>/img/panorama.svg" alt=""></span>
+                    </a>
+                </div>
+
+                <div class="block-genplan__choose-floors">
+                    <!-- Мобильные блоки будут создаваться JS -->
+                </div>
+
+                <div class="fullsreen-genplan-hint">
+                    <div class="fullsreen-genplan-hint__icon">
+                        <img src="<?= SITE_TEMPLATE_PATH ?>/img/arrows1.svg" alt="">
+                    </div>
+                    <p>Проведите пальцами вправо<br>для взаимодействия с генпланом</p>
+                </div>
+
+                <div class="block-genplan__title title-genplan">
+                    <div class="block-genplan__icon">
+                        <svg aria-hidden="true" width="24" height="24">
+                            <use xlink:href="<?= SITE_TEMPLATE_PATH ?>/img/sprite.svg#plan"></use>
+                        </svg>
+                    </div>
+                    <span>Генплан проекта</span>
+                </div>
+
+                <button type="button" class="block-genplan__title title-house">
+                    <div class="block-genplan__icon">
+                        <svg aria-hidden="true" width="12" height="8">
+                            <use xlink:href="<?= SITE_TEMPLATE_PATH ?>/img/sprite.svg#arrow1"></use>
+                        </svg>
+                    </div>
+                    <span>Выбор дома</span>
+                </button>
+
+                <button type="button" class="block-genplan__title title-romms">
+                    <div class="block-genplan__icon">
+                        <svg aria-hidden="true" width="12" height="8">
+                            <use xlink:href="<?= SITE_TEMPLATE_PATH ?>/img/sprite.svg#arrow1"></use>
+                        </svg>
+                    </div>
+                    <span>Дом №6</span>
+                </button>
+
+                <div class="block-genplan__bottom">
+                    <div class="block-genplan__descr">
+                        <div class="block-genplan__compass">
+                            <img loading="lazy" src="<?= SITE_TEMPLATE_PATH ?>/img/compass.webp" alt="">
+                        </div>
+                        <p>От уютных до просторных квартир <span>с антресолями и террасами</span></p>
+                    </div>
+                    <div class="block-genplan__buttons">
+                        <div class="switch-genplan entrance-switch">
+                            <div class="switch-genplan__title">Показать подъезды</div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="entrances-toggle">
+                                <span class="toggle-switch-background">
+                                    <span class="toggle-switch-handle"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="genplan-button-objects">
+                            <div class="switch-genplan objects-switch">
+                                <div class="switch-genplan__title">Объекты</div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="objects-toggle">
+                                    <span class="toggle-switch-background">
+                                        <span class="toggle-switch-handle"></span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <a href="#" class="block-genplan__filter btn">
+                            <span>Подбор по параметрам</span>
+                            <svg aria-hidden="true" width="9" height="10">
+                                <use xlink:href="<?= SITE_TEMPLATE_PATH ?>/img/sprite.svg#filter"></use>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Попапы (region + houses) -->
+            <div data-da=".block-genplan__content, 768" class="block-genplan__popups">
+                <!-- Будут заполнены динамически -->
+            </div>
+        </div>
+    </div>
+</div>
