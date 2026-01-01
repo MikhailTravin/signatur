@@ -583,6 +583,7 @@
     pointer-events: auto;
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     gap: 12px;
   }
 }
@@ -787,6 +788,273 @@
     @media (max-width: 768px) {
       height: 45px;
     }
+  }
+}
+
+.genplan-button-objects {
+  //opacity: 0;
+  //pointer-events: none;
+  z-index: 30;
+  .choice-home & {
+    display: none;
+  }
+  .choice-floor & {
+    display: none;
+  }
+  .switch-genplan {
+    display: flex;
+    opacity: 1;
+    border-radius: 11px;
+    padding: 10px 10px 10px 15px;
+    pointer-events: auto;
+    position: relative;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(12.445961952209473px);
+      background: rgba(0, 0, 0, 0.65);
+    }
+  }
+  .switch-genplan__title {
+    position: relative;
+    z-index: 10;
+    font-family: var(--second-family);
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: -0.03em;
+  }
+  .toggle-switch {
+    position: relative;
+    z-index: 10;
+    width: 34px;
+    height: 20px;
+    .toggle-switch-handle {
+      bottom: -2.5px;
+      left: 0px;
+    }
+  }
+  .toggle-switch-background {
+    top: 3px;
+    height: calc(100% - 6px);
+    overflow: visible;
+    background-color: rgb(255, 255, 255, 0.3);
+  }
+  .toggle-switch input[type="checkbox"]:checked + .toggle-switch-background {
+    background-color: rgb(242, 171, 103, 0.5);
+  }
+  .toggle-switch input[type="checkbox"]:checked + .toggle-switch-background .toggle-switch-handle {
+    background-color: rgb(242, 171, 103, 1);
+    transform: translateX(13px);
+  }
+}
+
+.block-genplan-objects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3;
+  &::selection,
+  &::-moz-selection {
+    background: none;
+  }
+  &.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  // .block-genplan-objects__column
+
+  &__column {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    &.active {
+      .block-genplan__tippy {
+        opacity: 0;
+      }
+      .block-genplan-objects__popup {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+    &.column-white {
+      .block-genplan-objects__icon {
+        background-color: #fff;
+      }
+    }
+    &.column-green {
+      .block-genplan-objects__icon {
+        background-color: #00ff26;
+      }
+      .block-genplan__tippy {
+        text-transform: none;
+        color: #fff;
+        background-color: #0c2776;
+        border-radius: 0px;
+        &::before {
+          content: "";
+          top: -8px;
+          bottom: auto;
+          border-left: 12px solid transparent;
+          border-right: 12px solid transparent;
+          border-bottom: 10px solid #0c2776;
+          border-top: none;
+        }
+      }
+    }
+    &.column-left {
+      align-items: flex-start;
+      .block-genplan__tippy {
+        &::before {
+          content: "";
+          left: 12px;
+          transform: translate(0, 0);
+        }
+      }
+      .block-genplan-objects__icon {
+        margin: 0px 0px 0px 5px;
+      }
+    }
+    &.column-right {
+      flex-direction: row;
+      align-items: center;
+      .block-genplan__tippy {
+        &::before {
+          content: "";
+          left: auto;
+          top: 50%;
+          right: -16px;
+          transform: translate(0, -50%);
+          border-top: 12px solid transparent;
+          border-bottom: 12px solid transparent;
+          border-left: 10px solid #fff;
+        }
+      }
+    }
+    &.block-genplan-objects-column {
+      cursor: pointer;
+    }
+    .block-genplan__tippy {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.3s;
+      position: relative;
+      min-width: 70px;
+      padding: 8px 11px;
+      z-index: 41;
+      pointer-events: auto;
+      text-transform: uppercase;
+      @media (max-width: 768px) {
+        font-size: 16px;
+      }
+    }
+  }
+
+  // .block-genplan-objects__icon
+
+  &__icon {
+    background-color: #ffb26b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 30;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    @media (max-width: 768px) {
+      width: 30px;
+      height: 30px;
+    }
+    svg {
+      fill: #0c2776;
+      @media (max-width: 768px) {
+        height: 17px;
+        width: auto;
+      }
+    }
+  }
+
+  // .block-genplan-objects__popup
+
+  &__popup {
+    position: absolute;
+    border-radius: 9px;
+    padding: 15px 15px 20px;
+    background: #fff;
+    width: 268px;
+    z-index: 40;
+    transition: opacity 0.3s;
+    opacity: 0;
+    display: flex;
+    pointer-events: none;
+    flex-direction: column;
+    gap: 30px;
+    ul {
+      li {
+        border-radius: 4px;
+        padding: 8px 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: space-between;
+        background: #ededed;
+      }
+    }
+  }
+
+  // .block-genplan-objects__top
+
+  &__top {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    p {
+      font-family: var(--second-family);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 109%;
+      color: #000;
+    }
+  }
+
+  // .block-genplan-objects__title
+
+  &__title {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 85%;
+    color: #0c2776;
+  }
+
+  // .block-genplan-objects__name
+
+  &__name {
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: -0.03em;
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  // .block-genplan-objects__data
+
+  &__data {
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: -0.03em;
+    text-align: right;
+    color: #000;
   }
 }
 
@@ -4278,7 +4546,10 @@
       background-color: #fff;
     }
     .filter-apartments {
-      max-width: 645px;
+      width: 645px;
+      @media (max-width: 768px) {
+        width: 100%;
+      }
     }
     .heading-complex {
       @media (max-width: 768px) {
