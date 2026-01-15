@@ -893,8 +893,12 @@ function renderMobileFloorsBlock(houseId, selectedFloor = '4') {
                 return numA - numB;
             });
 
-            const apartmentsHtml = sortedApartments.map(ap => `
-                <a href="${ap.DETAIL_PAGE_URL}" class="card-apartments">
+            const apartmentsHtml = sortedApartments.map(ap => {
+                const isSold = ap.SOLD === true || ap.PRICE === 0;
+                const priceText = isSold ? '0 ₽ - продано' : `${parseInt(ap.PRICE).toLocaleString('ru-RU')} ₽`;
+
+                return `
+                <a href="${ap.DETAIL_PAGE_URL}" class="card-apartments ${isSold ? 'sold-active' : ''}">
                     <div class="card-apartments__image">
                         <img loading="lazy" src="${ap.IMAGE}" alt="${ap.NAME}">
                     </div>
@@ -902,7 +906,7 @@ function renderMobileFloorsBlock(houseId, selectedFloor = '4') {
                         <div class="card-apartments__top">
                             <div class="card-apartments__titles">
                                 <div class="card-apartments__title">${ap.NAME}, ${ap.AREA} м²</div>
-                                <div class="card-apartments__price">${parseInt(ap.PRICE).toLocaleString('ru-RU')} ₽</div>
+                                <div class="card-apartments__price ${isSold ? 'sold-active' : ''}">${priceText}</div>
                             </div>
                         </div>
                         <div class="card-apartments__bottom">
@@ -912,7 +916,7 @@ function renderMobileFloorsBlock(houseId, selectedFloor = '4') {
                         </div>
                     </div>
                 </a>
-            `).join('');
+            `}).join('');
 
             return `
                 <div class="choose-floor-mob__body">
@@ -1240,9 +1244,10 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
 
         if (floor.APARTMENTS && floor.APARTMENTS.length) {
             floor.APARTMENTS.forEach(ap => {
+                const isSold = ap.SOLD === true || ap.PRICE === 0;
                 const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 path.setAttribute('data-id', `kv${ap.NUMBER_APARTMENT}`);
-                path.setAttribute('class', 'block-genplan__path kv');
+                path.setAttribute('class', `block-genplan__path kv ${isSold ? 'sold-active' : ''}`);
                 if (ap.SVG_PATH) {
                     path.setAttribute('d', ap.SVG_PATH);
                 }
@@ -1293,8 +1298,9 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
 
             if (floor.APARTMENTS && floor.APARTMENTS.length) {
                 floor.APARTMENTS.forEach(ap => {
+                    const isSold = ap.SOLD === true || ap.PRICE === 0;
                     const tippy = document.createElement('button');
-                    tippy.className = 'block-genplan__tippy tippy-floor';
+                    tippy.className = `block-genplan__tippy tippy-floor ${isSold ? 'sold-active' : ''}`;
                     tippy.dataset.id = `kv${ap.NUMBER_APARTMENT}`;
                     tippy.style.top = `${ap.POS_TOP}%`;
                     tippy.style.left = `${ap.POS_RIGHT}%`;
@@ -1319,12 +1325,15 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
                     popup.style.top = `${popupTop}%`;
                     popup.style.left = `${popupLeft}%`;
 
+                    const isSoldPopup = ap.SOLD === true || ap.PRICE === 0;
+                    const priceText = isSoldPopup ? '0 ₽ - продано' : `${parseInt(ap.PRICE).toLocaleString('ru-RU')} ₽`;
+
                     popup.innerHTML = `
-                        <div class="card-apartments">
+                        <div class="card-apartments ${isSoldPopup ? 'sold-active' : ''}">
                             <div class="card-apartments__top">
                                 <div class="card-apartments__titles">
                                     <div class="card-apartments__title">${ap.NAME}, ${ap.AREA} м²</div>
-                                    <div class="card-apartments__price">${parseInt(ap.PRICE).toLocaleString('ru-RU')} ₽</div>
+                                    <div class="card-apartments__price ${isSoldPopup ? 'sold-active' : ''}">${priceText}</div>
                                 </div>
                             </div>
                             <div class="card-apartments__image">
@@ -2167,10 +2176,6 @@ const objectsColumns = document.querySelectorAll('.block-genplan-objects-column'
 if (objectsColumns) {
     objectsColumns.forEach(column => {
         column.addEventListener('click', function (e) {
-            if (e.target.closest('.block-genplan__tippy')) {
-                return;
-            }
-
             const isActive = this.classList.contains('active');
 
             objectsColumns.forEach(col => {
