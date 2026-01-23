@@ -901,6 +901,8 @@
       .block-genplan-objects__icon {
         background-color: #fff;
       }
+      .block-genplan__tippy {
+      }
     }
     &.column-green {
       .block-genplan-objects__icon {
@@ -967,6 +969,41 @@
       text-transform: uppercase;
       @media (max-width: 768px) {
         font-size: 16px;
+      }
+    }
+    &.column-orange {
+      &:hover {
+        .block-genplan__tippy {
+          opacity: 1;
+          pointer-events: auto;
+        }
+      }
+      &.active {
+        .block-genplan__tippy {
+          opacity: 0;
+          pointer-events: none;
+        }
+      }
+      .block-genplan__tippy {
+        background-color: #ffb26b;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+        &::before {
+          content: "";
+          border-top: 10px solid #ffb26b;
+        }
+      }
+    }
+    &.column-bottom {
+      .block-genplan__tippy {
+        &::before {
+          content: "";
+          top: -17px;
+          bottom: auto;
+          border-bottom: 10px solid #ffb26b;
+          border-top: 10px solid transparent;
+        }
       }
     }
   }
