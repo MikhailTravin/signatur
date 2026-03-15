@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>Главная страница</title>
+    {% include 'blocks/head.njk' %}
+</head>
+
+<body class="preload mp">
+    <div class="main-wrapper-outer">
+        {% include 'blocks/header.njk' %}
+        <main class="main">
+
+            <div class="block-intro block-intro-home2">
+                <div class="block-intro__content">
+                    <div class="block-intro__slider swiper">
+                        <div class="block-intro__wrapper swiper-wrapper">
+                            <div class="block-intro__slide swiper-slide">
+                                <img src="img/image41.webp" alt="">
+                                <div class="container2">
+                                    <div class="block-intro__item">
+                                        <div class="block-intro__top">
+                                            <h2 class="title2">
+                                                Свой дом.
+                                                <br>
+                                                Со всеми преимуществами города
+                                            </h2>
+                                            <div class="block-intro__title text">
+                                                Индивидуальные дома в квартале «Сигнатур» — это центральные
+                                                коммуникации, продуманная инфраструктура и архитектура в едином
+                                                европейском стиле.
+                                                Здесь начинается жизнь, которую вы выбираете
+                                            </div>
+                                        </div>
+                                        <div class="block-intro__center">
+                                            <div class="block-intro__buttons">
+                                                <a href="#" class="btn mini">
+                                                    <span>Смотреть дома и участки</span>
+                                                    <svg aria-hidden="true" width="12" height="8">
+                                                        <use xlink:href="img/sprite.svg#arrow1"></use>
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="block-intro__arrows">
+                        <div class="block-intro__arrow-prev arrow-prev">
+                            <svg aria-hidden="true" width="12" height="8">
+                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                            </svg>
+                        </div>
+                        <div class="block-intro__arrow-next arrow-next">
+                            <svg aria-hidden="true" width="12" height="8">
+                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-benefits">
+                <div class="container">
+                    <div class="block-benefits__content">
+                        <h2 class="title2">
+                            Мы перенесли стандарты городского комфорта на землю
+                        </h2>
+                        <div class="block-benefits__body">
+                            <div class="block-benefits__column">
+                                <div class="block-benefits__icon">
+                                    <svg aria-hidden="true" width="18" height="22">
+                                        <use xlink:href="img/sprite.svg#icon1"></use>
+                                    </svg>
+                                </div>
+                                <div class="block-benefits__item">
+                                    <div class="block-benefits__title">
+                                        Центральные коммуникации
+                                    </div>
+                                    <div class="block-benefits__subtitle">
+                                        Вода, канализация и газ — городские. Никаких септиков и скважин
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-benefits__column">
+                                <div class="block-benefits__icon">
+                                    <img src="img/icons/icon2.svg" alt="">
+                                </div>
+                                <div class="block-benefits__item">
+                                    <div class="block-benefits__title">
+                                        Архитектура ансамбля
+                                    </div>
+                                    <div class="block-benefits__subtitle">
+                                        Дома объединены общим стилем, но у каждого свой фасад. Квартал выглядит цельным
+                                        и живым
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-benefits__column">
+                                <div class="block-benefits__icon">
+                                    <svg aria-hidden="true" width="24" height="24">
+                                        <use xlink:href="img/sprite.svg#icon3"></use>
+                                    </svg>
+                                </div>
+                                <div class="block-benefits__item">
+                                    <div class="block-benefits__title">
+                                        Готовый участок
+                                    </div>
+                                    <div class="block-benefits__subtitle">
+                                        Выравнивание, газон, подъездные пути и ливневка — всё подготовлено, чтобы жить с
+                                        первого дня
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block-benefits__column">
+                                <div class="block-benefits__icon">
+                                    <svg aria-hidden="true" width="24" height="24">
+                                        <use xlink:href="img/sprite.svg#icon4"></use>
+                                    </svg>
+                                </div>
+                                <div class="block-benefits__item">
+                                    <div class="block-benefits__title">
+                                        Выбор планировки
+                                    </div>
+                                    <div class="block-benefits__subtitle">
+                                        От компактных «двушек» до просторных семейных домов. Можем обсудить и
+                                        индивидуальный проект
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'blocks/genplan.njk' %}
+
+            <div class="block-house-about1">
+                <div class="container">
+                    <div class="block-house-about1__content">
+                        <div class="block-house-about1__body">
+                            <div class="block-house-about1__titles">
+                                <h2 class="title2">
+                                    Мы строим основательно, как строили здесь всегда
+                                </h2>
+                                <p>
+                                    Городская вода и канализация
+                                    в частном доме — это не роскошь, а стандарт «Сигнатур»
+                                </p>
+                            </div>
+                            <div class="block-house-about1__text">
+                                Никаких забот <span>о септиках</span>
+                            </div>
+                        </div>
+                        <div data-da=".block-house-about1__body, 768, 1" class="block-house-about1__images">
+                            <img src="img/image42.webp" alt="">
+                            <div class="block-house-about1__title">
+                                Только чистый комфорт городской квартиры, который остаётся с вами за вашим собственным
+                                забором
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-house-descr">
+                <img src="img/image43.webp" alt="" class="block-house-descr__bg1">
+                <div class="container">
+                    <div class="block-house-descr__content">
+                        <h2 class="title2">Дом и участок — всё, что важно знать</h2>
+                        <div class="block-house-descr__body">
+                            <div class="block-house-descr__left">
+                                <div class="block-house-descr__title">
+                                    Коммуникации<br> на участке
+                                </div>
+                                <ul>
+                                    <li>Центральные вода, канализация и газ подведены к каждому дому</li>
+                                    <li>Ливневка и дренаж тоже централизованные — после дождя во дворе сухо</li>
+                                    <li>Возможность поставить баню или хозяйственную постройку</li>
+                                    <li>Предусмотрено место под парковку с навесом</li>
+                                </ul>
+                            </div>
+                            <div class="block-house-descr__right">
+                                <div class="block-house-descr__titles">
+                                    <div class="block-house-descr__icons">
+                                        <div class="block-house-descr__icon">
+                                            <img src="img/icons/bicycle.svg" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="block-house-descr__name">
+                                        Участок готов к вашей жизни
+                                    </div>
+                                </div>
+                                <p>
+                                    Когда вы получаете ключи, участок уже выровнен, засеян газон, сделан подъезд к дому
+                                    и дорожка из тротуарной плитки от ворот
+                                    до крыльца. По периметру стоит ограждение, можно сразу поставить откатные ворота с
+                                    электроприводом
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-house">
+                <div class="container">
+                    <div class="block-house__content">
+                        <div class="block-house__body">
+                            <div class="block-house__column">
+                                <h2 class="title2">
+                                    Дом собран основательно
+                                </h2>
+                                <a data-da=".block-house__content, 768, last" href="#" class="btn btn-bg">
+                                    <span>Смотреть дома и участки</span>
+                                    <svg aria-hidden="true" width="12" height="8">
+                                        <use xlink:href="img/sprite.svg#arrow1"></use>
+                                    </svg>
+                                </a>
+                            </div>
+                            <div class="block-house__column">
+                                <img src="img/image44.webp" alt="">
+                                <div class="block-house__text">
+                                    <div class="block-house__title">Стены</div>
+                                    <p>
+                                        Керамический кирпич или керамический камень. Утепление 50 мм
+                                        пенополистирола,
+                                        сверху декоративная штукатурка. Керамика дышит, не боится сырости, не
+                                        пропускает
+                                        шум
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="block-house__column">
+                                <img src="img/image45.webp" alt="">
+                                <div class="block-house__text">
+                                    <div class="block-house__title">Отделка</div>
+                                    <p>
+                                        Дом передаётся в состоянии «серый ключ»: стены оштукатурены, полы со стяжкой.
+                                        Финишную отделку делаете сами
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="block-house__column">
+                                <img src="img/image46.webp" alt="">
+                                <div class="block-house__text">
+                                    <div class="block-house__title">Кровля</div>
+                                    <p>
+                                        Двускатная, покрыта керамической черепицей
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="block-house__column">
+                                <img src="img/image47.webp" alt="">
+                                <div class="block-house__text">
+                                    <div class="block-house__title">Потолки</div>
+                                    <p>
+                                        Высота три метра. В кухне-гостиной можно сделать второй свет — тогда высота
+                                        доходит до 5,5 метров
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="block-house__column">
+                                <img src="img/image48.webp" alt="">
+                                <div class="block-house__text">
+                                    <div class="block-house__title">Окна и двери</div>
+                                    <p>
+                                        Пластиковые стеклопакеты, распашные двери на террасу. Входная дверь
+                                        металлическая
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-engineering-systems">
+                <img src="img/image50.webp" alt="" class="block-engineering-systems__bg1">
+                <div class="container">
+                    <div class="block-engineering-systems__content">
+                        <div class="block-engineering-systems__top">
+                            <h2 class="title2">Инженерные<br> системы</h2>
+                            <div data-da=".block-engineering-systems__content, 768,last"
+                                class="block-engineering-systems__descr">
+                                <div class="block-engineering-systems__title">
+                                    Всё, что отвечает за тепло, свет
+                                    и воду
+                                </div>
+                                <div class="block-engineering-systems__text">
+                                    <p>
+                                        Мы спроектировали инженерные системы так, чтобы вы чувствовали себя
+                                        в доме так же комфортно, как в современной городской квартире.
+                                    </p>
+                                    <p>
+                                        Только теперь это ваш собственное пространство
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block-engineering-systems__bottom">
+                            <div class="block-engineering-systems__lists">
+                                <div class="block-engineering-systems__column">
+                                    <div class="block-engineering-systems__icon">
+                                        <img loading="lazy" src="img/person.svg" alt="">
+                                    </div>
+                                    <span>Отопление от двухконтурного газового котла</span>
+                                </div>
+                                <div class="block-engineering-systems__column">
+                                    <div class="block-engineering-systems__icon">
+                                        <img loading="lazy" src="img/person.svg" alt="">
+                                    </div>
+                                    <span>Разведена электрика под розетки и выключатели</span>
+                                </div>
+                                <div class="block-engineering-systems__column">
+                                    <div class="block-engineering-systems__icon">
+                                        <img loading="lazy" src="img/person.svg" alt="">
+                                    </div>
+                                    <span>По всему дому тёплые полы</span>
+                                </div>
+                                <div class="block-engineering-systems__column">
+                                    <div class="block-engineering-systems__icon">
+                                        <img loading="lazy" src="img/person.svg" alt="">
+                                    </div>
+                                    <span>Выведена сантехника</span>
+                                </div>
+                                <div class="block-engineering-systems__column">
+                                    <div class="block-engineering-systems__icon">
+                                        <img loading="lazy" src="img/person.svg" alt="">
+                                    </div>
+                                    <span>Отопление от двухконтурного газового котла</span>
+                                </div>
+                            </div>
+                            <p>
+                                По запросу установим видеонаблюдение, сигнализацию или систему «умный дом»
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-about2">
+                <div class="container">
+                    <div class="block-about2__content">
+                        <div class="heading-complex">
+                            <h2 class="title2">Как устроен квартал</h2>
+                            <a data-da=".block-about2__content, 768, last" href="#" class="btn mini">
+                                <span>Узнать больше</span>
+                            </a>
+                        </div>
+                        <div class="block-about2__body">
+                            <div class="block-about2__column">
+                                <img src="img/image49.webp" alt="">
+                                <div class="block-about2__text">
+                                    <div class="block-about2__title">Дороги и свет</div>
+                                    <p>
+                                        Двухполосные проезды с тротуарами и уличным освещением — для безопасности и
+                                        комфорта
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="block-about2__column">
+                                <img src="img/image10.webp" alt="">
+                                <div class="block-about2__text">
+                                    <div class="block-about2__title">Единый стиль</div>
+                                    <p>
+                                        Все дома, и многоквартирные, и индивидуальные, поддерживают общую архитектурную
+                                        стилистику
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="block-about2__column">
+                                <img src="img/image14.webp" alt="">
+                                <div class="block-about2__text">
+                                    <div class="block-about2__title">Общие зоны</div>
+                                    <p>
+                                        Озеленение, клумбы, детские и спортивные площадки, места для жизни квартала
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-apartments block-apartments-home2">
+                <div class="container">
+                    <div class="heading-complex">
+                        <h2 class="title2">
+                            Найдите свой дом среди ста
+                        </h2>
+                        <a href="#" class="heading-complex__link">
+                            <span>Перейти к каталогу</span>
+                            <div class="heading-complex__icon">
+                                <svg aria-hidden="true" width="12" height="8">
+                                    <use xlink:href="img/sprite.svg#arrow1"></use>
+                                </svg>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="block-apartments__content">
+                        <div class="filter-apartments">
+                            <div class="filter-apartments__body">
+                                <div class="filter-apartments__left">
+                                    <div class="filter-apartments__column column-range">
+                                        <div class="filter-apartments__title">Общая площадь</div>
+                                        <div class="filter-apartments__item">
+                                            <div class="filter-apartments__rating rating-square">
+                                                <div class="filter-apartments__inputs">
+                                                    <div class="filter-apartments__input">
+                                                        <span>от</span>
+                                                        70 м²
+                                                    </div>
+                                                    <div data-da=".rating-square, 768, 1"
+                                                        class="filter-apartments__price filter-square">
+                                                        <input autocomplete="off" type="text" name="form[]"
+                                                            placeholder="90">
+                                                    </div>
+                                                    <div class="filter-apartments__input">
+                                                        <span>до</span>
+                                                        150+м²
+                                                    </div>
+                                                </div>
+                                                <div class="filter-square-range"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="filter-apartments__column column-range">
+                                        <div class="filter-apartments__title">Задайте стоимость, млн ₽</div>
+                                        <div class="filter-apartments__item">
+                                            <div class="filter-apartments__rating rating-range">
+                                                <div class="filter-apartments__inputs">
+                                                    <div class="filter-apartments__input">
+                                                        <span>от</span>
+                                                        6,7
+                                                    </div>
+                                                    <div data-da=".rating-range, 768, 1"
+                                                        class="filter-apartments__price">
+                                                        <input autocomplete="off" type="text" name="form[]"
+                                                            placeholder="23 000 0000">
+                                                    </div>
+                                                    <div class="filter-apartments__input">
+                                                        <span>до</span>
+                                                        22,0
+                                                    </div>
+                                                </div>
+                                                <div class="filter-apartments__range"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="filter-apartments__right">
+                                    <div class="filter-apartments__selects">
+                                        <div class="filter-apartments__select">
+                                            <div class="filter-apartments__title">Сортировать по:</div>
+                                            <select name="select1">
+                                                <option value="1" selected>Количеству комнат</option>
+                                                <option value="2">Количеству комнат №2</option>
+                                                <option value="3">Количеству комнат №3</option>
+                                                <option value="4">Количеству комнат №4</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="filter-apartments__column column-rooms">
+                                        <div class="filter-apartments__title">Укажите количество комнат</div>
+                                        <div class="filter-apartments__item">
+                                            <div class="options">
+                                                <div class="options__item">
+                                                    <input hidden id="o_1" class="options__input" checked type="radio"
+                                                        value="1" name="option1">
+                                                    <label for="o_1" class="options__label">
+                                                        <span class="options__text">1</span>
+                                                    </label>
+                                                </div>
+                                                <div class="options__item">
+                                                    <input hidden id="o_2" class="options__input" type="radio" value="2"
+                                                        name="option1">
+                                                    <label for="o_2" class="options__label">
+                                                        <span class="options__text">2</span>
+                                                    </label>
+                                                </div>
+                                                <div class="options__item">
+                                                    <input hidden id="o_3" class="options__input" type="radio" value="3"
+                                                        name="option1">
+                                                    <label for="o_3" class="options__label">
+                                                        <span class="options__text">3</span>
+                                                    </label>
+                                                </div>
+                                                <div class="options__item">
+                                                    <input hidden id="o_4" class="options__input" type="radio" value="4"
+                                                        name="option1">
+                                                    <label for="o_4" class="options__label">
+                                                        <span class="options__text">4</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="btn">
+                                <span>Показать</span>
+                            </a>
+                        </div>
+                        <div class="block-apartments__body">
+                            <div class="block-apartments__cards">
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-apartments">
+                                    <div class="card-apartments__top">
+                                        <div class="card-apartments__titles">
+                                            <div class="card-apartments__title">4-комнатная, 200 м²</div>
+                                            <div class="card-apartments__price">13 175 000 ₽</div>
+                                        </div>
+                                        <div class="card-apartments__tag">
+                                            Комфорт
+                                        </div>
+                                    </div>
+                                    <div class="card-apartments__image">
+                                        <img loading="lazy" src="img/image23.webp" alt="">
+                                    </div>
+                                    <div class="card-apartments__bottom">
+                                        <ul>
+                                            <li>Жилая площадь - 65м² </li>
+                                            <li>Общая площадь - 85м²</li>
+                                            <li>Этаж - 4</li>
+                                            <li>Высота потолков - 3м</li>
+                                        </ul>
+                                        <a href="#" class="btn btn-bg">
+                                            <span>Связаться</span>
+                                            <svg aria-hidden="true" width="12" height="8">
+                                                <use xlink:href="img/sprite.svg#arrow1"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="block-apartments__button btn">Загрузить еще</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-methods-purchase">
+                <div class="container">
+                    <div class="block-methods-purchase__content">
+                        <div class="block-methods-purchase__image">
+                            <span>
+                                Ипотека<br> от 5.5%
+                            </span>
+                            <img loading="lazy" src="img/image19.webp" alt="" class="block-methods-purchase__pic1">
+                        </div>
+                        <div class="block-methods-purchase__right">
+                            <h2 class="title2">
+                                Способы покупки
+                            </h2>
+                            <div class="block-methods-purchase__body">
+                                <div class="block-methods-purchase__columns">
+                                    <div class="block-methods-purchase__column">
+                                        <div class="block-methods-purchase__icon">
+                                            <img loading="lazy" src="img/person.svg" alt="">
+                                        </div>
+                                        <span>Ипотечный брокер</span>
+                                    </div>
+                                    <div class="block-methods-purchase__column">
+                                        <div class="block-methods-purchase__icon">
+                                            <img loading="lazy" src="img/calendar.svg" alt="">
+                                        </div>
+                                        <span>Рассрочка 0%</span>
+                                    </div>
+                                    <div class="block-methods-purchase__column">
+                                        <div class="block-methods-purchase__icon">
+                                            <img loading="lazy" src="img/baby-bed.svg" alt="">
+                                        </div>
+                                        <span>Материнский капитал</span>
+                                    </div>
+                                    <div class="block-methods-purchase__column">
+                                        <div class="block-methods-purchase__icon">
+                                            <img loading="lazy" src="img/cash.svg" alt="">
+                                        </div>
+                                        <span>Оплата 100% по специальным условиям</span>
+                                    </div>
+                                </div>
+                                <a href="#" class="btn mini">
+                                    <span>Подробнее </span>
+                                    <svg aria-hidden="true" width="9" height="10">
+                                        <use xlink:href="img/sprite.svg#plus"></use>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'blocks/forms.njk' %}
+
+            {% include 'blocks/reviews.njk' %}
+
+        </main>
+        {% include 'blocks/footer.njk' %}
+    </div>
+    {% include 'blocks/scripts.njk' %}
+</body>
+
+</html>
