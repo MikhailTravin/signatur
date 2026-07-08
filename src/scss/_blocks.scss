@@ -141,7 +141,8 @@
 
   &__path {
     &._active {
-      &.path1 {
+      &.path1,
+      &.path2 {
         fill: rgba(205, 117, 85, 0.5);
       }
       &.path-blue {
