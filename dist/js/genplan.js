@@ -230,6 +230,11 @@ const popupPositionConfig = {
         left: '50%',
         transform: 'translate(-50%,-50%)'
     },
+    'r2': {
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%,-50%)'
+    },
     'h9': {
         top: '5%',
         left: '38%'
@@ -296,6 +301,518 @@ function updateTransform() {
     }
 }
 
+function renderPrivateHousePaths() {
+    const privateHousesBlock = document.querySelector('#private-houses');
+    if (!privateHousesBlock) return;
+
+    const svg = privateHousesBlock.querySelector('.block-genplan__svg');
+    if (!svg) return;
+
+    const viewBox = svg.getAttribute('viewBox');
+    const width = svg.getAttribute('width');
+    const height = svg.getAttribute('height');
+    const className = svg.getAttribute('class');
+    const fill = svg.getAttribute('fill');
+    const xmlns = svg.getAttribute('xmlns');
+
+    svg.innerHTML = '';
+
+    if (viewBox) svg.setAttribute('viewBox', viewBox);
+    if (width) svg.setAttribute('width', width);
+    if (height) svg.setAttribute('height', height);
+    if (className) svg.setAttribute('class', className);
+    if (fill) svg.setAttribute('fill', fill);
+    if (xmlns) svg.setAttribute('xmlns', xmlns);
+
+    const privateHousePaths = [
+        {
+            id: 'ph1',
+            d: 'M1 106V239.5L12 246L187 141L40.5 90.5L1 106Z'
+        },
+        {
+            id: 'ph2',
+            d: 'M180.5 309.5L10.5 249.5L191.5 135.5L342 184.5L180.5 309.5Z'
+        },
+        {
+            id: 'ph3',
+            d: 'M344 181.5L182 309.5L380.5 387.5L527.5 238.5L344 181.5Z'
+        },
+        {
+            id: 'ph4',
+            d: 'M624 474L385.5 389L528.5 237.5L737.5 296.5L624 474Z'
+        },
+        {
+            id: 'ph5',
+            d: 'M913 587L625 473L737.5 298L989 371.5L913 587Z'
+        },
+        {
+            id: 'ph6',
+            d: 'M1102 631L919 587L993 374.5L1199.5 429.5V631H1102Z'
+        },
+        {
+            id: 'ph7',
+            d: 'M1031.5 333L895.5 294.5L958 157.5L1179.5 208L1170 306.5L1031.5 333Z'
+        },
+        {
+            id: 'ph8',
+            d: 'M893.5 293.5L693 238.5L783 120L953 158.5L893.5 293.5Z'
+        },
+        {
+            id: 'ph9',
+            d: 'M622.5 87L509.5 187L688.5 235.5L775 122.5L622.5 87Z'
+        },
+        {
+            id: 'ph10',
+            d: 'M504 184.5L352 140L479 51L620.5 86L504 184.5Z'
+        },
+        {
+            id: 'ph11',
+            d: 'M348.5 25.5L219 104.5L348.5 144L475.5 54L348.5 25.5Z'
+        },
+        {
+            id: 'ph12',
+            d: 'M334 28L232 2.5L107.5 70.5L211.5 104.5L334 28Z'
+        }
+    ];
+
+    privateHousePaths.forEach(pathData => {
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('data-id', pathData.id);
+        path.setAttribute('class', 'block-genplan__path path-blue');
+        path.setAttribute('d', pathData.d);
+        svg.appendChild(path);
+    });
+}
+
+function renderPrivateHouses() {
+    const privateHousesBlock = document.querySelector('#private-houses');
+    if (!privateHousesBlock) return;
+
+    let privateHousesData = loadedHouses.get('33');
+
+    if (!privateHousesData && regionsData && regionsData[0]) {
+        const region = regionsData[0];
+        if (region.HOUSES) {
+            privateHousesData = region.HOUSES.find(h => h.ID == 33);
+        }
+        if (!privateHousesData && region.PRIVATE_HOUSES) {
+            privateHousesData = region.PRIVATE_HOUSES;
+        }
+    }
+
+    if (!privateHousesData) {
+        fetchHouse(33).then(data => {
+            loadedHouses.set('33', data);
+            renderPrivateHouses();
+        }).catch(err => {
+            console.error('Ошибка загрузки частных домов:', err);
+        });
+        return;
+    }
+
+    const tipsContainer = privateHousesBlock.querySelector('.block-genplan__tips');
+    if (!tipsContainer) return;
+
+    tipsContainer.innerHTML = '';
+
+    const privateHousesPositions = {
+        '12': { top: '1.5%', right: '75%' },
+        '11': { top: '7%', right: '63%' },
+        '10': { top: '10%', right: '55%' },
+        '9': { top: '15%', right: '40%' },
+        '8': { top: '20%', right: '28%' },
+        '7': { top: '30%', right: '9%' },
+        '6': { top: '65%', right: '5%' },
+        '5': { top: '50%', right: '29%' },
+        '4': { top: '40%', right: '43%' },
+        '3': { top: '28%', right: '66%' },
+        '2': { top: '20%', right: '77%' },
+        '1': { top: '18%', right: '87%' }
+    };
+
+    let apartments = [];
+
+    if (privateHousesData.FLOORS && privateHousesData.FLOORS.length > 0) {
+        privateHousesData.FLOORS.forEach(floor => {
+            if (floor.APARTMENTS && floor.APARTMENTS.length > 0) {
+                apartments = apartments.concat(floor.APARTMENTS);
+            }
+        });
+    }
+
+    apartments.forEach(apartment => {
+        const number = apartment.NUMBER_APARTMENT;
+        const position = privateHousesPositions[number];
+
+        if (!position) return;
+
+        const tippy = document.createElement('button');
+        tippy.className = 'block-genplan__tippy';
+        tippy.dataset.id = `ph${number}`;
+        tippy.style.top = position.top;
+        tippy.style.right = position.right;
+        tippy.innerHTML = `<span>${apartment.NAME}</span>`;
+        tipsContainer.appendChild(tippy);
+    });
+
+    if (tipsContainer.querySelectorAll('.block-genplan__tippy').length > 0) {
+        initPrivateHouseTippy();
+    }
+
+    renderPrivateHousePaths();
+}
+
+function renderPrivateHousePopups() {
+    const privateHousesBlock = document.querySelector('#private-houses');
+    if (!privateHousesBlock) return;
+
+    let privateHousesData = loadedHouses.get('33');
+
+    if (!privateHousesData && regionsData && regionsData[0]) {
+        const region = regionsData[0];
+        if (region.HOUSES) {
+            privateHousesData = region.HOUSES.find(h => h.ID == 33);
+        }
+        if (!privateHousesData && region.PRIVATE_HOUSES) {
+            privateHousesData = region.PRIVATE_HOUSES;
+        }
+    }
+
+    if (!privateHousesData) {
+        fetchHouse(33).then(data => {
+            loadedHouses.set('33', data);
+            renderPrivateHousePopups();
+        }).catch(err => {
+            console.error('Ошибка загрузки частных домов:', err);
+        });
+        return;
+    }
+
+    let apartments = [];
+    if (privateHousesData.FLOORS && privateHousesData.FLOORS.length > 0) {
+        privateHousesData.FLOORS.forEach(floor => {
+            if (floor.APARTMENTS && floor.APARTMENTS.length > 0) {
+                apartments = apartments.concat(floor.APARTMENTS);
+            }
+        });
+    }
+
+    const popupsContainer = privateHousesBlock.querySelector('.block-genplan__popups');
+    if (!popupsContainer) return;
+
+    popupsContainer.innerHTML = '';
+
+    const privateHousesPositions = {
+        '12': { top: '0%', left: '25%' },
+        '11': { top: '1%', left: '37%' },
+        '10': { top: '1%', left: '45%' },
+        '9': { top: '10%', left: '60%' },
+        '8': { top: '15%', left: '72%' },
+        '7': { top: '1%', left: '57%' },
+        '6': { top: '22%', left: '60%' },
+        '5': { top: '18%', left: '72%' },
+        '4': { top: '18%', left: '57%' },
+        '3': { top: '12%', left: '35%' },
+        '2': { top: '12%', left: '23%' },
+        '1': { top: '15%', left: '13%' }
+    };
+
+    apartments.forEach(apartment => {
+        const number = apartment.NUMBER_APARTMENT;
+        const position = privateHousesPositions[number];
+
+        if (!position) return;
+
+        const popup = document.createElement('div');
+        popup.className = 'block-genplan-popup';
+        popup.dataset.idPopup = `ph${number}`;
+        popup.style.top = position.top;
+        popup.style.left = position.left;
+
+        const isSold = apartment.SOLD === true || apartment.PRICE === 0;
+        const priceText = isSold ? '0 ₽ - продано' : `${parseInt(apartment.PRICE).toLocaleString('ru-RU')} ₽`;
+
+        const propertiesHtml = apartment.PROPERTIES_DISPLAY_VALUES ?
+            apartment.PROPERTIES_DISPLAY_VALUES.map(p => `<li>${p}</li>`).join('') : '';
+
+        popup.innerHTML = `
+            <button type="button" class="block-genplan-popup__close">
+                <svg aria-hidden="true" width="13" height="13">
+                    <use xlink:href="/img/sprite.svg#close"></use>
+                </svg>
+            </button>
+            <div class="card-apartments ${isSold ? 'sold-active' : ''}">
+                <div class="card-apartments__top">
+                    <div class="card-apartments__titles">
+                        <div class="card-apartments__title">${apartment.NAME}, ${apartment.AREA} м²</div>
+                        <div class="card-apartments__price ${isSold ? 'sold-active' : ''}">${priceText}</div>
+                    </div>
+                </div>
+                <div class="card-apartments__image">
+                    <img loading="lazy" src="${apartment.IMAGE}" alt="${apartment.NAME}">
+                </div>
+                <div class="card-apartments__bottom">
+                    <ul>
+                        ${propertiesHtml}
+                    </ul>
+                    <a href="${apartment.DETAIL_PAGE_URL}" target="_blank" class="btn btn-bg">
+                        <span>Подробнее</span>
+                        <svg aria-hidden="true" width="12" height="8"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
+                    </a>
+                </div>
+            </div>
+        `;
+
+        popupsContainer.appendChild(popup);
+    });
+}
+
+function initPrivateHouseTippy() {
+    const privateHousesBlock = document.querySelector('#private-houses');
+    if (!privateHousesBlock) return;
+
+    const tips = privateHousesBlock.querySelectorAll('.block-genplan__tippy');
+
+    tips.forEach((tip) => {
+        const id = tip.dataset.id;
+        const popup = privateHousesBlock.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
+
+        if (!popup) return;
+
+        const title = popup.querySelector('.card-apartments__title');
+        const price = popup.querySelector('.card-apartments__price');
+        const image = popup.querySelector('.card-apartments__image img');
+        const properties = popup.querySelectorAll('.card-apartments__bottom ul li');
+        const detailLink = popup.querySelector('.btn-bg');
+
+        let content = '';
+        let html = '';
+
+        if (image) {
+            html += `<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">`;
+            html += `<img src="${image.src}" alt="" style="width:50px;height:50px;object-fit:cover;border-radius:6px;">`;
+            html += `<div>`;
+        }
+
+        if (title) {
+            html += `<strong>${title.textContent}</strong>`;
+        }
+
+        if (image) {
+            html += `</div></div>`;
+        }
+
+        if (price) {
+            const isSold = price.classList.contains('sold-active');
+            html += `<div style="${isSold ? 'color:#999;' : 'color:#4CAF50;font-weight:bold;'}">${price.textContent}</div>`;
+        }
+
+        if (properties.length > 0) {
+            html += `<div style="margin-top:6px;font-size:12px;color:#666;">`;
+            properties.forEach(p => {
+                html += `<div>• ${p.textContent}</div>`;
+            });
+            html += `</div>`;
+        }
+
+        if (detailLink) {
+            html += `<a href="${detailLink.href}" style="display:inline-block;margin-top:8px;padding:6px 14px;background:#1a73e8;color:#fff;border-radius:4px;text-decoration:none;font-size:12px;transition:background 0.2s;">Подробнее</a>`;
+        }
+
+        content = html;
+
+        tippy(tip, {
+            content: content,
+            placement: 'top',
+            theme: 'light',
+            animation: 'fade',
+            duration: [200, 150],
+            allowHTML: true,
+            interactive: true,
+            trigger: 'click',
+            arrow: true,
+            appendTo: document.body,
+            offset: [0, 8],
+            onShow(instance) {
+                document.querySelectorAll('.tippy-box[data-tippy-root]').forEach(el => {
+                    if (el !== instance.popper) {
+                        const instanceToHide = el._tippy;
+                        if (instanceToHide) instanceToHide.hide();
+                    }
+                });
+                const trigger = instance.reference;
+                if (trigger) trigger.classList.add('_active');
+            },
+            onHidden(instance) {
+                const trigger = instance.reference;
+                if (trigger) trigger.classList.remove('_active');
+            }
+        });
+    });
+}
+
+function initPrivateHouseTippyHandler() {
+    document.addEventListener('click', function (e) {
+        const tippy = e.target.closest('#private-houses .block-genplan__tippy');
+        if (tippy) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const id = tippy.dataset.id;
+            if (!id) return;
+
+            const privateHousesBlock = document.querySelector('#private-houses');
+            const popup = privateHousesBlock.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
+            const path = privateHousesBlock.querySelector(`.block-genplan__path[data-id="${id}"]`);
+
+            if (!popup) {
+                console.warn('Popup not found for id:', id);
+                return;
+            }
+
+            const activePopup = privateHousesBlock.querySelector('.block-genplan-popup._active');
+            const activeTippy = privateHousesBlock.querySelector('.block-genplan__tippy._active');
+
+            if (activePopup === popup && activeTippy === tippy) {
+                popup.classList.remove('_active');
+                tippy.classList.remove('_active');
+                if (path) path.classList.remove('_active');
+                document.documentElement.classList.remove('popup-open');
+                return;
+            }
+
+            privateHousesBlock.querySelectorAll('.block-genplan-popup._active').forEach(p => {
+                p.classList.remove('_active');
+            });
+            privateHousesBlock.querySelectorAll('.block-genplan__tippy._active').forEach(t => {
+                t.classList.remove('_active');
+            });
+            privateHousesBlock.querySelectorAll('.block-genplan__path._active').forEach(p => {
+                p.classList.remove('_active');
+            });
+
+            popup.classList.add('_active');
+            tippy.classList.add('_active');
+            if (path) path.classList.add('_active');
+            document.documentElement.classList.add('popup-open');
+        }
+    });
+
+    document.addEventListener('click', function (e) {
+        const privateHousesBlock = document.querySelector('#private-houses');
+        if (!privateHousesBlock) return;
+
+        const activePopup = privateHousesBlock.querySelector('.block-genplan-popup._active');
+        if (!activePopup) return;
+
+        const isInside = activePopup.contains(e.target);
+        const isOnTippy = e.target.closest('#private-houses .block-genplan__tippy');
+        const isOnClose = e.target.closest('.block-genplan-popup__close');
+
+        if (isOnClose) {
+            activePopup.classList.remove('_active');
+            privateHousesBlock.querySelectorAll('.block-genplan__tippy._active').forEach(t => {
+                t.classList.remove('_active');
+            });
+            privateHousesBlock.querySelectorAll('.block-genplan__path._active').forEach(p => {
+                p.classList.remove('_active');
+            });
+            document.documentElement.classList.remove('popup-open');
+            return;
+        }
+
+        if (!isInside && !isOnTippy) {
+            activePopup.classList.remove('_active');
+            privateHousesBlock.querySelectorAll('.block-genplan__tippy._active').forEach(t => {
+                t.classList.remove('_active');
+            });
+            privateHousesBlock.querySelectorAll('.block-genplan__path._active').forEach(p => {
+                p.classList.remove('_active');
+            });
+            document.documentElement.classList.remove('popup-open');
+        }
+    });
+}
+
+function initPrivateHousePathClickHandler() {
+    document.addEventListener('click', function (e) {
+        const path = e.target.closest('#private-houses .block-genplan__path');
+        if (path) {
+            const id = path.dataset.id;
+            if (!id || !id.startsWith('ph')) return;
+
+            const privateHousesBlock = document.querySelector('#private-houses');
+            const tippy = privateHousesBlock.querySelector(`.block-genplan__tippy[data-id="${id}"]`);
+
+            if (tippy) {
+                tippy.click();
+            }
+        }
+    });
+}
+
+function initPrivateHouseButtonHandler() {
+    document.addEventListener('click', function (e) {
+        const privateHouseBtn = e.target.closest('.btn-private-house');
+        if (privateHouseBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const privateHousesBlock = document.querySelector('#private-houses');
+            if (privateHousesBlock) {
+                document.querySelectorAll('.block-genplan__content-container').forEach(el => {
+                    el.classList.remove('_active');
+                });
+
+                privateHousesBlock.classList.add('_active');
+
+                const titleGenplan = document.querySelector('.title-genplan');
+                const titleHouse = document.querySelector('.title-house');
+                const titleRooms = document.querySelector('.title-romms');
+                const switchGenplan = document.querySelector('.switch-genplan');
+                const zoomGenplan = document.querySelector('.zoom-genplan');
+                const fullscreenBtn = document.querySelector('.fullsreen-genplan__button');
+
+                titleGenplan?.classList.add('hidden');
+                titleHouse?.classList.remove('hidden');
+                titleHouse?.classList.add('_active');
+                titleRooms?.classList.remove('_active');
+                titleRooms?.classList.add('hidden');
+
+                if (switchGenplan) {
+                    switchGenplan.classList.remove('_active');
+                }
+
+                if (zoomGenplan) {
+                    zoomGenplan.classList.remove('hidden');
+                }
+
+                if (fullscreenBtn) {
+                    fullscreenBtn.classList.remove('step3_genplan-button');
+                }
+
+                document.documentElement.classList.remove('choice-floor');
+                document.documentElement.classList.add('choice-home');
+
+                updateCurrentContainer();
+
+                if (window.resetTransformations) {
+                    resetTransformations();
+                }
+
+                document.querySelectorAll('.block-genplan-popup._active').forEach(popup => {
+                    popup.classList.remove('_active');
+                });
+                document.documentElement.classList.remove('popup-open');
+
+                if (window.updateEntrancesState) {
+                    updateEntrancesState();
+                }
+            }
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     const blockGenplan = document.querySelector('.block-genplan');
     if (!blockGenplan) return;
@@ -305,8 +822,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderStep1AndStep2();
         renderPopups();
 
+        try {
+            const privateHouseData = await fetchHouse(33);
+            loadedHouses.set('33', privateHouseData);
+            renderPrivateHouses();
+            renderPrivateHousePopups();
+        } catch (err) {
+            console.warn('Не удалось загрузить частные дома:', err);
+        }
+
         if (regionsData && regionsData.length && regionsData[0].HOUSES) {
             regionsData[0].HOUSES.forEach(house => {
+                if (house.ID == 33) return;
                 setTimeout(() => {
                     if (!loadedHouses.has(house.ID.toString())) {
                         fetchHouse(house.ID).then(data => {
@@ -324,6 +851,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         initPopupHandlers();
         initMobileFloorHandlers();
         initExistingHandlers();
+        initPrivateHouseButtonHandler();
+        initPrivateHouseTippyHandler();
+        initPrivateHousePathClickHandler();
     } catch (err) {
         console.error('Ошибка загрузки генплана:', err);
     }
@@ -389,6 +919,12 @@ function renderStep1AndStep2() {
         svg1.appendChild(path);
     });
 
+    const privateHousesPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    privateHousesPath.setAttribute('data-id', 'r2');
+    privateHousesPath.setAttribute('class', 'block-genplan__path path2');
+    privateHousesPath.setAttribute('d', 'M1091.21 359.364L1046.45 335.158L1137.79 261.625L1186.66 285.374L1091.21 359.364Z');
+    svg1.appendChild(privateHousesPath);
+
     const tippy1 = document.createElement('button');
     tippy1.className = 'block-genplan__tippy';
     tippy1.dataset.id = 'r1';
@@ -396,6 +932,14 @@ function renderStep1AndStep2() {
     tippy1.style.right = `${region.POS_RIGHT}%`;
     tippy1.innerHTML = `<span>${region.NAME}</span>`;
     tips1.appendChild(tippy1);
+
+    const tippy2 = document.createElement('button');
+    tippy2.className = 'block-genplan__tippy';
+    tippy2.dataset.id = 'r2';
+    tippy2.style.top = '42%';
+    tippy2.style.right = '5%';
+    tippy2.innerHTML = `<span>Частные дома</span>`;
+    tips1.appendChild(tippy2);
 
     region.HOUSES.forEach(house => {
         const houseId = `h${house.ID}`;
@@ -418,6 +962,9 @@ function renderStep1AndStep2() {
         tips2.appendChild(tippy);
     });
 
+    renderPrivateHouses();
+    renderPrivateHousePopups();
+
     saveOriginalImageSizes();
 
     const step1 = document.querySelector('.block-genplan__content-container.step1');
@@ -428,8 +975,11 @@ function renderStep1AndStep2() {
 }
 
 function renderPopups() {
-    const popupsContainer = document.querySelector('.block-genplan__popups');
-    if (!popupsContainer || !regionsData?.length) return;
+    const popupsContainer = document.querySelector('.block-genplan__popups:not(#private-houses .block-genplan__popups)');
+
+    if (!popupsContainer || !regionsData?.length) {
+        return;
+    }
 
     popupsContainer.innerHTML = '';
     const region = regionsData[0];
@@ -437,7 +987,6 @@ function renderPopups() {
     const regionPopup = document.createElement('div');
     regionPopup.className = 'block-genplan-popup';
     regionPopup.dataset.idPopup = 'r1';
-
     applyIndividualPopupPosition(regionPopup, 'r1');
 
     regionPopup.innerHTML = `
@@ -478,18 +1027,87 @@ function renderPopups() {
     `;
     popupsContainer.appendChild(regionPopup);
 
+    const privateHousesPopup = document.createElement('div');
+    privateHousesPopup.className = 'block-genplan-popup';
+    privateHousesPopup.dataset.idPopup = 'r2';
+    applyIndividualPopupPosition(privateHousesPopup, 'r2');
+
+    let privateHouseData = null;
+    if (region.PRIVATE_HOUSES) {
+        privateHouseData = region.PRIVATE_HOUSES;
+    } else if (region.HOUSES) {
+        privateHouseData = region.HOUSES.find(h => h.ID == 33);
+    }
+
+    const privateData = privateHouseData || {
+        NAME: 'Частный сектор',
+        HOUSES_COUNT: 15,
+        DEADLINE: '2026',
+        IMAGE: region.IMAGE || '',
+        PREVIEW_TEXT: 'Уютные частные дома в экологически чистом районе',
+        ROOMS_INFO: [
+            { NAME: '2-комнатные', PRICE: 10000000 },
+            { NAME: '3-комнатные', PRICE: 12000000 }
+        ]
+    };
+
+    let roomsHtml = '';
+    if (privateData.ROOMS_INFO) {
+        privateData.ROOMS_INFO.forEach(r => {
+            const priceText = r.PRICE ? `от ${r.PRICE.toLocaleString('ru-RU')} руб.` : '';
+            roomsHtml += `
+                <li>
+                    <div class="block-genplan-popup__room">${r.NAME}</div>
+                    ${priceText ? `<div class="block-genplan-popup__price">${priceText}</div>` : ''}
+                </li>
+            `;
+        });
+    }
+
+    privateHousesPopup.innerHTML = `
+        <button type="button" class="block-genplan-popup__close">
+            <svg aria-hidden="true" width="13" height="13"><use xlink:href="/img/sprite.svg#close"></use></svg>
+        </button>
+        <div class="block-genplan-popup__content">
+            <div class="block-genplan-popup__body">
+                <div class="block-genplan-popup__title">${privateData.NAME || 'Частный сектор'}</div>
+                <div class="block-genplan-popup__top">
+                    <ul>
+                        <li><div class="block-genplan-popup__name">Домов построено</div><div class="block-genplan-popup__value">${privateData.HOUSES_COUNT || region.HOUSES_COUNT || 0}</div></li>
+                        <li><div class="block-genplan-popup__name">Срок сдачи:</div><div class="block-genplan-popup__value">${privateData.DEADLINE || '2026'}</div></li>
+                    </ul>
+                </div>
+                <div class="block-genplan-popup__image">
+                    <img loading="lazy" src="${privateData.IMAGE || region.IMAGE || ''}" alt="">
+                    <p>${privateData.PREVIEW_TEXT || 'От уютных квартир с антресолями до просторных частных домов'}</p>
+                </div>
+                <div class="block-genplan-popup__rooms">
+                    <ul>
+                        ${roomsHtml}
+                    </ul>
+                </div>
+                <div class="block-genplan-popup__buttons">
+                    <a href="#" class="block-genplan-popup__button btn btn-genplan btn-private-house">
+                        <span>Выбрать дом</span>
+                        <svg aria-hidden="true" width="12" height="9"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    popupsContainer.appendChild(privateHousesPopup);
+
     region.HOUSES.forEach(house => {
+        if (house.ID == 33) return;
+
         const houseId = `h${house.ID}`;
         const originalHouseId = house.ID;
-
-        const chooseApartmentText = house.COMING_SOON === 1 ? 'Скоро в продаже' : 'Выбрать квартиру';
         const isComingSoon = house.COMING_SOON === 1;
 
         const housePopup = document.createElement('div');
         housePopup.className = 'block-genplan-popup';
         housePopup.dataset.idPopup = houseId;
         housePopup.dataset.originalId = originalHouseId;
-
         applyIndividualPopupPosition(housePopup, houseId);
 
         housePopup.innerHTML = `
@@ -566,11 +1184,38 @@ function applyIndividualPopupPosition(popupElement, popupId) {
 function initPopupHandlers() {
     document.addEventListener('click', (e) => {
         const tippy = e.target.closest('.block-genplan__tippy');
+
         if (tippy) {
             const id = tippy.dataset.id;
+
             if (id) {
                 e.preventDefault();
                 e.stopPropagation();
+
+                if (id === 'r1' || id === 'r2') {
+                    togglePopup(id);
+                    return;
+                }
+
+                if (id.startsWith('ph')) {
+                    const privateHousesBlock = document.querySelector('#private-houses');
+                    const popup = privateHousesBlock?.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
+                    if (popup) {
+                        const activePopup = privateHousesBlock.querySelector('.block-genplan-popup._active');
+                        if (activePopup === popup) {
+                            popup.classList.remove('_active');
+                            document.documentElement.classList.remove('popup-open');
+                            return;
+                        }
+                        privateHousesBlock.querySelectorAll('.block-genplan-popup._active').forEach(p => {
+                            p.classList.remove('_active');
+                        });
+                        popup.classList.add('_active');
+                        document.documentElement.classList.add('popup-open');
+                    }
+                    return;
+                }
+
                 togglePopup(id);
                 return;
             }
@@ -709,6 +1354,40 @@ function initPopupHandlers() {
             document.documentElement.classList.remove('popup-open');
         }
     });
+}
+
+function togglePopup(id) {
+    const targetPopup = document.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
+
+    if (!targetPopup) {
+        return;
+    }
+
+    const activePopup = document.querySelector('.block-genplan-popup._active');
+    const wasActive = targetPopup === activePopup;
+
+    document.querySelectorAll('.block-genplan-popup._active').forEach(popup => {
+        popup.classList.remove('_active');
+    });
+
+    document.querySelectorAll('.block-genplan__path._active, .block-genplan__tippy._active').forEach(el => {
+        el.classList.remove('_active');
+    });
+
+    if (wasActive) {
+        document.documentElement.classList.remove('popup-open');
+        return;
+    }
+
+    targetPopup.classList.add('_active');
+
+    const path = document.querySelector(`.block-genplan__path[data-id="${id}"]`);
+    const tippy = document.querySelector(`.block-genplan__tippy[data-id="${id}"]`);
+
+    if (path) path.classList.add('_active');
+    if (tippy) tippy.classList.add('_active');
+
+    document.documentElement.classList.add('popup-open');
 }
 
 function createMobileFloorsPopup(houseId, visualHouseId) {
@@ -1132,37 +1811,6 @@ function initMobileFloorHandlers() {
     });
 }
 
-function togglePopup(id) {
-    const targetPopup = document.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
-    if (!targetPopup) return;
-
-    const activePopup = document.querySelector('.block-genplan-popup._active');
-    const wasActive = targetPopup === activePopup;
-
-    document.querySelectorAll('.block-genplan-popup._active').forEach(popup => {
-        popup.classList.remove('_active');
-    });
-
-    document.querySelectorAll('.block-genplan__path._active, .block-genplan__tippy._active').forEach(el => {
-        el.classList.remove('_active');
-    });
-
-    if (wasActive) {
-        document.documentElement.classList.remove('popup-open');
-        return;
-    }
-
-    targetPopup.classList.add('_active');
-
-    const path = document.querySelector(`.block-genplan__path[data-id="${id}"]`);
-    const tippy = document.querySelector(`.block-genplan__tippy[data-id="${id}"]`);
-
-    if (path) path.classList.add('_active');
-    if (tippy) tippy.classList.add('_active');
-
-    document.documentElement.classList.add('popup-open');
-}
-
 async function loadAndRenderStep3(houseId, selectedFloor = null) {
     let houseData = loadedHouses.get(houseId);
     if (!houseData) {
@@ -1343,7 +1991,7 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
                                 <ul>
                                     ${ap.PROPERTIES_DISPLAY_VALUES.map(p => `<li>${p}</li>`).join('')}
                                 </ul>
-                                <a href="${ap.DETAIL_PAGE_URL}" class="btn btn-bg">
+                                <a href="${ap.DETAIL_PAGE_URL}" target="_blank" class="btn btn-bg">
                                     <span>Подробнее</span>
                                     <svg aria-hidden="true" width="12" height="8"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
                                 </a>
@@ -1439,6 +2087,7 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
 function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null) {
     const contentContainerStep1 = document.querySelector('.block-genplan__content-container.step1');
     const contentContainerStep2 = document.querySelector('.block-genplan__content-container.step2');
+    const privateHousesBlock = document.querySelector('#private-houses');
     const titleGenplan = document.querySelector('.title-genplan');
     const titleHouse = document.querySelector('.title-house');
     const titleRooms = document.querySelector('.title-romms');
@@ -1448,6 +2097,7 @@ function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null)
 
     contentContainerStep1?.classList.remove('_active');
     contentContainerStep2?.classList.remove('_active');
+    if (privateHousesBlock) privateHousesBlock.classList.remove('_active');
     document.querySelectorAll('.block-genplan__content-container.step3').forEach(el => el.classList.remove('_active'));
 
     titleGenplan?.classList.remove('_active');

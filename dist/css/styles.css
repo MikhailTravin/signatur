@@ -2131,7 +2131,7 @@ a {
   top: 0;
   z-index: 4;
 }
-.block-genplan__path._active.path1 {
+.block-genplan__path._active.path1, .block-genplan__path._active.path2 {
   fill: rgba(205, 117, 85, 0.5);
 }
 .block-genplan__path._active.path-blue {
