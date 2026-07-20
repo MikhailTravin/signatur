@@ -417,8 +417,8 @@ function renderPrivateHouses() {
 
     const privateHousesPositions = {
         '12': { top: '1.5%', right: '75%' },
-        '11': { top: '7%', right: '63%' },
-        '10': { top: '10%', right: '55%' },
+        '11': { top: '3%', right: '62%' },
+        '10': { top: '10%', right: '53%' },
         '9': { top: '15%', right: '40%' },
         '8': { top: '20%', right: '28%' },
         '7': { top: '30%', right: '9%' },
@@ -426,7 +426,7 @@ function renderPrivateHouses() {
         '5': { top: '50%', right: '29%' },
         '4': { top: '40%', right: '43%' },
         '3': { top: '28%', right: '66%' },
-        '2': { top: '20%', right: '77%' },
+        '2': { top: '20%', right: '75%' },
         '1': { top: '18%', right: '87%' }
     };
 
@@ -661,19 +661,14 @@ function initPrivateHouseTippyHandler() {
             const id = tippy.dataset.id;
             if (!id) return;
 
-            const privateHousesBlock = document.querySelector('#private-houses');
-            const popup = privateHousesBlock.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
-            const path = privateHousesBlock.querySelector(`.block-genplan__path[data-id="${id}"]`);
+            const popup = document.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
+            const path = document.querySelector(`#private-houses .block-genplan__path[data-id="${id}"]`);
 
-            if (!popup) {
-                console.warn('Popup not found for id:', id);
-                return;
-            }
+            if (!popup) return;
 
-            const activePopup = privateHousesBlock.querySelector('.block-genplan-popup._active');
-            const activeTippy = privateHousesBlock.querySelector('.block-genplan__tippy._active');
+            const activeTippy = document.querySelector('#private-houses .block-genplan__tippy._active');
 
-            if (activePopup === popup && activeTippy === tippy) {
+            if (activeTippy === tippy) {
                 popup.classList.remove('_active');
                 tippy.classList.remove('_active');
                 if (path) path.classList.remove('_active');
@@ -681,13 +676,15 @@ function initPrivateHouseTippyHandler() {
                 return;
             }
 
-            privateHousesBlock.querySelectorAll('.block-genplan-popup._active').forEach(p => {
+            document.querySelectorAll('.block-genplan-popup[data-id-popup^="ph"]._active').forEach(p => {
                 p.classList.remove('_active');
             });
-            privateHousesBlock.querySelectorAll('.block-genplan__tippy._active').forEach(t => {
+
+            document.querySelectorAll('#private-houses .block-genplan__tippy._active').forEach(t => {
                 t.classList.remove('_active');
             });
-            privateHousesBlock.querySelectorAll('.block-genplan__path._active').forEach(p => {
+
+            document.querySelectorAll('#private-houses .block-genplan__path._active').forEach(p => {
                 p.classList.remove('_active');
             });
 
@@ -699,10 +696,7 @@ function initPrivateHouseTippyHandler() {
     });
 
     document.addEventListener('click', function (e) {
-        const privateHousesBlock = document.querySelector('#private-houses');
-        if (!privateHousesBlock) return;
-
-        const activePopup = privateHousesBlock.querySelector('.block-genplan-popup._active');
+        const activePopup = document.querySelector('.block-genplan-popup[data-id-popup^="ph"]._active');
         if (!activePopup) return;
 
         const isInside = activePopup.contains(e.target);
@@ -711,10 +705,10 @@ function initPrivateHouseTippyHandler() {
 
         if (isOnClose) {
             activePopup.classList.remove('_active');
-            privateHousesBlock.querySelectorAll('.block-genplan__tippy._active').forEach(t => {
+            document.querySelectorAll('#private-houses .block-genplan__tippy._active').forEach(t => {
                 t.classList.remove('_active');
             });
-            privateHousesBlock.querySelectorAll('.block-genplan__path._active').forEach(p => {
+            document.querySelectorAll('#private-houses .block-genplan__path._active').forEach(p => {
                 p.classList.remove('_active');
             });
             document.documentElement.classList.remove('popup-open');
@@ -723,10 +717,10 @@ function initPrivateHouseTippyHandler() {
 
         if (!isInside && !isOnTippy) {
             activePopup.classList.remove('_active');
-            privateHousesBlock.querySelectorAll('.block-genplan__tippy._active').forEach(t => {
+            document.querySelectorAll('#private-houses .block-genplan__tippy._active').forEach(t => {
                 t.classList.remove('_active');
             });
-            privateHousesBlock.querySelectorAll('.block-genplan__path._active').forEach(p => {
+            document.querySelectorAll('#private-houses .block-genplan__path._active').forEach(p => {
                 p.classList.remove('_active');
             });
             document.documentElement.classList.remove('popup-open');

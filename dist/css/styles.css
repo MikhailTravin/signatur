@@ -2329,13 +2329,6 @@ a {
   content: "";
   border-top: 10px solid var(--theme-color-accent);
 }
-@media (max-width: 768px) {
-  .block-genplan__tippy {
-    font-size: 22px;
-    padding: 15px 13px;
-    border-radius: 48px;
-  }
-}
 .block-genplan__choose-floors-mob {
   position: absolute;
   top: 0;
