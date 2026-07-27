@@ -261,7 +261,18 @@
     letter-spacing: -0.03em;
     transition:
       background-color 0.3s,
-      color 0.3s;
+      color 0.3s,
+      opacity 0.3s;
+    @media (any-hover: hover) {
+      &:hover {
+        color: #fff;
+        background: #cd7555;
+        &::before {
+          content: "";
+          border-top: 10px solid #cd7555;
+        }
+      }
+    }
     &::before {
       content: "";
       position: absolute;
@@ -273,6 +284,7 @@
       border-left: 12px solid transparent;
       border-right: 12px solid transparent;
       border-top: 10px solid #fff;
+      transition: border-top 0.3s;
       @media (max-width: 768px) {
         border-left: 15px solid transparent;
         border-right: 15px solid transparent;
@@ -326,9 +338,9 @@
       }
     }
     @media (max-width: 768px) {
-      //font-size: 22px;
-      //padding: 15px 13px;
-      //border-radius: 48px;
+      font-size: 22px;
+      padding: 15px 13px;
+      border-radius: 48px;
     }
   }
 
@@ -2039,7 +2051,8 @@
   .block-intro__top {
     max-width: 100%;
     .title2 {
-      margin: 0px 0px 12px 0px;
+      font-size: 65px;
+      margin: 0px 0px 10px 0px;
       @media (max-width: 768px) {
         margin: 0px 0px 15px 0px;
         font-size: 48px;
@@ -2047,7 +2060,13 @@
     }
   }
   .block-intro__item {
-    gap: 26px;
+    gap: 16px;
+    @media (max-width: 768px) {
+      gap: 28px;
+    }
+    .btn {
+      padding: 5px 7px 5px 10px;
+    }
   }
   .block-intro__title {
     font-weight: 500;
@@ -8024,7 +8043,7 @@
     @media (max-width: 768px) {
       background: rgba(34, 34, 34, 0.5);
       border-radius: 30px;
-      padding: 20px;
+      padding: 20px 20px 40px 20px;
       gap: 20px;
       flex: 1 1 auto;
     }
@@ -8081,6 +8100,7 @@
         max-width: 80%;
         text-align: center;
         margin: 0 auto;
+        padding: 0px 0px 40px 0px;
       }
     }
   }
@@ -8283,14 +8303,15 @@
 //========================================================================================================================================================
 
 .block-house-descr {
-  padding: 73px 0px 40px 0px;
+  padding: 73px 0px 46px 0px;
   position: relative;
-  min-height: 800px;
+  min-height: 737px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   @media (max-width: 768px) {
-    padding: 71px 0px 100px 0px;
-    min-height: 1130px;
+    padding: 71px 0px;
+    min-height: 1016px;
     background: #000;
   }
   .container {
@@ -8333,7 +8354,7 @@
 
   &__body {
     display: grid;
-    align-items: center;
+    align-items: flex-end;
     gap: 5px;
     grid-template-columns: repeat(2, 1fr);
     @media (max-width: 768px) {
@@ -8346,28 +8367,34 @@
   // .block-house-descr__left
 
   &__left {
+    max-width: 363px;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
+    margin-bottom: 22px;
     @media (max-width: 768px) {
-      gap: 15px;
       width: 100%;
+      margin-bottom: 0px;
     }
     ul {
+      display: flex;
+      flex-direction: column;
+      gap: 19px;
+      padding: 0px 0px 0px 10px;
       @media (max-width: 768px) {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+        gap: 15px;
       }
       li {
         display: flex;
         font-family: var(--second-family);
         font-weight: 500;
         font-size: 16px;
-        line-height: 183%;
+        line-height: 132%;
         letter-spacing: -0.02em;
         @media (max-width: 768px) {
-          line-height: 123%;
+          font-size: 14px;
+          line-height: 129%;
         }
         &::before {
           content: "";
@@ -8379,7 +8406,7 @@
           background: #fff;
           margin: 13px 11px 0px 0px;
           @media (max-width: 768px) {
-            margin: 11px 11px 0px 0px;
+            margin: 5px 11px 0px 0px;
           }
         }
       }
