@@ -301,6 +301,34 @@ function updateTransform() {
     }
 }
 
+function updateDescriptionText() {
+    const descParagraph = document.querySelector('.block-genplan__descr p');
+    if (!descParagraph) return;
+
+    const privateHousesBlock = document.querySelector('#private-houses');
+    const isPrivateHousesActive = privateHousesBlock && privateHousesBlock.classList.contains('_active');
+
+    const step2Container = document.querySelector('.block-genplan__content-container.step2');
+    const isStep2WithPrivateHouse = step2Container &&
+        step2Container.classList.contains('_active') &&
+        step2Container.id === 'private-houses';
+
+    const privateHousePopup = document.querySelector('.block-genplan-popup[data-id-popup="r2"]');
+    const isPrivateHousePopupActive = privateHousePopup && privateHousePopup.classList.contains('_active');
+
+    if (isPrivateHousesActive || isStep2WithPrivateHouse || isPrivateHousePopupActive) {
+        if (!descParagraph.textContent.includes('Свой дом. Со всеми преимуществами города.')) {
+            descParagraph.innerHTML = 'Свой дом. Со всеми преимуществами города.';
+        }
+    } else {
+        const originalText = 'От уютных до просторных квартир <span>с антресолями и террасами</span>';
+        if (descParagraph.innerHTML !== originalText &&
+            !descParagraph.textContent.includes('От уютных до просторных квартир')) {
+            descParagraph.innerHTML = originalText;
+        }
+    }
+}
+
 function renderPrivateHousePaths() {
     const privateHousesBlock = document.querySelector('#private-houses');
     if (!privateHousesBlock) return;
@@ -327,51 +355,51 @@ function renderPrivateHousePaths() {
     const privateHousePaths = [
         {
             id: 'ph1',
-            d: 'M1 106V239.5L12 246L187 141L40.5 90.5L1 106Z'
+            d: 'M133 262.5L28.5 213.5L56.5 171.5L147.5 122.5L275.5 162L133 262.5Z'
         },
         {
             id: 'ph2',
-            d: 'M180.5 309.5L10.5 249.5L191.5 135.5L342 184.5L180.5 309.5Z'
+            d: 'M277 162.5L135 265L267.5 325.5L397.5 207L277 162.5Z'
         },
         {
             id: 'ph3',
-            d: 'M344 181.5L182 309.5L380.5 387.5L527.5 238.5L344 181.5Z'
+            d: 'M428.5 399.5L271 327.5L402 206L545 262L428.5 399.5Z'
         },
         {
             id: 'ph4',
-            d: 'M624 474L385.5 389L528.5 237.5L737.5 296.5L624 474Z'
+            d: 'M619.5 483.5L432.5 399L548.5 264L714 319.5L619.5 483.5Z'
         },
         {
             id: 'ph5',
-            d: 'M913 587L625 473L737.5 298L989 371.5L913 587Z'
+            d: 'M850.5 586L625.5 484.5L717 324L911 391L850.5 586Z'
         },
         {
             id: 'ph6',
-            d: 'M1102 631L919 587L993 374.5L1199.5 429.5V631H1102Z'
+            d: 'M952 629L856 589.5L912 391L1081 446L1156.5 425.5L1149.5 629H952Z'
         },
         {
             id: 'ph7',
-            d: 'M1031.5 333L895.5 294.5L958 157.5L1179.5 208L1170 306.5L1031.5 333Z'
+            d: 'M945 348L833.5 312L886.5 183L1062 231.5L1051 317L945 348Z'
         },
         {
             id: 'ph8',
-            d: 'M893.5 293.5L693 238.5L783 120L953 158.5L893.5 293.5Z'
+            d: 'M831 311L670.5 255L746 144.5L885.5 181.5L831 311Z'
         },
         {
             id: 'ph9',
-            d: 'M622.5 87L509.5 187L688.5 235.5L775 122.5L622.5 87Z'
+            d: 'M666.5 253L523.5 205.5L612.5 111.5L744 146L666.5 253Z'
         },
         {
             id: 'ph10',
-            d: 'M504 184.5L352 140L479 51L620.5 86L504 184.5Z'
+            d: 'M518.5 206L407.5 165.5L504.5 74.5L609.5 112.5L518.5 206Z'
         },
         {
             id: 'ph11',
-            d: 'M348.5 25.5L219 104.5L348.5 144L475.5 54L348.5 25.5Z'
+            d: 'M405 167.5L295 129.5L405 49L500.5 77L405 167.5Z'
         },
         {
             id: 'ph12',
-            d: 'M334 28L232 2.5L107.5 70.5L211.5 104.5L334 28Z'
+            d: 'M293 128L225 105.5L233.5 70.5L308.5 24L403 49L293 128Z'
         }
     ];
 
@@ -416,18 +444,18 @@ function renderPrivateHouses() {
     tipsContainer.innerHTML = '';
 
     const privateHousesPositions = {
-        '12': { top: '1.5%', right: '75%' },
-        '11': { top: '3%', right: '62%' },
-        '10': { top: '10%', right: '53%' },
-        '9': { top: '15%', right: '40%' },
-        '8': { top: '20%', right: '28%' },
-        '7': { top: '30%', right: '9%' },
-        '6': { top: '65%', right: '5%' },
-        '5': { top: '50%', right: '29%' },
-        '4': { top: '40%', right: '43%' },
-        '3': { top: '28%', right: '66%' },
-        '2': { top: '20%', right: '75%' },
-        '1': { top: '18%', right: '87%' }
+        '12': { top: '3%', right: '74%' },
+        '11': { top: '8%', right: '64%' },
+        '10': { top: '13%', right: '56%' },
+        '9': { top: '19%', right: '43%' },
+        '8': { top: '25%', right: '34%' },
+        '7': { top: '35%', right: '18%' },
+        '6': { top: '70%', right: '7%' },
+        '5': { top: '52%', right: '34%' },
+        '4': { top: '43%', right: '46%' },
+        '3': { top: '31%', right: '63%' },
+        '2': { top: '25%', right: '72%' },
+        '1': { top: '17%', right: '85%' }
     };
 
     let apartments = [];
@@ -503,18 +531,18 @@ function renderPrivateHousePopups() {
     popupsContainer.innerHTML = '';
 
     const privateHousesPositions = {
-        '12': { top: '0%', left: '25%' },
-        '11': { top: '1%', left: '37%' },
-        '10': { top: '1%', left: '45%' },
-        '9': { top: '10%', left: '60%' },
-        '8': { top: '15%', left: '72%' },
-        '7': { top: '1%', left: '57%' },
-        '6': { top: '22%', left: '60%' },
-        '5': { top: '18%', left: '72%' },
-        '4': { top: '18%', left: '57%' },
-        '3': { top: '12%', left: '35%' },
-        '2': { top: '12%', left: '23%' },
-        '1': { top: '15%', left: '13%' }
+        '12': { top: '0%', left: '26%' },
+        '11': { top: '1%', left: '36%' },
+        '10': { top: '1%', left: '44%' },
+        '9': { top: '10%', left: '57%' },
+        '8': { top: '15%', left: '66%' },
+        '7': { top: '1%', left: '53%' },
+        '6': { top: '22%', left: '64%' },
+        '5': { top: '18%', left: '66%' },
+        '4': { top: '18%', left: '54%' },
+        '3': { top: '12%', left: '37%' },
+        '2': { top: '12%', left: '28%' },
+        '1': { top: '15%', left: '15%' }
     };
 
     apartments.forEach(apartment => {
@@ -802,6 +830,8 @@ function initPrivateHouseButtonHandler() {
                 if (window.updateEntrancesState) {
                     updateEntrancesState();
                 }
+
+                setTimeout(updateDescriptionText, 50);
             }
         }
     });
@@ -848,6 +878,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         initPrivateHouseButtonHandler();
         initPrivateHouseTippyHandler();
         initPrivateHousePathClickHandler();
+
+        updateDescriptionText();
+        observePrivateHousesState();
+        interceptPrivateHouseActivations();
     } catch (err) {
         console.error('Ошибка загрузки генплана:', err);
     }
@@ -861,6 +895,7 @@ document.addEventListener('visibilitychange', function () {
 
 window.addEventListener('resize', function () {
     refreshEntrancesState;
+    updateDescriptionText();
 });
 
 function renderStep1AndStep2() {
@@ -1072,8 +1107,8 @@ function renderPopups() {
                     </ul>
                 </div>
                 <div class="block-genplan-popup__image">
-                    <img loading="lazy" src="${privateData.IMAGE || region.IMAGE || ''}" alt="">
-                    <p>${privateData.PREVIEW_TEXT || 'От уютных квартир с антресолями до просторных частных домов'}</p>
+                    <img loading="lazy" src="/local/templates/makro/img/image-private-house.webp" alt="">
+                    <p>${privateData.PREVIEW_TEXT || 'Свой дом. Со всеми преимуществами города.'}</p>
                 </div>
                 <div class="block-genplan-popup__rooms">
                     <ul>
@@ -1382,6 +1417,8 @@ function togglePopup(id) {
     if (tippy) tippy.classList.add('_active');
 
     document.documentElement.classList.add('popup-open');
+
+    setTimeout(updateDescriptionText, 50);
 }
 
 function createMobileFloorsPopup(houseId, visualHouseId) {
@@ -2192,6 +2229,8 @@ function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null)
     }
 
     initEntranceToggleSwitchHandler();
+
+    setTimeout(updateDescriptionText, 50);
 }
 
 function initExistingHandlers() {
@@ -2814,6 +2853,86 @@ function initMainGenplanLogic() {
     window.updateEntrancesState = updateEntrancesState;
     window.toggleSteps = toggleSteps;
     window.updateSvgsSize = updateSvgsSize;
+}
+
+function observePrivateHousesState() {
+    const privateHousesBlock = document.querySelector('#private-houses');
+    if (!privateHousesBlock) return;
+
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.attributeName === 'class') {
+                updateDescriptionText();
+            }
+        });
+    });
+
+    observer.observe(privateHousesBlock, {
+        attributes: true,
+        attributeFilter: ['class']
+    });
+
+    const step2Container = document.querySelector('.block-genplan__content-container.step2');
+    if (step2Container) {
+        const step2Observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (mutation.attributeName === 'class') {
+                    updateDescriptionText();
+                }
+            });
+        });
+
+        step2Observer.observe(step2Container, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    }
+
+    const privateHousePopup = document.querySelector('.block-genplan-popup[data-id-popup="r2"]');
+    if (privateHousePopup) {
+        const popupObserver = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (mutation.attributeName === 'class') {
+                    updateDescriptionText();
+                }
+            });
+        });
+
+        popupObserver.observe(privateHousePopup, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    }
+}
+
+function interceptPrivateHouseActivations() {
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.btn-private-house');
+        if (btn) {
+            setTimeout(updateDescriptionText, 50);
+        }
+    });
+
+    document.addEventListener('click', function (e) {
+        const tippy = e.target.closest('.block-genplan__tippy[data-id="r2"]');
+        if (tippy) {
+            setTimeout(updateDescriptionText, 50);
+        }
+    });
+
+    document.addEventListener('click', function (e) {
+        const path = e.target.closest('.block-genplan__path[data-id="r2"]');
+        if (path) {
+            setTimeout(updateDescriptionText, 50);
+        }
+    });
+
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.block-genplan-popup[data-id-popup="r2"] .btn-genplan');
+        if (btn) {
+            setTimeout(updateDescriptionText, 50);
+        }
+    });
 }
 
 const objectsColumns = document.querySelectorAll('.block-genplan-objects-column');
