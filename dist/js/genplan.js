@@ -483,6 +483,8 @@ function renderPrivateHouses() {
         tipsContainer.appendChild(tippy);
     });
 
+    renderPrivateHousePopups();
+
     if (tipsContainer.querySelectorAll('.block-genplan__tippy').length > 0) {
         initPrivateHouseTippy();
     }
@@ -525,11 +527,6 @@ function renderPrivateHousePopups() {
         });
     }
 
-    const popupsContainer = privateHousesBlock.querySelector('.block-genplan__popups');
-    if (!popupsContainer) return;
-
-    popupsContainer.innerHTML = '';
-
     const privateHousesPositions = {
         '12': { top: '0%', left: '26%' },
         '11': { top: '1%', left: '36%' },
@@ -545,53 +542,60 @@ function renderPrivateHousePopups() {
         '1': { top: '15%', left: '15%' }
     };
 
-    apartments.forEach(apartment => {
-        const number = apartment.NUMBER_APARTMENT;
-        const position = privateHousesPositions[number];
+    const allContainers = document.querySelectorAll('.block-genplan__popups');
 
-        if (!position) return;
+    allContainers.forEach(container => {
+        const oldPhPopups = container.querySelectorAll('.block-genplan-popup[data-id-popup^="ph"]');
+        oldPhPopups.forEach(p => p.remove());
 
-        const popup = document.createElement('div');
-        popup.className = 'block-genplan-popup';
-        popup.dataset.idPopup = `ph${number}`;
-        popup.style.top = position.top;
-        popup.style.left = position.left;
+        apartments.forEach(apartment => {
+            const number = apartment.NUMBER_APARTMENT;
+            const position = privateHousesPositions[number];
 
-        const isSold = apartment.SOLD === true || apartment.PRICE === 0;
-        const priceText = isSold ? '0 ₽ - продано' : `${parseInt(apartment.PRICE).toLocaleString('ru-RU')} ₽`;
+            if (!position) return;
 
-        const propertiesHtml = apartment.PROPERTIES_DISPLAY_VALUES ?
-            apartment.PROPERTIES_DISPLAY_VALUES.map(p => `<li>${p}</li>`).join('') : '';
+            const popup = document.createElement('div');
+            popup.className = 'block-genplan-popup';
+            popup.dataset.idPopup = `ph${number}`;
+            popup.style.top = position.top;
+            popup.style.left = position.left;
 
-        popup.innerHTML = `
-            <button type="button" class="block-genplan-popup__close">
-                <svg aria-hidden="true" width="13" height="13">
-                    <use xlink:href="/img/sprite.svg#close"></use>
-                </svg>
-            </button>
-            <div class="card-apartments ${isSold ? 'sold-active' : ''}">
-                <div class="card-apartments__top">
-                    <div class="card-apartments__titles">
-                        <div class="card-apartments__title">${apartment.NAME}, ${apartment.AREA} м²</div>
-                        <div class="card-apartments__price ${isSold ? 'sold-active' : ''}">${priceText}</div>
+            const isSold = apartment.SOLD === true || apartment.PRICE === 0;
+            const priceText = isSold ? '0 ₽ - продано' : `${parseInt(apartment.PRICE).toLocaleString('ru-RU')} ₽`;
+
+            const propertiesHtml = apartment.PROPERTIES_DISPLAY_VALUES ?
+                apartment.PROPERTIES_DISPLAY_VALUES.map(p => `<li>${p}</li>`).join('') : '';
+
+            popup.innerHTML = `
+                <button type="button" class="block-genplan-popup__close">
+                    <svg aria-hidden="true" width="13" height="13">
+                        <use xlink:href="/img/sprite.svg#close"></use>
+                    </svg>
+                </button>
+                <div class="card-apartments ${isSold ? 'sold-active' : ''}">
+                    <div class="card-apartments__top">
+                        <div class="card-apartments__titles">
+                            <div class="card-apartments__title">${apartment.NAME}, ${apartment.AREA} м²</div>
+                            <div class="card-apartments__price ${isSold ? 'sold-active' : ''}">${priceText}</div>
+                        </div>
+                    </div>
+                    <div class="card-apartments__image">
+                        <img loading="lazy" src="${apartment.IMAGE}" alt="${apartment.NAME}">
+                    </div>
+                    <div class="card-apartments__bottom">
+                        <ul>
+                            ${propertiesHtml}
+                        </ul>
+                        <a href="${apartment.DETAIL_PAGE_URL}" target="_blank" class="btn btn-bg">
+                            <span>Подробнее</span>
+                            <svg aria-hidden="true" width="12" height="8"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
+                        </a>
                     </div>
                 </div>
-                <div class="card-apartments__image">
-                    <img loading="lazy" src="${apartment.IMAGE}" alt="${apartment.NAME}">
-                </div>
-                <div class="card-apartments__bottom">
-                    <ul>
-                        ${propertiesHtml}
-                    </ul>
-                    <a href="${apartment.DETAIL_PAGE_URL}" target="_blank" class="btn btn-bg">
-                        <span>Подробнее</span>
-                        <svg aria-hidden="true" width="12" height="8"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
-                    </a>
-                </div>
-            </div>
-        `;
+            `;
 
-        popupsContainer.appendChild(popup);
+            container.appendChild(popup);
+        });
     });
 }
 
@@ -603,7 +607,7 @@ function initPrivateHouseTippy() {
 
     tips.forEach((tip) => {
         const id = tip.dataset.id;
-        const popup = privateHousesBlock.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
+        const popup = document.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
 
         if (!popup) return;
 
@@ -692,7 +696,16 @@ function initPrivateHouseTippyHandler() {
             const popup = document.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
             const path = document.querySelector(`#private-houses .block-genplan__path[data-id="${id}"]`);
 
-            if (!popup) return;
+            if (!popup) {
+                renderPrivateHousePopups();
+                const newPopup = document.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
+                if (!newPopup) return;
+                newPopup.classList.add('_active');
+                tippy.classList.add('_active');
+                if (path) path.classList.add('_active');
+                document.documentElement.classList.add('popup-open');
+                return;
+            }
 
             const activeTippy = document.querySelector('#private-houses .block-genplan__tippy._active');
 
@@ -882,6 +895,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateDescriptionText();
         observePrivateHousesState();
         interceptPrivateHouseActivations();
+
+        setTimeout(() => {
+            renderPrivateHousePopups();
+        }, 500);
     } catch (err) {
         console.error('Ошибка загрузки генплана:', err);
     }
@@ -1227,16 +1244,15 @@ function initPopupHandlers() {
                 }
 
                 if (id.startsWith('ph')) {
-                    const privateHousesBlock = document.querySelector('#private-houses');
-                    const popup = privateHousesBlock?.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
+                    const popup = document.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
                     if (popup) {
-                        const activePopup = privateHousesBlock.querySelector('.block-genplan-popup._active');
+                        const activePopup = document.querySelector('.block-genplan-popup._active');
                         if (activePopup === popup) {
                             popup.classList.remove('_active');
                             document.documentElement.classList.remove('popup-open');
                             return;
                         }
-                        privateHousesBlock.querySelectorAll('.block-genplan-popup._active').forEach(p => {
+                        document.querySelectorAll('.block-genplan-popup._active').forEach(p => {
                             p.classList.remove('_active');
                         });
                         popup.classList.add('_active');

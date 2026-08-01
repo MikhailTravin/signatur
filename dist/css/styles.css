@@ -4638,7 +4638,7 @@ a {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(63.22%, rgba(0, 0, 0, 0)), to(#000));
   background: linear-gradient(180deg, rgba(0, 0, 0, 0) 63.22%, #000 100%);
 }
-.block-about-video__video .container {
+.block-about-video__video .container2 {
   position: absolute;
   bottom: 0;
   left: 50%;
