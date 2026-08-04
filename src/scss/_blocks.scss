@@ -534,9 +534,15 @@
   &__compass {
     width: 94px;
     height: 94px;
+    &.compass-private-house {
+      img {
+        transform: rotate(90deg);
+      }
+    }
     img {
       width: 100%;
       height: 100%;
+      transition: transform 0.3s;
     }
     @media (max-width: 768px) {
       width: 65px;
