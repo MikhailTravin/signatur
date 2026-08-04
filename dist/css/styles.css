@@ -2535,9 +2535,17 @@ a {
   width: 94px;
   height: 94px;
 }
+.block-genplan__compass.compass-private-house img {
+  -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
 .block-genplan__compass img {
   width: 100%;
   height: 100%;
+  -webkit-transition: -webkit-transform 0.3s;
+  transition: -webkit-transform 0.3s;
+  transition: transform 0.3s;
+  transition: transform 0.3s, -webkit-transform 0.3s;
 }
 @media (max-width: 768px) {
   .block-genplan__compass {

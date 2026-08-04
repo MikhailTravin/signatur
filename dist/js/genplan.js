@@ -303,7 +303,7 @@ function updateTransform() {
 
 function updateDescriptionText() {
     const descParagraph = document.querySelector('.block-genplan__descr p');
-    if (!descParagraph) return;
+    const compassElement = document.querySelector('.block-genplan__compass');
 
     const privateHousesBlock = document.querySelector('#private-houses');
     const isPrivateHousesActive = privateHousesBlock && privateHousesBlock.classList.contains('_active');
@@ -313,18 +313,27 @@ function updateDescriptionText() {
         step2Container.classList.contains('_active') &&
         step2Container.id === 'private-houses';
 
-    const privateHousePopup = document.querySelector('.block-genplan-popup[data-id-popup="r2"]');
-    const isPrivateHousePopupActive = privateHousePopup && privateHousePopup.classList.contains('_active');
+    const isPrivateHouseActive = isPrivateHousesActive || isStep2WithPrivateHouse;
 
-    if (isPrivateHousesActive || isStep2WithPrivateHouse || isPrivateHousePopupActive) {
-        if (!descParagraph.textContent.includes('Свой дом. Со всеми преимуществами города.')) {
-            descParagraph.innerHTML = 'Свой дом. Со всеми преимуществами города.';
+    if (isPrivateHouseActive) {
+        if (descParagraph && !descParagraph.textContent.includes('От уютных квартир с антресолями до просторных частных домов')) {
+            descParagraph.innerHTML = 'От уютных квартир с антресолями до просторных частных домов';
+        }
+
+        if (compassElement) {
+            compassElement.classList.add('compass-private-house');
         }
     } else {
-        const originalText = 'От уютных до просторных квартир <span>с антресолями и террасами</span>';
-        if (descParagraph.innerHTML !== originalText &&
-            !descParagraph.textContent.includes('От уютных до просторных квартир')) {
-            descParagraph.innerHTML = originalText;
+        if (descParagraph) {
+            const originalText = 'От уютных до просторных квартир <span>с антресолями и террасами</span>';
+            if (descParagraph.innerHTML !== originalText &&
+                !descParagraph.textContent.includes('От уютных до просторных квартир')) {
+                descParagraph.innerHTML = originalText;
+            }
+        }
+
+        if (compassElement) {
+            compassElement.classList.remove('compass-private-house');
         }
     }
 }
@@ -560,8 +569,17 @@ function renderPrivateHousePopups() {
             popup.style.top = position.top;
             popup.style.left = position.left;
 
-            const isSold = apartment.SOLD === true || apartment.PRICE === 0;
-            const priceText = isSold ? '0 ₽ - продано' : `${parseInt(apartment.PRICE).toLocaleString('ru-RU')} ₽`;
+            const isReserved = apartment.RESERVED === true;
+            const isSold = apartment.SOLD === true || (apartment.PRICE === 0 && !isReserved);
+
+            let priceText;
+            if (isReserved) {
+                priceText = 'Дом в резерве';
+            } else if (isSold) {
+                priceText = '0 ₽ - продано';
+            } else {
+                priceText = `${parseInt(apartment.PRICE).toLocaleString('ru-RU')} ₽`;
+            }
 
             const propertiesHtml = apartment.PROPERTIES_DISPLAY_VALUES ?
                 apartment.PROPERTIES_DISPLAY_VALUES.map(p => `<li>${p}</li>`).join('') : '';
@@ -572,11 +590,11 @@ function renderPrivateHousePopups() {
                         <use xlink:href="/img/sprite.svg#close"></use>
                     </svg>
                 </button>
-                <div class="card-apartments ${isSold ? 'sold-active' : ''}">
+                <div class="card-apartments ${isReserved ? 'reserved-active' : isSold ? 'sold-active' : ''}">
                     <div class="card-apartments__top">
                         <div class="card-apartments__titles">
                             <div class="card-apartments__title">${apartment.NAME}, ${apartment.AREA} м²</div>
-                            <div class="card-apartments__price ${isSold ? 'sold-active' : ''}">${priceText}</div>
+                            <div class="card-apartments__price ${isReserved ? 'reserved-active' : isSold ? 'sold-active' : ''}">${priceText}</div>
                         </div>
                     </div>
                     <div class="card-apartments__image">
@@ -635,8 +653,15 @@ function initPrivateHouseTippy() {
         }
 
         if (price) {
+            const isReserved = price.classList.contains('reserved-active');
             const isSold = price.classList.contains('sold-active');
-            html += `<div style="${isSold ? 'color:#999;' : 'color:#4CAF50;font-weight:bold;'}">${price.textContent}</div>`;
+            if (isReserved) {
+                html += `<div style="color:#FF6B35;font-weight:bold;">${price.textContent}</div>`;
+            } else if (isSold) {
+                html += `<div style="color:#999;">${price.textContent}</div>`;
+            } else {
+                html += `<div style="color:#4CAF50;font-weight:bold;">${price.textContent}</div>`;
+            }
         }
 
         if (properties.length > 0) {
@@ -652,34 +677,6 @@ function initPrivateHouseTippy() {
         }
 
         content = html;
-
-        tippy(tip, {
-            content: content,
-            placement: 'top',
-            theme: 'light',
-            animation: 'fade',
-            duration: [200, 150],
-            allowHTML: true,
-            interactive: true,
-            trigger: 'click',
-            arrow: true,
-            appendTo: document.body,
-            offset: [0, 8],
-            onShow(instance) {
-                document.querySelectorAll('.tippy-box[data-tippy-root]').forEach(el => {
-                    if (el !== instance.popper) {
-                        const instanceToHide = el._tippy;
-                        if (instanceToHide) instanceToHide.hide();
-                    }
-                });
-                const trigger = instance.reference;
-                if (trigger) trigger.classList.add('_active');
-            },
-            onHidden(instance) {
-                const trigger = instance.reference;
-                if (trigger) trigger.classList.remove('_active');
-            }
-        });
     });
 }
 
@@ -844,7 +841,7 @@ function initPrivateHouseButtonHandler() {
                     updateEntrancesState();
                 }
 
-                setTimeout(updateDescriptionText, 50);
+                setTimeout(updateDescriptionText, 100);
             }
         }
     });
@@ -1433,8 +1430,6 @@ function togglePopup(id) {
     if (tippy) tippy.classList.add('_active');
 
     document.documentElement.classList.add('popup-open');
-
-    setTimeout(updateDescriptionText, 50);
 }
 
 function createMobileFloorsPopup(houseId, visualHouseId) {
@@ -1620,11 +1615,20 @@ function renderMobileFloorsBlock(houseId, selectedFloor = '4') {
             });
 
             const apartmentsHtml = sortedApartments.map(ap => {
-                const isSold = ap.SOLD === true || ap.PRICE === 0;
-                const priceText = isSold ? '0 ₽ - продано' : `${parseInt(ap.PRICE).toLocaleString('ru-RU')} ₽`;
+                const isReserved = ap.RESERVED === true;
+                const isSold = ap.SOLD === true || (ap.PRICE === 0 && !isReserved);
+
+                let priceText;
+                if (isReserved) {
+                    priceText = 'Дом в резерве';
+                } else if (isSold) {
+                    priceText = '0 ₽ - продано';
+                } else {
+                    priceText = `${parseInt(ap.PRICE).toLocaleString('ru-RU')} ₽`;
+                }
 
                 return `
-                <a href="${ap.DETAIL_PAGE_URL}" class="card-apartments ${isSold ? 'sold-active' : ''}">
+                <a href="${ap.DETAIL_PAGE_URL}" class="card-apartments ${isReserved ? 'reserved-active' : isSold ? 'sold-active' : ''}">
                     <div class="card-apartments__image">
                         <img loading="lazy" src="${ap.IMAGE}" alt="${ap.NAME}">
                     </div>
@@ -1632,7 +1636,7 @@ function renderMobileFloorsBlock(houseId, selectedFloor = '4') {
                         <div class="card-apartments__top">
                             <div class="card-apartments__titles">
                                 <div class="card-apartments__title">${ap.NAME}, ${ap.AREA} м²</div>
-                                <div class="card-apartments__price ${isSold ? 'sold-active' : ''}">${priceText}</div>
+                                <div class="card-apartments__price ${isReserved ? 'reserved-active' : isSold ? 'sold-active' : ''}">${priceText}</div>
                             </div>
                         </div>
                         <div class="card-apartments__bottom">
@@ -1939,10 +1943,11 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
 
         if (floor.APARTMENTS && floor.APARTMENTS.length) {
             floor.APARTMENTS.forEach(ap => {
-                const isSold = ap.SOLD === true || ap.PRICE === 0;
+                const isReserved = ap.RESERVED === true;
+                const isSold = ap.SOLD === true || (ap.PRICE === 0 && !isReserved);
                 const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 path.setAttribute('data-id', `kv${ap.NUMBER_APARTMENT}`);
-                path.setAttribute('class', `block-genplan__path kv ${isSold ? 'sold-active' : ''}`);
+                path.setAttribute('class', `block-genplan__path kv ${isReserved ? 'reserved-active' : isSold ? 'sold-active' : ''}`);
                 if (ap.SVG_PATH) {
                     path.setAttribute('d', ap.SVG_PATH);
                 }
@@ -1993,9 +1998,10 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
 
             if (floor.APARTMENTS && floor.APARTMENTS.length) {
                 floor.APARTMENTS.forEach(ap => {
-                    const isSold = ap.SOLD === true || ap.PRICE === 0;
+                    const isReserved = ap.RESERVED === true;
+                    const isSold = ap.SOLD === true || (ap.PRICE === 0 && !isReserved);
                     const tippy = document.createElement('button');
-                    tippy.className = `block-genplan__tippy tippy-floor ${isSold ? 'sold-active' : ''}`;
+                    tippy.className = `block-genplan__tippy tippy-floor ${isReserved ? 'reserved-active' : isSold ? 'sold-active' : ''}`;
                     tippy.dataset.id = `kv${ap.NUMBER_APARTMENT}`;
                     tippy.style.top = `${ap.POS_TOP}%`;
                     tippy.style.left = `${ap.POS_RIGHT}%`;
@@ -2020,15 +2026,24 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
                     popup.style.top = `${popupTop}%`;
                     popup.style.left = `${popupLeft}%`;
 
-                    const isSoldPopup = ap.SOLD === true || ap.PRICE === 0;
-                    const priceText = isSoldPopup ? '0 ₽ - продано' : `${parseInt(ap.PRICE).toLocaleString('ru-RU')} ₽`;
+                    const isReservedPopup = ap.RESERVED === true;
+                    const isSoldPopup = ap.SOLD === true || (ap.PRICE === 0 && !isReservedPopup);
+
+                    let priceText;
+                    if (isReservedPopup) {
+                        priceText = 'Дом в резерве';
+                    } else if (isSoldPopup) {
+                        priceText = '0 ₽ - продано';
+                    } else {
+                        priceText = `${parseInt(ap.PRICE).toLocaleString('ru-RU')} ₽`;
+                    }
 
                     popup.innerHTML = `
-                        <div class="card-apartments ${isSoldPopup ? 'sold-active' : ''}">
+                        <div class="card-apartments ${isReservedPopup ? 'reserved-active' : isSoldPopup ? 'sold-active' : ''}">
                             <div class="card-apartments__top">
                                 <div class="card-apartments__titles">
                                     <div class="card-apartments__title">${ap.NAME}, ${ap.AREA} м²</div>
-                                    <div class="card-apartments__price ${isSoldPopup ? 'sold-active' : ''}">${priceText}</div>
+                                    <div class="card-apartments__price ${isReservedPopup ? 'reserved-active' : isSoldPopup ? 'sold-active' : ''}">${priceText}</div>
                                 </div>
                             </div>
                             <div class="card-apartments__image">
@@ -2925,28 +2940,14 @@ function interceptPrivateHouseActivations() {
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('.btn-private-house');
         if (btn) {
-            setTimeout(updateDescriptionText, 50);
-        }
-    });
-
-    document.addEventListener('click', function (e) {
-        const tippy = e.target.closest('.block-genplan__tippy[data-id="r2"]');
-        if (tippy) {
-            setTimeout(updateDescriptionText, 50);
-        }
-    });
-
-    document.addEventListener('click', function (e) {
-        const path = e.target.closest('.block-genplan__path[data-id="r2"]');
-        if (path) {
-            setTimeout(updateDescriptionText, 50);
+            setTimeout(updateDescriptionText, 100);
         }
     });
 
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('.block-genplan-popup[data-id-popup="r2"] .btn-genplan');
         if (btn) {
-            setTimeout(updateDescriptionText, 50);
+            setTimeout(updateDescriptionText, 100);
         }
     });
 }
