@@ -630,6 +630,296 @@ if (document.querySelectorAll('.tabs__slider').length) {
   });
 }
 
+function detailsSwiper() {
+  const body = document.querySelector('.block-house-details__body');
+  if (!body) return;
+
+  const slider = body.querySelector('.block-house-details__slider');
+  const wrapper = body.querySelector('.block-house-details__wrapper');
+  const slides = Array.from(body.querySelectorAll('.block-house-details__slide'));
+  const pagOrig = body.querySelector('.card-house-pagination');
+  const fracOrig = body.querySelector('.card-house-pagination-fraction');
+  const N = slides.length;
+  if (!slider || !wrapper || N === 0) return;
+
+  const TOP = 'center';
+  const PX = 700;
+  const LERP = 0.12;
+  const GAP = 120;
+  const GAP_START = 0;
+  const MAGNET = 0.35;
+  const SNAP_MS = 800;
+
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const pad = (n) => String(n).padStart(2, '0');
+  const ease = (t) => 1 - Math.pow(1 - t, 3);
+  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+  slider.classList.remove('swiper');
+  wrapper.classList.remove('swiper-wrapper');
+  slides.forEach((s) => s.classList.remove('swiper-slide'));
+  slider.style.overflow = 'visible';
+  Object.assign(wrapper.style, {
+    display: 'grid',
+    position: 'relative',
+    clipPath: 'inset(-40px -40px 0 -40px)',
+  });
+  body.style.zIndex = 2;
+
+  const pagTpl = pagOrig ? pagOrig.cloneNode(false) : null;
+  const fracTpl = fracOrig ? fracOrig.cloneNode(true) : null;
+  if (pagOrig) pagOrig.remove();
+  if (fracOrig) fracOrig.remove();
+
+  slides.forEach((s, i) => {
+    Object.assign(s.style, {
+      gridArea: '1 / 1',
+      position: 'relative',
+      zIndex: i + 1,
+      willChange: 'transform',
+      visibility: i ? 'hidden' : 'visible',
+    });
+    const card = s.querySelector('.card-house-details');
+    if (card) card.style.flex = '1 1 auto';
+
+    if (pagTpl) {
+      const pag = pagTpl.cloneNode(false);
+      pag.style.zIndex = 5;
+      for (let b = 0; b < N; b++) {
+        const bullet = document.createElement('span');
+        bullet.className = 'swiper-pagination-bullet' + (b <= i ? ' swiper-pagination-bullet-active' : '');
+        bullet.addEventListener('click', () => goTo(b));
+        pag.appendChild(bullet);
+      }
+      s.appendChild(pag);
+    }
+
+    if (fracTpl) {
+      const frac = fracTpl.cloneNode(true);
+      frac.style.zIndex = 5;
+      const cur = frac.querySelector('.swiper-pagination-current');
+      const tot = frac.querySelector('.swiper-pagination-total');
+      if (cur) cur.textContent = pad(i + 1);
+      if (tot) tot.textContent = pad(N);
+      s.appendChild(frac);
+    }
+  });
+
+  let top = 0, dist = 0;
+  let target = 0, current = 0;
+  let locked = false, lockY = 0;
+  let snapping = false, ignoreUntil = 0;
+  let swallow = false, lastWheel = 0, prevD = null;
+  let running = false, touchY = 0;
+
+  let spacer = null;
+  let savedScroll = 0;
+
+  function freezePage() {
+    if (spacer) return;
+    savedScroll = window.scrollY;
+
+    spacer = document.createElement('div');
+    spacer.style.cssText = `height:${document.documentElement.scrollHeight}px;width:1px;pointer-events:none;visibility:hidden;`;
+    document.body.appendChild(spacer);
+
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${savedScroll}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+    lockY = 0;
+  }
+
+  function unfreezePage() {
+    if (!spacer) return;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    spacer.remove();
+    spacer = null;
+    window.scrollTo({ top: savedScroll, behavior: 'instant' });
+  }
+
+  function measure() {
+    const vh = window.innerHeight;
+    const h = wrapper.offsetHeight;
+    top = TOP === 'center' ? Math.max((vh - h) / 2, 0) : TOP;
+    dist = h + GAP_START;
+    render();
+  }
+
+  function render() {
+    slides.forEach((s, i) => {
+      if (i === 0) return;
+      const local = clamp(current - (i - 1), 0, 1);
+      s.style.visibility = local === 0 ? 'hidden' : 'visible';
+      s.style.transform = `translate3d(0, ${(1 - ease(local)) * dist}px, 0)`;
+    });
+  }
+
+  function tick() {
+    current += (target - current) * LERP;
+    if (Math.abs(target - current) < 0.001) current = target;
+    render();
+    if (current !== target) requestAnimationFrame(tick);
+    else running = false;
+  }
+  function start() {
+    if (!running) { running = true; requestAnimationFrame(tick); }
+  }
+
+  function lockAt() {
+    const y = window.scrollY + body.getBoundingClientRect().top - top;
+    window.scrollTo({ top: y, behavior: 'instant' });
+    savedScroll = y;
+    freezePage();
+    locked = true;
+    swallow = false;
+  }
+
+  function glideLock(d) {
+    if (snapping || locked) return;
+    snapping = true;
+    locked = true;
+    swallow = false;
+
+    const y0 = window.scrollY;
+    const y1 = y0 + d;
+    const dur = clamp(Math.abs(d) * 1.5, 350, SNAP_MS);
+    const t0 = performance.now();
+
+    (function step(now) {
+      const t = clamp((now - t0) / dur, 0, 1);
+      const y = y0 + (y1 - y0) * easeInOut(t);
+      window.scrollTo({ top: y, behavior: 'instant' });
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else {
+        savedScroll = y1;
+        snapping = false;
+        freezePage();
+        ignoreUntil = performance.now() + 150;
+      }
+    })(t0);
+  }
+
+  function unlock() {
+    if (!locked) return;
+    locked = false;
+    prevD = null;
+    unfreezePage();
+  }
+
+  function tryLock(dir, dy) {
+    if (dir > 0 ? target >= N - 1 : target <= 0) return;
+    const d = body.getBoundingClientRect().top - top;
+    const zone = window.innerHeight * MAGNET;
+    const near = dir > 0 ? d <= zone && d >= -1 : d >= -zone && d <= 1;
+    const reaches = dir > 0 ? d - dy <= 1 && d >= -1 : d - dy >= -1 && d <= 1;
+    if (near || reaches) glideLock(d);
+  }
+
+  function handleDelta(dy, e) {
+    const dir = Math.sign(dy);
+    if (!dir) return;
+    const now = performance.now();
+
+    if (snapping || now < ignoreUntil) {
+      e.cancelable && e.preventDefault();
+      lastWheel = now;
+      return;
+    }
+
+    const fresh = now - lastWheel > GAP;
+    lastWheel = now;
+
+    if (!locked) {
+      tryLock(dir, dy);
+      if (!locked) return;
+      e.cancelable && e.preventDefault();
+      return;
+    }
+    if (fresh) swallow = false;
+
+    const canMove = dir > 0 ? target < N - 1 : target > 0;
+    if (!canMove) {
+      if (swallow) { e.cancelable && e.preventDefault(); return; }
+      unlock();
+      return;
+    }
+    e.cancelable && e.preventDefault();
+    target = clamp(target + dy / PX, 0, N - 1);
+    if (target === 0 || target === N - 1) swallow = true;
+    start();
+  }
+
+  window.addEventListener('wheel', (e) => {
+    const k = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1;
+    handleDelta(e.deltaY * k, e);
+  }, { passive: false });
+
+  window.addEventListener('touchstart', (e) => {
+    touchY = e.touches[0].clientY;
+    lastWheel = 0;
+    if (locked) e.cancelable && e.preventDefault();
+  }, { passive: false });
+
+  window.addEventListener('touchmove', (e) => {
+    const y = e.touches[0].clientY;
+    handleDelta((touchY - y) * 1.8, e);
+    touchY = y;
+  }, { passive: false });
+
+  window.addEventListener('keydown', (e) => {
+    if (!locked || snapping || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    const down = ['ArrowDown', 'PageDown'].includes(e.key) || (e.key === ' ' && !e.shiftKey);
+    const up = ['ArrowUp', 'PageUp'].includes(e.key) || (e.key === ' ' && e.shiftKey);
+    if (!down && !up) return;
+    const dir = down ? 1 : -1;
+    if (dir > 0 ? target >= N - 1 : target <= 0) { unlock(); return; }
+    e.preventDefault();
+    target = clamp(Math.round(target) + dir, 0, N - 1);
+    start();
+  });
+
+  window.addEventListener('scroll', () => {
+    if (!locked) {
+      const d = body.getBoundingClientRect().top - top;
+      if (prevD !== null) {
+        if (prevD > 0 && d <= 0 && target < N - 1) lockAt();
+        else if (prevD < 0 && d >= 0 && target > 0) lockAt();
+      }
+      prevD = d;
+      return;
+    }
+
+    if (window.scrollY !== 0) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, { passive: true });
+
+  function goTo(i) {
+    if (snapping) return;
+    if (!locked) glideLock(body.getBoundingClientRect().top - top);
+    target = i;
+    start();
+  }
+
+  window.addEventListener('resize', measure);
+  window.addEventListener('load', measure);
+  measure();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', detailsSwiper);
+} else {
+  detailsSwiper();
+}
+
+
 //========================================================================================================================================================
 
 Fancybox.bind("[data-fancybox]", {

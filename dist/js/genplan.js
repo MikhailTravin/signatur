@@ -5,12 +5,44 @@ async function fetchRegions() {
     return data.result;
 }
 
-async function fetchHouse(houseId) {
-    const res = await fetch(`/ajax/genplan.php?action=get_house&house_id=${houseId}`);
+async function fetchHouse(houseId, regionId = null) {
+    let url = `/ajax/genplan.php?action=get_house&house_id=${houseId}`;
+    if (regionId) url += `&region_id=${regionId}`;
+    const res = await fetch(url);
     const data = await res.json();
     if (data.error) throw new Error(data.result);
     return data.result;
 }
+
+function getHome2Region() {
+    if (!regionsData || !regionsData.length) return null;
+
+    let home2 = regionsData.find(r => r.NAME === 'Второй этап');
+
+    if (!home2 && regionsData.length > 1) {
+        home2 = regionsData[1];
+    }
+
+    return home2;
+}
+
+function getCommonPopupsContainer() {
+    return document.querySelector('.block-genplan__popups:not(#private-houses .block-genplan__popups):not(#home2 .block-genplan__popups)');
+}
+
+const home2PopupPositions = {
+    '35': { top: '28%', left: '44%' },
+    '36': { top: '39%', right: '27%' },
+    '37': { top: '32%', right: '45%' },
+    '38': { top: '53%', right: '15%' },
+    '39': { top: '45%', right: '40%' },
+    '40': { top: '50%', right: '12%' },
+    '41': { top: '35%', right: '50%' },
+    '42': { top: '50%', right: '45%' },
+    '43': { top: '52%', right: '26%' },
+    '44': { top: '45%', right: '47%' },
+    '45': { top: '53%', right: '49%' },
+};
 
 let regionsData = null;
 let loadedHouses = new Map();
@@ -144,145 +176,39 @@ function zoomToPoint(scaleFactor, clientX, clientY) {
 }
 
 const houseSizeConfig = {
-    '6': {
-        svgWidth: 531,
-        svgHeight: 550,
-        imgWidth: 531,
-        imgHeight: 550
-    },
-    '8': {
-        svgWidth: 531,
-        svgHeight: 550,
-        imgWidth: 531,
-        imgHeight: 550
-    },
-    '9': {
-        svgWidth: 531,
-        svgHeight: 550,
-        imgWidth: 531,
-        imgHeight: 550
-    },
-    '10': {
-        svgWidth: 531,
-        svgHeight: 550,
-        imgWidth: 531,
-        imgHeight: 550
-    },
-    '11': {
-        svgWidth: 531,
-        svgHeight: 550,
-        imgWidth: 531,
-        imgHeight: 550
-    },
-    '12': {
-        svgWidth: 531,
-        svgHeight: 550,
-        imgWidth: 531,
-        imgHeight: 550
-    },
-    '13': {
-        svgWidth: 531,
-        svgHeight: 550,
-        imgWidth: 531,
-        imgHeight: 550
-    },
-    '14': {
-        svgWidth: 531,
-        svgHeight: 550,
-        imgWidth: 531,
-        imgHeight: 550
-    },
-    '15': {
-        svgWidth: 263,
-        svgHeight: 504,
-        imgWidth: 263,
-        imgHeight: 504
-    },
-    '16': {
-        svgWidth: 263,
-        svgHeight: 504,
-        imgWidth: 263,
-        imgHeight: 504
-    },
-    '17': {
-        svgWidth: 263,
-        svgHeight: 504,
-        imgWidth: 263,
-        imgHeight: 504
-    },
-    '18': {
-        svgWidth: 263,
-        svgHeight: 504,
-        imgWidth: 263,
-        imgHeight: 504
-    },
-    'default': {
-        svgWidth: 531,
-        svgHeight: 550,
-        imgWidth: 531,
-        imgHeight: 550
-    }
+    '6': { svgWidth: 531, svgHeight: 550, imgWidth: 531, imgHeight: 550 },
+    '8': { svgWidth: 531, svgHeight: 550, imgWidth: 531, imgHeight: 550 },
+    '9': { svgWidth: 531, svgHeight: 550, imgWidth: 531, imgHeight: 550 },
+    '10': { svgWidth: 531, svgHeight: 550, imgWidth: 531, imgHeight: 550 },
+    '11': { svgWidth: 531, svgHeight: 550, imgWidth: 531, imgHeight: 550 },
+    '12': { svgWidth: 531, svgHeight: 550, imgWidth: 531, imgHeight: 550 },
+    '13': { svgWidth: 531, svgHeight: 550, imgWidth: 531, imgHeight: 550 },
+    '14': { svgWidth: 531, svgHeight: 550, imgWidth: 531, imgHeight: 550 },
+    '15': { svgWidth: 263, svgHeight: 504, imgWidth: 263, imgHeight: 504 },
+    '16': { svgWidth: 263, svgHeight: 504, imgWidth: 263, imgHeight: 504 },
+    '17': { svgWidth: 263, svgHeight: 504, imgWidth: 263, imgHeight: 504 },
+    '18': { svgWidth: 263, svgHeight: 504, imgWidth: 263, imgHeight: 504 },
+    '35': { svgWidth: 531, svgHeight: 550, imgWidth: 531, imgHeight: 550 },
+    'default': { svgWidth: 531, svgHeight: 550, imgWidth: 531, imgHeight: 550 }
 };
 
 const popupPositionConfig = {
-    'r1': {
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%,-50%)'
-    },
-    'r2': {
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%,-50%)'
-    },
-    'h9': {
-        top: '5%',
-        left: '38%'
-    },
-    'h10': {
-        top: '10%',
-        left: '23%'
-    },
-    'h11': {
-        top: '20%',
-        left: '11%'
-    },
-    'h12': {
-        top: '32%',
-        left: '20%'
-    },
-    'h8': {
-        top: '23%',
-        right: '19%'
-    },
-    'h6': {
-        bottom: '10%',
-        right: '28%'
-    },
-    'h13': {
-        bottom: '10%',
-        right: '48%'
-    },
-    'h14': {
-        bottom: '10%',
-        left: '42%'
-    },
-    'h15': {
-        top: '10%',
-        right: '29%'
-    },
-    'h16': {
-        top: '14%',
-        right: '24%'
-    },
-    'h17': {
-        top: '20%',
-        right: '23%'
-    },
-    'h18': {
-        top: '30%',
-        right: '10%'
-    }
+    'r1': { top: '50%', left: '50%', transform: 'translate(-50%,-50%)' },
+    'r2': { top: '50%', left: '50%', transform: 'translate(-50%,-50%)' },
+    'r3': { top: '50%', left: '50%', transform: 'translate(-50%,-50%)' },
+    'r4': { top: '50%', left: '50%', transform: 'translate(-50%,-50%)' },
+    'h9': { top: '5%', left: '38%' },
+    'h10': { top: '10%', left: '23%' },
+    'h11': { top: '20%', left: '11%' },
+    'h12': { top: '32%', left: '20%' },
+    'h8': { top: '23%', right: '19%' },
+    'h6': { bottom: '10%', right: '28%' },
+    'h13': { bottom: '10%', right: '48%' },
+    'h14': { bottom: '10%', left: '42%' },
+    'h15': { top: '10%', right: '29%' },
+    'h16': { top: '14%', right: '24%' },
+    'h17': { top: '20%', right: '23%' },
+    'h18': { top: '30%', right: '10%' }
 };
 
 function updateTransform() {
@@ -308,14 +234,15 @@ function updateDescriptionText() {
     const privateHousesBlock = document.querySelector('#private-houses');
     const isPrivateHousesActive = privateHousesBlock && privateHousesBlock.classList.contains('_active');
 
-    const step2Container = document.querySelector('.block-genplan__content-container.step2');
-    const isStep2WithPrivateHouse = step2Container &&
-        step2Container.classList.contains('_active') &&
-        step2Container.id === 'private-houses';
+    const home2Block = document.querySelector('#home2');
+    const isHome2Active = home2Block && home2Block.classList.contains('_active');
 
-    const isPrivateHouseActive = isPrivateHousesActive || isStep2WithPrivateHouse;
+    if (compassElement) {
+        compassElement.classList.remove('compass-private-house');
+        compassElement.classList.remove('compass-home2');
+    }
 
-    if (isPrivateHouseActive) {
+    if (isPrivateHousesActive) {
         if (descParagraph && !descParagraph.textContent.includes('От уютных квартир с антресолями до просторных частных домов')) {
             descParagraph.innerHTML = 'От уютных квартир с антресолями до просторных частных домов';
         }
@@ -323,17 +250,21 @@ function updateDescriptionText() {
         if (compassElement) {
             compassElement.classList.add('compass-private-house');
         }
+    } else if (isHome2Active) {
+        if (descParagraph && !descParagraph.textContent.includes('От уютных квартир с антресолями до просторных частных домов')) {
+            descParagraph.innerHTML = 'От уютных квартир с антресолями до просторных частных домов';
+        }
+
+        if (compassElement) {
+            compassElement.classList.add('compass-home2');
+        }
     } else {
         if (descParagraph) {
-            const originalText = 'От уютных до просторных квартир <span>с антресолями и террасами</span>';
+            const originalText = 'От уютных квартир с антресолями до просторных частных домов';
             if (descParagraph.innerHTML !== originalText &&
                 !descParagraph.textContent.includes('От уютных до просторных квартир')) {
                 descParagraph.innerHTML = originalText;
             }
-        }
-
-        if (compassElement) {
-            compassElement.classList.remove('compass-private-house');
         }
     }
 }
@@ -362,54 +293,18 @@ function renderPrivateHousePaths() {
     if (xmlns) svg.setAttribute('xmlns', xmlns);
 
     const privateHousePaths = [
-        {
-            id: 'ph1',
-            d: 'M133 262.5L28.5 213.5L56.5 171.5L147.5 122.5L275.5 162L133 262.5Z'
-        },
-        {
-            id: 'ph2',
-            d: 'M277 162.5L135 265L267.5 325.5L397.5 207L277 162.5Z'
-        },
-        {
-            id: 'ph3',
-            d: 'M428.5 399.5L271 327.5L402 206L545 262L428.5 399.5Z'
-        },
-        {
-            id: 'ph4',
-            d: 'M619.5 483.5L432.5 399L548.5 264L714 319.5L619.5 483.5Z'
-        },
-        {
-            id: 'ph5',
-            d: 'M850.5 586L625.5 484.5L717 324L911 391L850.5 586Z'
-        },
-        {
-            id: 'ph6',
-            d: 'M952 629L856 589.5L912 391L1081 446L1156.5 425.5L1149.5 629H952Z'
-        },
-        {
-            id: 'ph7',
-            d: 'M945 348L833.5 312L886.5 183L1062 231.5L1051 317L945 348Z'
-        },
-        {
-            id: 'ph8',
-            d: 'M831 311L670.5 255L746 144.5L885.5 181.5L831 311Z'
-        },
-        {
-            id: 'ph9',
-            d: 'M666.5 253L523.5 205.5L612.5 111.5L744 146L666.5 253Z'
-        },
-        {
-            id: 'ph10',
-            d: 'M518.5 206L407.5 165.5L504.5 74.5L609.5 112.5L518.5 206Z'
-        },
-        {
-            id: 'ph11',
-            d: 'M405 167.5L295 129.5L405 49L500.5 77L405 167.5Z'
-        },
-        {
-            id: 'ph12',
-            d: 'M293 128L225 105.5L233.5 70.5L308.5 24L403 49L293 128Z'
-        }
+        { id: 'ph1', d: 'M133 262.5L28.5 213.5L56.5 171.5L147.5 122.5L275.5 162L133 262.5Z' },
+        { id: 'ph2', d: 'M277 162.5L135 265L267.5 325.5L397.5 207L277 162.5Z' },
+        { id: 'ph3', d: 'M428.5 399.5L271 327.5L402 206L545 262L428.5 399.5Z' },
+        { id: 'ph4', d: 'M619.5 483.5L432.5 399L548.5 264L714 319.5L619.5 483.5Z' },
+        { id: 'ph5', d: 'M850.5 586L625.5 484.5L717 324L911 391L850.5 586Z' },
+        { id: 'ph6', d: 'M952 629L856 589.5L912 391L1081 446L1156.5 425.5L1149.5 629H952Z' },
+        { id: 'ph7', d: 'M945 348L833.5 312L886.5 183L1062 231.5L1051 317L945 348Z' },
+        { id: 'ph8', d: 'M831 311L670.5 255L746 144.5L885.5 181.5L831 311Z' },
+        { id: 'ph9', d: 'M666.5 253L523.5 205.5L612.5 111.5L744 146L666.5 253Z' },
+        { id: 'ph10', d: 'M518.5 206L407.5 165.5L504.5 74.5L609.5 112.5L518.5 206Z' },
+        { id: 'ph11', d: 'M405 167.5L295 129.5L405 49L500.5 77L405 167.5Z' },
+        { id: 'ph12', d: 'M293 128L225 105.5L233.5 70.5L308.5 24L403 49L293 128Z' }
     ];
 
     privateHousePaths.forEach(pathData => {
@@ -551,69 +446,67 @@ function renderPrivateHousePopups() {
         '1': { top: '15%', left: '15%' }
     };
 
-    const allContainers = document.querySelectorAll('.block-genplan__popups');
+    const popupsContainer = getCommonPopupsContainer();
+    if (!popupsContainer) return;
 
-    allContainers.forEach(container => {
-        const oldPhPopups = container.querySelectorAll('.block-genplan-popup[data-id-popup^="ph"]');
-        oldPhPopups.forEach(p => p.remove());
+    popupsContainer.querySelectorAll('.block-genplan-popup[data-id-popup^="ph"]').forEach(p => p.remove());
 
-        apartments.forEach(apartment => {
-            const number = apartment.NUMBER_APARTMENT;
-            const position = privateHousesPositions[number];
+    apartments.forEach(apartment => {
+        const number = apartment.NUMBER_APARTMENT;
+        const position = privateHousesPositions[number];
 
-            if (!position) return;
+        if (!position) return;
 
-            const popup = document.createElement('div');
-            popup.className = 'block-genplan-popup';
-            popup.dataset.idPopup = `ph${number}`;
-            popup.style.top = position.top;
-            popup.style.left = position.left;
+        const popup = document.createElement('div');
+        popup.className = 'block-genplan-popup';
+        popup.dataset.idPopup = `ph${number}`;
+        popup.style.top = position.top;
+        popup.style.left = position.left;
 
-            const isReserved = apartment.RESERVED === true;
-            const isSold = apartment.SOLD === true || (apartment.PRICE === 0 && !isReserved);
+        const isReserved = apartment.RESERVED === true;
+        const isSold = apartment.SOLD === true || (apartment.PRICE === 0 && !isReserved);
 
-            let priceText;
-            if (isReserved) {
-                priceText = 'Дом в резерве';
-            } else if (isSold) {
-                priceText = '0 ₽ - продано';
-            } else {
-                priceText = `${parseInt(apartment.PRICE).toLocaleString('ru-RU')} ₽`;
-            }
+        let priceText;
+        if (isReserved) {
+            priceText = 'Дом в резерве';
+        } else if (isSold) {
+            priceText = '0 ₽ - продано';
+        } else {
+            priceText = `${parseInt(apartment.PRICE).toLocaleString('ru-RU')} ₽`;
+        }
 
-            const propertiesHtml = apartment.PROPERTIES_DISPLAY_VALUES ?
-                apartment.PROPERTIES_DISPLAY_VALUES.map(p => `<li>${p}</li>`).join('') : '';
+        const propertiesHtml = apartment.PROPERTIES_DISPLAY_VALUES ?
+            apartment.PROPERTIES_DISPLAY_VALUES.map(p => `<li>${p}</li>`).join('') : '';
 
-            popup.innerHTML = `
-                <button type="button" class="block-genplan-popup__close">
-                    <svg aria-hidden="true" width="13" height="13">
-                        <use xlink:href="/img/sprite.svg#close"></use>
-                    </svg>
-                </button>
-                <div class="card-apartments ${isReserved ? 'reserved-active' : isSold ? 'sold-active' : ''}">
-                    <div class="card-apartments__top">
-                        <div class="card-apartments__titles">
-                            <div class="card-apartments__title">${apartment.NAME}, ${apartment.AREA} м²</div>
-                            <div class="card-apartments__price ${isReserved ? 'reserved-active' : isSold ? 'sold-active' : ''}">${priceText}</div>
-                        </div>
-                    </div>
-                    <div class="card-apartments__image">
-                        <img loading="lazy" src="${apartment.IMAGE}" alt="${apartment.NAME}">
-                    </div>
-                    <div class="card-apartments__bottom">
-                        <ul>
-                            ${propertiesHtml}
-                        </ul>
-                        <a href="${apartment.DETAIL_PAGE_URL}" target="_blank" class="btn btn-bg">
-                            <span>Подробнее</span>
-                            <svg aria-hidden="true" width="12" height="8"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
-                        </a>
+        popup.innerHTML = `
+            <button type="button" class="block-genplan-popup__close">
+                <svg aria-hidden="true" width="13" height="13">
+                    <use xlink:href="/img/sprite.svg#close"></use>
+                </svg>
+            </button>
+            <div class="card-apartments ${isReserved ? 'reserved-active' : isSold ? 'sold-active' : ''}">
+                <div class="card-apartments__top">
+                    <div class="card-apartments__titles">
+                        <div class="card-apartments__title">${apartment.NAME}, ${apartment.AREA} м²</div>
+                        <div class="card-apartments__price ${isReserved ? 'reserved-active' : isSold ? 'sold-active' : ''}">${priceText}</div>
                     </div>
                 </div>
-            `;
+                <div class="card-apartments__image">
+                    <img loading="lazy" src="${apartment.IMAGE}" alt="${apartment.NAME}">
+                </div>
+                <div class="card-apartments__bottom">
+                    <ul>
+                        ${propertiesHtml}
+                    </ul>
+                    <a href="${apartment.DETAIL_PAGE_URL}" target="_blank" class="btn btn-bg">
+                        <span>Подробнее</span>
+                        <svg aria-hidden="true" width="12" height="8"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
+                    </a>
+                </div>
+            </div>
+        `;
 
-            container.appendChild(popup);
-        });
+        popupsContainer.appendChild(popup);
     });
 }
 
@@ -790,61 +683,278 @@ function initPrivateHouseButtonHandler() {
             e.preventDefault();
             e.stopPropagation();
 
-            const privateHousesBlock = document.querySelector('#private-houses');
-            if (privateHousesBlock) {
-                document.querySelectorAll('.block-genplan__content-container').forEach(el => {
-                    el.classList.remove('_active');
-                });
+            toggleSteps(true, false, null, 'private-houses');
 
-                privateHousesBlock.classList.add('_active');
+            const titleGenplan = document.querySelector('.title-genplan');
+            if (titleGenplan) {
+                titleGenplan.classList.add('hidden');
+            }
 
-                const titleGenplan = document.querySelector('.title-genplan');
-                const titleHouse = document.querySelector('.title-house');
-                const titleRooms = document.querySelector('.title-romms');
-                const switchGenplan = document.querySelector('.switch-genplan');
-                const zoomGenplan = document.querySelector('.zoom-genplan');
-                const fullscreenBtn = document.querySelector('.fullsreen-genplan__button');
-
-                titleGenplan?.classList.add('hidden');
-                titleHouse?.classList.remove('hidden');
-                titleHouse?.classList.add('_active');
-                titleRooms?.classList.remove('_active');
-                titleRooms?.classList.add('hidden');
-
-                if (switchGenplan) {
-                    switchGenplan.classList.remove('_active');
-                }
-
-                if (zoomGenplan) {
-                    zoomGenplan.classList.remove('hidden');
-                }
-
-                if (fullscreenBtn) {
-                    fullscreenBtn.classList.remove('step3_genplan-button');
-                }
-
-                document.documentElement.classList.remove('choice-floor');
-                document.documentElement.classList.add('choice-home');
-
-                updateCurrentContainer();
-
-                if (window.resetTransformations) {
-                    resetTransformations();
-                }
-
-                document.querySelectorAll('.block-genplan-popup._active').forEach(popup => {
-                    popup.classList.remove('_active');
-                });
+            const activePopup = document.querySelector('.block-genplan-popup._active');
+            if (activePopup) {
+                activePopup.classList.remove('_active');
                 document.documentElement.classList.remove('popup-open');
+            }
 
-                if (window.updateEntrancesState) {
-                    updateEntrancesState();
-                }
+            setTimeout(updateDescriptionText, 100);
+        }
+    });
+}
 
-                setTimeout(updateDescriptionText, 100);
+function renderHome2Paths() {
+    const home2Block = document.querySelector('#home2');
+    if (!home2Block) return;
+
+    const svg = home2Block.querySelector('.block-genplan__svg');
+    if (!svg) return;
+
+    const home2Region = getHome2Region();
+    if (!home2Region) return;
+
+    const viewBox = svg.getAttribute('viewBox') || '0 0 1200 631';
+    const width = svg.getAttribute('width') || '1200';
+    const height = svg.getAttribute('height') || '631';
+    const className = svg.getAttribute('class') || 'block-genplan__svg';
+    const fill = svg.getAttribute('fill') || 'none';
+    const xmlns = svg.getAttribute('xmlns') || 'http://www.w3.org/2000/svg';
+
+    svg.innerHTML = '';
+    svg.setAttribute('viewBox', viewBox);
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+    svg.setAttribute('class', className);
+    svg.setAttribute('fill', fill);
+    svg.setAttribute('xmlns', xmlns);
+
+    const houses = home2Region.HOUSES || [];
+
+    houses.forEach(house => {
+        if (!house.SVG_PATH) return;
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('data-id', `h2h${house.ID}`);
+        path.setAttribute('class', 'block-genplan__path path-blue');
+        path.setAttribute('d', house.SVG_PATH);
+        svg.appendChild(path);
+    });
+}
+
+function renderHome2() {
+    const home2Block = document.querySelector('#home2');
+    if (!home2Block) return;
+
+    const home2Region = getHome2Region();
+    if (!home2Region) return;
+
+    const tipsContainer = home2Block.querySelector('.block-genplan__tips');
+    if (!tipsContainer) return;
+
+    tipsContainer.innerHTML = '';
+
+    const houses = home2Region.HOUSES || [];
+
+    houses.forEach(house => {
+        const houseId = `h2h${house.ID}`;
+
+        const tippy = document.createElement('button');
+        tippy.className = 'block-genplan__tippy';
+        tippy.dataset.id = houseId;
+        if (house.POS_TOP !== undefined) tippy.style.top = `${house.POS_TOP}%`;
+        if (house.POS_RIGHT !== undefined) tippy.style.right = `${house.POS_RIGHT}%`;
+        else if (house.POS_LEFT !== undefined) tippy.style.left = `${house.POS_LEFT}%`;
+        tippy.innerHTML = `<span>${house.NAME}</span>`;
+        tipsContainer.appendChild(tippy);
+    });
+
+    renderHome2Popups();
+    renderHome2Paths();
+}
+
+function renderHome2Popups() {
+    const home2Block = document.querySelector('#home2');
+    if (!home2Block) return;
+
+    const home2Region = getHome2Region();
+    if (!home2Region) return;
+
+    const popupsContainer = getCommonPopupsContainer();
+    if (!popupsContainer) return;
+
+    popupsContainer.querySelectorAll('.block-genplan-popup[data-id-popup^="h2"]').forEach(p => p.remove());
+
+    const houses = home2Region.HOUSES || [];
+
+    houses.forEach(house => {
+        const houseId = `h2h${house.ID}`;
+        const isComingSoon = house.COMING_SOON === 1;
+
+        const popup = document.createElement('div');
+        popup.className = 'block-genplan-popup';
+        popup.dataset.idPopup = houseId;
+        popup.dataset.originalId = house.ID;
+
+        const posCfg = home2PopupPositions[String(house.ID)];
+        if (posCfg) {
+            if (posCfg.top !== undefined) popup.style.top = posCfg.top;
+            if (posCfg.left !== undefined) popup.style.left = posCfg.left;
+            if (posCfg.right !== undefined) popup.style.right = posCfg.right;
+        } else {
+            if (house.POS_TOP !== undefined) popup.style.top = `${house.POS_TOP}%`;
+            if (house.POS_RIGHT !== undefined) popup.style.right = `${house.POS_RIGHT}%`;
+            else if (house.POS_LEFT !== undefined) popup.style.left = `${house.POS_LEFT}%`;
+        }
+
+        popup.innerHTML = `
+            <button type="button" class="block-genplan-popup__close">
+                <svg aria-hidden="true" width="13" height="13"><use xlink:href="/img/sprite.svg#close"></use></svg>
+            </button>
+            <div class="block-genplan-popup__content">
+                <div class="block-genplan-popup__body">
+                    <div class="block-genplan-popup__title">${house.NAME}</div>
+                    <div class="block-genplan-popup__top">
+                        <ul>
+                            <li><div class="block-genplan-popup__name">Срок сдачи:</div><div class="block-genplan-popup__value">${house.DEADLINE || ''}</div></li>
+                            ${isComingSoon ? '<li><div class="block-genplan-popup__name">Статус:</div><div class="block-genplan-popup__value coming-soon-status">Скоро в продаже</div></li>' : ''}
+                        </ul>
+                    </div>
+                    <div class="block-genplan-popup__rooms">
+                        <ul>
+                            ${(house.ROOMS_INFO || []).map(r => `
+                                <li>
+                                    <div class="block-genplan-popup__room">${r.NAME}</div>
+                                    ${r.PRICE ? `<div class="block-genplan-popup__price">от ${r.PRICE.toLocaleString('ru-RU')} руб.</div>` : ''}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    <div class="block-genplan-popup__buttons">
+                        ${!isComingSoon ? `
+                            <a href="#" data-house-id="h2-${house.ID}" class="block-genplan-popup__button choose-apartment btn">
+                                <span>Выбрать квартиру</span>
+                                <svg aria-hidden="true" width="12" height="9"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
+                            </a>
+                            <a href="#" data-house-id="h2-${house.ID}" class="block-genplan-popup__button choose-floor btn">
+                                <span>Выбрать этаж</span>
+                                <svg aria-hidden="true" width="12" height="9"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
+                            </a>
+                        ` : `
+                            <a href="#" class="block-genplan-popup__button btn coming-soon-single">
+                                <span>Скоро в продаже</span>
+                            </a>
+                        `}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        popupsContainer.appendChild(popup);
+    });
+}
+
+function initHome2TippyHandler() {
+    document.addEventListener('click', function (e) {
+        const tippy = e.target.closest('#home2 .block-genplan__tippy');
+        if (tippy) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const id = tippy.dataset.id;
+            if (!id) return;
+
+            const popup = document.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
+            const path = document.querySelector(`#home2 .block-genplan__path[data-id="${id}"]`);
+
+            if (!popup) {
+                renderHome2Popups();
+                const newPopup = document.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
+                if (!newPopup) return;
+                newPopup.classList.add('_active');
+                tippy.classList.add('_active');
+                if (path) path.classList.add('_active');
+                document.documentElement.classList.add('popup-open');
+                return;
+            }
+
+            const activeTippy = document.querySelector('#home2 .block-genplan__tippy._active');
+
+            if (activeTippy === tippy) {
+                popup.classList.remove('_active');
+                tippy.classList.remove('_active');
+                if (path) path.classList.remove('_active');
+                document.documentElement.classList.remove('popup-open');
+                return;
+            }
+
+            document.querySelectorAll('.block-genplan-popup[data-id-popup^="h2"]._active').forEach(p => {
+                p.classList.remove('_active');
+            });
+
+            document.querySelectorAll('#home2 .block-genplan__tippy._active').forEach(t => {
+                t.classList.remove('_active');
+            });
+
+            document.querySelectorAll('#home2 .block-genplan__path._active').forEach(p => {
+                p.classList.remove('_active');
+            });
+
+            popup.classList.add('_active');
+            tippy.classList.add('_active');
+            if (path) path.classList.add('_active');
+            document.documentElement.classList.add('popup-open');
+        }
+    });
+
+    document.addEventListener('click', function (e) {
+        const activePopup = document.querySelector('.block-genplan-popup[data-id-popup^="h2"]._active');
+        if (!activePopup) return;
+
+        const isInside = activePopup.contains(e.target);
+        const isOnTippy = e.target.closest('#home2 .block-genplan__tippy');
+        const isOnClose = e.target.closest('.block-genplan-popup__close');
+
+        if (isOnClose) {
+            activePopup.classList.remove('_active');
+            document.querySelectorAll('#home2 .block-genplan__tippy._active').forEach(t => {
+                t.classList.remove('_active');
+            });
+            document.querySelectorAll('#home2 .block-genplan__path._active').forEach(p => {
+                p.classList.remove('_active');
+            });
+            document.documentElement.classList.remove('popup-open');
+            return;
+        }
+
+        if (!isInside && !isOnTippy) {
+            activePopup.classList.remove('_active');
+            document.querySelectorAll('#home2 .block-genplan__tippy._active').forEach(t => {
+                t.classList.remove('_active');
+            });
+            document.querySelectorAll('#home2 .block-genplan__path._active').forEach(p => {
+                p.classList.remove('_active');
+            });
+            document.documentElement.classList.remove('popup-open');
+        }
+    });
+}
+
+function initHome2PathClickHandler() {
+    document.addEventListener('click', function (e) {
+        const path = e.target.closest('#home2 .block-genplan__path');
+        if (path) {
+            const id = path.dataset.id;
+            if (!id || !id.startsWith('h2')) return;
+
+            const home2Block = document.querySelector('#home2');
+            const tippy = home2Block.querySelector(`.block-genplan__tippy[data-id="${id}"]`);
+
+            if (tippy) {
+                tippy.click();
             }
         }
     });
+}
+
+function initHome2ButtonHandler() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -864,6 +974,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (err) {
             console.warn('Не удалось загрузить частные дома:', err);
         }
+
+        renderHome2();
+        renderHome2Popups();
+        renderHome2Paths();
 
         if (regionsData && regionsData.length && regionsData[0].HOUSES) {
             regionsData[0].HOUSES.forEach(house => {
@@ -888,6 +1002,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         initPrivateHouseButtonHandler();
         initPrivateHouseTippyHandler();
         initPrivateHousePathClickHandler();
+        initHome2TippyHandler();
+        initHome2PathClickHandler();
 
         updateDescriptionText();
         observePrivateHousesState();
@@ -895,6 +1011,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         setTimeout(() => {
             renderPrivateHousePopups();
+            renderHome2Popups();
         }, 500);
     } catch (err) {
         console.error('Ошибка загрузки генплана:', err);
@@ -968,6 +1085,18 @@ function renderStep1AndStep2() {
     privateHousesPath.setAttribute('d', 'M1091.21 359.364L1046.45 335.158L1137.79 261.625L1186.66 285.374L1091.21 359.364Z');
     svg1.appendChild(privateHousesPath);
 
+    const secondStagePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    secondStagePath.setAttribute('data-id', 'r3');
+    secondStagePath.setAttribute('class', 'block-genplan__path path2');
+    secondStagePath.setAttribute('d', 'M931 181.5L851 228.5L1020.5 324.5L1112 258.5L931 181.5Z');
+    svg1.appendChild(secondStagePath);
+
+    const fourthPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    fourthPath.setAttribute('data-id', 'r4');
+    fourthPath.setAttribute('class', 'block-genplan__path path1');
+    fourthPath.setAttribute('d', 'M198.5 220.5L175 188L218 141.5L313 108.5L368.5 155L198.5 220.5Z');
+    svg1.appendChild(fourthPath);
+
     const tippy1 = document.createElement('button');
     tippy1.className = 'block-genplan__tippy';
     tippy1.dataset.id = 'r1';
@@ -983,6 +1112,22 @@ function renderStep1AndStep2() {
     tippy2.style.right = '5%';
     tippy2.innerHTML = `<span>Частные дома</span>`;
     tips1.appendChild(tippy2);
+
+    const tippy3 = document.createElement('button');
+    tippy3.className = 'block-genplan__tippy';
+    tippy3.dataset.id = 'r3';
+    tippy3.style.top = '28%';
+    tippy3.style.right = '8%';
+    tippy3.innerHTML = `<span>Дома и секции - скоро в продаже</span>`;
+    tips1.appendChild(tippy3);
+
+    const tippy4 = document.createElement('button');
+    tippy4.className = 'block-genplan__tippy';
+    tippy4.dataset.id = 'r4';
+    tippy4.style.top = '18%';
+    tippy4.style.left = '18%';
+    tippy4.innerHTML = `<span>Второй этап</span>`;
+    tips1.appendChild(tippy4);
 
     region.HOUSES.forEach(house => {
         const houseId = `h${house.ID}`;
@@ -1007,6 +1152,9 @@ function renderStep1AndStep2() {
 
     renderPrivateHouses();
     renderPrivateHousePopups();
+    renderHome2();
+    renderHome2Popups();
+    renderHome2Paths();
 
     saveOriginalImageSizes();
 
@@ -1018,7 +1166,7 @@ function renderStep1AndStep2() {
 }
 
 function renderPopups() {
-    const popupsContainer = document.querySelector('.block-genplan__popups:not(#private-houses .block-genplan__popups)');
+    const popupsContainer = getCommonPopupsContainer();
 
     if (!popupsContainer || !regionsData?.length) {
         return;
@@ -1140,6 +1288,108 @@ function renderPopups() {
     `;
     popupsContainer.appendChild(privateHousesPopup);
 
+    const secondStagePopup = document.createElement('div');
+    secondStagePopup.className = 'block-genplan-popup';
+    secondStagePopup.dataset.idPopup = 'r3';
+    applyIndividualPopupPosition(secondStagePopup, 'r3');
+
+    let secondStageRoomsHtml = '';
+    if (region.ROOMS_INFO) {
+        region.ROOMS_INFO.forEach(r => {
+            const priceText = r.PRICE ? `от ${r.PRICE.toLocaleString('ru-RU')} руб.` : '';
+            secondStageRoomsHtml += `
+                <li>
+                    <div class="block-genplan-popup__room">${r.NAME}</div>
+                    ${priceText ? `<div class="block-genplan-popup__price">${priceText}</div>` : ''}
+                </li>
+            `;
+        });
+    }
+
+    secondStagePopup.innerHTML = `
+        <button type="button" class="block-genplan-popup__close">
+            <svg aria-hidden="true" width="13" height="13"><use xlink:href="/img/sprite.svg#close"></use></svg>
+        </button>
+        <div class="block-genplan-popup__content">
+            <div class="block-genplan-popup__body">
+                <div class="block-genplan-popup__title">Второй этап</div>
+                <div class="block-genplan-popup__top">
+                    <ul>
+                        <li><div class="block-genplan-popup__name">Домов построено</div><div class="block-genplan-popup__value">${region.HOUSES_COUNT || 0}</div></li>
+                        <li><div class="block-genplan-popup__name">Срок сдачи:</div><div class="block-genplan-popup__value">${region.DEADLINE || '2026'}</div></li>
+                    </ul>
+                </div>
+                <div class="block-genplan-popup__image">
+                    <img loading="lazy" src="/local/templates/makro/img/image-private-house.webp" alt="">
+                    <p>Свой дом. Со всеми преимуществами города.</p>
+                </div>
+                <div class="block-genplan-popup__rooms">
+                    <ul>
+                        ${secondStageRoomsHtml}
+                    </ul>
+                </div>
+                <div class="block-genplan-popup__buttons">
+                    <a href="https://signatur-ms.ru/form/" target="_blank" rel="noopener" class="block-genplan-popup__button btn">
+                        <span>Оставить заявку</span>
+                        <svg aria-hidden="true" width="12" height="9"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    popupsContainer.appendChild(secondStagePopup);
+
+    const fourthPopup = document.createElement('div');
+    fourthPopup.className = 'block-genplan-popup';
+    fourthPopup.dataset.idPopup = 'r4';
+    applyIndividualPopupPosition(fourthPopup, 'r4');
+
+    let fourthRoomsHtml = '';
+    if (region.ROOMS_INFO) {
+        region.ROOMS_INFO.forEach(r => {
+            const priceText = r.PRICE ? `от ${r.PRICE.toLocaleString('ru-RU')} руб.` : '';
+            fourthRoomsHtml += `
+                <li>
+                    <div class="block-genplan-popup__room">${r.NAME}</div>
+                    ${priceText ? `<div class="block-genplan-popup__price">${priceText}</div>` : ''}
+                </li>
+            `;
+        });
+    }
+
+    fourthPopup.innerHTML = `
+        <button type="button" class="block-genplan-popup__close">
+            <svg aria-hidden="true" width="13" height="13"><use xlink:href="/img/sprite.svg#close"></use></svg>
+        </button>
+        <div class="block-genplan-popup__content">
+            <div class="block-genplan-popup__body">
+                <div class="block-genplan-popup__title">Второй этап</div>
+                <div class="block-genplan-popup__top">
+                    <ul>
+                        <li><div class="block-genplan-popup__name">Домов построено</div><div class="block-genplan-popup__value">${region.HOUSES_COUNT}</div></li>
+                        <li><div class="block-genplan-popup__name">Срок сдачи:</div><div class="block-genplan-popup__value">${region.DEADLINE}</div></li>
+                    </ul>
+                </div>
+                <div class="block-genplan-popup__image">
+                    <img loading="lazy" src="${region.IMAGE}" alt="">
+                    <p>${region.PREVIEW_TEXT}</p>
+                </div>
+                <div class="block-genplan-popup__rooms">
+                    <ul>
+                        ${fourthRoomsHtml}
+                    </ul>
+                </div>
+                <div class="block-genplan-popup__buttons">
+                    <a href="#" class="block-genplan-popup__button btn btn-genplan btn-fourth-stage">
+                        <span>Выбрать дом</span>
+                        <svg aria-hidden="true" width="12" height="9"><use xlink:href="/img/sprite.svg#arrow1"></use></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    popupsContainer.appendChild(fourthPopup);
+
     region.HOUSES.forEach(house => {
         if (house.ID == 33) return;
 
@@ -1224,6 +1474,41 @@ function applyIndividualPopupPosition(popupElement, popupId) {
     }
 }
 
+function preloadImage(src) {
+    return new Promise((resolve) => {
+        if (!src) {
+            resolve();
+            return;
+        }
+        const img = new Image();
+        img.onload = () => resolve();
+        img.onerror = () => resolve();
+        img.src = src;
+    });
+}
+
+async function showStep2WithImage(imageSrc) {
+    const step2 = document.querySelector('.block-genplan__content-container.step2');
+    if (!step2) {
+        toggleSteps(true, false);
+        return;
+    }
+
+    const step2Image = step2.querySelector('.block-genplan__image img');
+    const fallbackImage = regionsData && regionsData[0] && regionsData[0].GENPLAN_IMAGE
+        ? regionsData[0].GENPLAN_IMAGE
+        : null;
+
+    const targetSrc = imageSrc || fallbackImage;
+
+    if (step2Image && targetSrc && step2Image.getAttribute('src') !== targetSrc) {
+        await preloadImage(targetSrc);
+        step2Image.src = targetSrc;
+    }
+
+    toggleSteps(true, false);
+}
+
 function initPopupHandlers() {
     document.addEventListener('click', (e) => {
         const tippy = e.target.closest('.block-genplan__tippy');
@@ -1235,12 +1520,30 @@ function initPopupHandlers() {
                 e.preventDefault();
                 e.stopPropagation();
 
-                if (id === 'r1' || id === 'r2') {
+                if (id === 'r1' || id === 'r2' || id === 'r3' || id === 'r4') {
                     togglePopup(id);
                     return;
                 }
 
                 if (id.startsWith('ph')) {
+                    const popup = document.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
+                    if (popup) {
+                        const activePopup = document.querySelector('.block-genplan-popup._active');
+                        if (activePopup === popup) {
+                            popup.classList.remove('_active');
+                            document.documentElement.classList.remove('popup-open');
+                            return;
+                        }
+                        document.querySelectorAll('.block-genplan-popup._active').forEach(p => {
+                            p.classList.remove('_active');
+                        });
+                        popup.classList.add('_active');
+                        document.documentElement.classList.add('popup-open');
+                    }
+                    return;
+                }
+
+                if (id.startsWith('h2')) {
                     const popup = document.querySelector(`.block-genplan-popup[data-id-popup="${id}"]`);
                     if (popup) {
                         const activePopup = document.querySelector('.block-genplan-popup._active');
@@ -1278,27 +1581,30 @@ function initPopupHandlers() {
             e.preventDefault();
             e.stopPropagation();
 
-            const houseId = chooseFloorBtn.dataset.houseId;
-            if (houseId) {
-                const visualHouseId = `h${houseId}`;
+            const rawHouseId = chooseFloorBtn.dataset.houseId;
+            if (!rawHouseId) return;
 
-                if (window.innerWidth <= 768) {
-                    const activePopup = document.querySelector('.block-genplan-popup._active');
-                    if (activePopup) {
-                        activePopup.classList.remove('_active');
-                        document.documentElement.classList.remove('popup-open');
-                    }
+            const isHome2 = rawHouseId.startsWith('h2-');
+            const realId = isHome2 ? rawHouseId.replace('h2-', '') : rawHouseId;
+            const visualHouseId = isHome2 ? `h2-${realId}` : `h${realId}`;
+            const step2Target = isHome2 ? 'home2' : null;
+            const regionId = isHome2 ? getHome2Region()?.ID : null;
 
-                    createMobileFloorsPopup(houseId, visualHouseId);
-                } else {
-                    const popup = chooseFloorBtn.closest('.block-genplan-popup');
-                    loadAndRenderStep3(houseId).then(() => {
-                        const visualHouseId = `h${houseId}`;
-                        toggleSteps(false, true, visualHouseId);
-                        popup?.classList.remove('_active');
-                        document.documentElement.classList.remove('popup-open');
-                    });
+            if (window.innerWidth <= 768) {
+                const activePopup = document.querySelector('.block-genplan-popup._active');
+                if (activePopup) {
+                    activePopup.classList.remove('_active');
+                    document.documentElement.classList.remove('popup-open');
                 }
+
+                createMobileFloorsPopup(realId, visualHouseId, regionId);
+            } else {
+                const popup = chooseFloorBtn.closest('.block-genplan-popup');
+                loadAndRenderStep3(rawHouseId, null, regionId).then(() => {
+                    toggleSteps(false, true, visualHouseId, step2Target);
+                    popup?.classList.remove('_active');
+                    document.documentElement.classList.remove('popup-open');
+                });
             }
             return;
         }
@@ -1312,43 +1618,80 @@ function initPopupHandlers() {
                 return;
             }
 
-            const houseId = chooseApartmentBtn.dataset.houseId;
-            if (houseId) {
-                const popup = chooseApartmentBtn.closest('.block-genplan-popup');
+            const rawHouseId = chooseApartmentBtn.dataset.houseId;
+            if (!rawHouseId) return;
 
-                if (window.innerWidth <= 768) {
-                    const visualHouseId = `h${houseId}`;
-                    if (!loadedHouses.has(houseId)) {
-                        fetchHouse(houseId).then(houseData => {
-                            loadedHouses.set(houseId, houseData);
-                            createMobileFloorsPopup(houseId, visualHouseId);
-                        }).catch(err => {
-                            console.error('Ошибка загрузки дома:', err);
-                        });
-                    } else {
-                        createMobileFloorsPopup(houseId, visualHouseId);
-                    }
-                } else {
-                    loadAndRenderStep3(houseId).then(() => {
-                        const visualHouseId = `h${houseId}`;
-                        toggleSteps(false, true, visualHouseId);
-                        popup?.classList.remove('_active');
-                        document.documentElement.classList.remove('popup-open');
+            const isHome2 = rawHouseId.startsWith('h2-');
+            const realId = isHome2 ? rawHouseId.replace('h2-', '') : rawHouseId;
+            const visualHouseId = isHome2 ? `h2-${realId}` : `h${realId}`;
+            const step2Target = isHome2 ? 'home2' : null;
+            const regionId = isHome2 ? getHome2Region()?.ID : null;
+
+            const popup = chooseApartmentBtn.closest('.block-genplan-popup');
+
+            if (window.innerWidth <= 768) {
+                if (!loadedHouses.has(String(realId))) {
+                    fetchHouse(realId, regionId).then(houseData => {
+                        loadedHouses.set(String(realId), houseData);
+                        createMobileFloorsPopup(realId, visualHouseId, regionId);
+                    }).catch(err => {
+                        console.error('Ошибка загрузки дома:', err);
                     });
+                } else {
+                    createMobileFloorsPopup(realId, visualHouseId, regionId);
                 }
+            } else {
+                loadAndRenderStep3(rawHouseId, null, regionId).then(() => {
+                    toggleSteps(false, true, visualHouseId, step2Target);
+                    popup?.classList.remove('_active');
+                    document.documentElement.classList.remove('popup-open');
+                });
             }
             return;
         }
 
-        if (e.target.closest('.btn-genplan')) {
+        const fourthStageBtn = e.target.closest('.btn-fourth-stage');
+        if (fourthStageBtn) {
             e.preventDefault();
             e.stopPropagation();
-            toggleSteps(true, false);
+
+            toggleSteps(true, false, null, 'home2');
+
+            const titleGenplan = document.querySelector('.title-genplan');
+            if (titleGenplan) {
+                titleGenplan.classList.add('hidden');
+            }
+
             const activePopup = document.querySelector('.block-genplan-popup._active');
             if (activePopup) {
                 activePopup.classList.remove('_active');
                 document.documentElement.classList.remove('popup-open');
             }
+            return;
+        }
+
+        if (e.target.closest('.btn-genplan') &&
+            !e.target.closest('.btn-fourth-stage') &&
+            !e.target.closest('.btn-private-house')) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const fallbackImage = regionsData && regionsData[0] && regionsData[0].GENPLAN_IMAGE
+                ? regionsData[0].GENPLAN_IMAGE
+                : null;
+
+            showStep2WithImage(fallbackImage).then(() => {
+                const titleGenplan = document.querySelector('.title-genplan');
+                if (titleGenplan) {
+                    titleGenplan.classList.add('hidden');
+                }
+
+                const activePopup = document.querySelector('.block-genplan-popup._active');
+                if (activePopup) {
+                    activePopup.classList.remove('_active');
+                    document.documentElement.classList.remove('popup-open');
+                }
+            });
             return;
         }
 
@@ -1432,12 +1775,31 @@ function togglePopup(id) {
     document.documentElement.classList.add('popup-open');
 }
 
-function createMobileFloorsPopup(houseId, visualHouseId) {
-    const houseData = regionsData[0].HOUSES.find(h => h.ID == houseId);
+function findHouseData(houseId, regionId = null) {
+    if (regionId) {
+        const region = regionsData.find(r => r.ID == regionId);
+        if (region && region.HOUSES) {
+            const house = region.HOUSES.find(h => h.ID == houseId);
+            if (house) return house;
+        }
+    }
+    if (regionsData && regionsData.length) {
+        for (const region of regionsData) {
+            if (region.HOUSES) {
+                const house = region.HOUSES.find(h => h.ID == houseId);
+                if (house) return house;
+            }
+        }
+    }
+    return null;
+}
+
+function createMobileFloorsPopup(houseId, visualHouseId, regionId = null) {
+    const houseData = findHouseData(houseId, regionId);
     const isComingSoon = houseData && houseData.COMING_SOON === 1;
 
     if (isComingSoon) {
-        const popupsContainer = document.querySelector('.block-genplan__popups');
+        const popupsContainer = getCommonPopupsContainer();
         const existingMessage = document.querySelector('.coming-soon-message');
         if (existingMessage) {
             existingMessage.remove();
@@ -1482,6 +1844,7 @@ function createMobileFloorsPopup(houseId, visualHouseId) {
     mobFloors.className = 'floors-block-genplan mob _active';
     mobFloors.dataset.id = visualHouseId;
     mobFloors.dataset.originalId = houseId;
+    if (regionId) mobFloors.dataset.regionId = regionId;
 
     mobFloors.innerHTML = `
         <button type="button" class="block-genplan-popup__close">
@@ -1503,34 +1866,35 @@ function createMobileFloorsPopup(houseId, visualHouseId) {
         </button>
     `;
 
-    const popupsContainer = document.querySelector('.block-genplan__popups');
+    const popupsContainer = getCommonPopupsContainer();
     if (popupsContainer) {
         popupsContainer.appendChild(mobFloors);
     }
 
     document.documentElement.classList.add('popup-open');
 
-    if (!loadedHouses.has(houseId.toString())) {
-        fetchHouse(houseId).then(houseData => {
-            loadedHouses.set(houseId.toString(), houseData);
+    if (!loadedHouses.has(String(houseId))) {
+        fetchHouse(houseId, regionId).then(houseData => {
+            loadedHouses.set(String(houseId), houseData);
         }).catch(err => {
             console.error('Ошибка загрузки дома:', err);
         });
     }
 }
 
-function renderMobileFloorsBlock(houseId, selectedFloor = '4') {
+function renderMobileFloorsBlock(houseId, selectedFloor = '4', regionId = null) {
     const existingBlock = document.querySelector('.block-genplan__choose-floors-mob');
     if (existingBlock) {
         existingBlock.remove();
     }
 
-    const houseData = loadedHouses.get(houseId.toString());
+    const houseData = loadedHouses.get(String(houseId));
     if (!houseData) return;
 
     const floorsBlock = document.createElement('div');
     floorsBlock.className = 'block-genplan__choose-floors-mob _active';
     floorsBlock.dataset.id = `h${houseId}`;
+    if (regionId) floorsBlock.dataset.regionId = regionId;
 
     let availableFloors = [4, 3, 2, 1];
     if (houseData.FLOORS) {
@@ -1736,13 +2100,14 @@ function initMobileFloorHandlers() {
             const floor = floorBtn.dataset.floor;
             const floorsPopup = floorBtn.closest('.floors-block-genplan.mob');
             const visualHouseId = floorsPopup.dataset.id;
-            const originalHouseId = floorsPopup.dataset.originalId || visualHouseId.replace('h', '');
+            const originalHouseId = floorsPopup.dataset.originalId || visualHouseId.replace(/^h2-?/, '');
+            const regionId = floorsPopup.dataset.regionId || null;
 
             floorsPopup.classList.remove('_active');
             document.documentElement.classList.remove('popup-open');
 
-            if (loadedHouses.has(originalHouseId)) {
-                renderMobileFloorsBlock(originalHouseId, floor);
+            if (loadedHouses.has(String(originalHouseId))) {
+                renderMobileFloorsBlock(originalHouseId, floor, regionId);
             } else {
                 const loadingBlock = document.createElement('div');
                 loadingBlock.className = 'block-genplan__choose-floors-mob _active loading';
@@ -1769,10 +2134,10 @@ function initMobileFloorHandlers() {
                     chooseFloorsContainer.appendChild(loadingBlock);
                 }
 
-                fetchHouse(originalHouseId).then(houseData => {
-                    loadedHouses.set(originalHouseId.toString(), houseData);
+                fetchHouse(originalHouseId, regionId).then(houseData => {
+                    loadedHouses.set(String(originalHouseId), houseData);
                     loadingBlock.remove();
-                    renderMobileFloorsBlock(originalHouseId, floor);
+                    renderMobileFloorsBlock(originalHouseId, floor, regionId);
                 }).catch(err => {
                     console.error('Ошибка загрузки дома:', err);
                     loadingBlock.innerHTML = `
@@ -1795,10 +2160,10 @@ function initMobileFloorHandlers() {
             `;
 
                     loadingBlock.querySelector('.retry-btn')?.addEventListener('click', () => {
-                        fetchHouse(originalHouseId).then(houseData => {
-                            loadedHouses.set(originalHouseId.toString(), houseData);
+                        fetchHouse(originalHouseId, regionId).then(houseData => {
+                            loadedHouses.set(String(originalHouseId), houseData);
                             loadingBlock.remove();
-                            renderMobileFloorsBlock(originalHouseId, floor);
+                            renderMobileFloorsBlock(originalHouseId, floor, regionId);
                         });
                     });
                 });
@@ -1813,10 +2178,11 @@ function initMobileFloorHandlers() {
             const floorBlock = titleChooseFloor.closest('.choose-floor-mob');
             const floorsBlock = floorBlock.closest('.block-genplan__choose-floors-mob');
             const visualHouseId = floorsBlock.dataset.id;
-            const originalHouseId = visualHouseId.replace('h', '');
+            const originalHouseId = visualHouseId.replace(/^h2-?/, '');
+            const regionId = floorsBlock.dataset.regionId || null;
 
             floorsBlock.remove();
-            createMobileFloorsPopup(originalHouseId, visualHouseId);
+            createMobileFloorsPopup(originalHouseId, visualHouseId, regionId);
             return;
         }
 
@@ -1862,12 +2228,24 @@ function initMobileFloorHandlers() {
     });
 }
 
-async function loadAndRenderStep3(houseId, selectedFloor = null) {
-    let houseData = loadedHouses.get(houseId);
+async function loadAndRenderStep3(houseId, selectedFloor = null, regionId = null) {
+    let isHome2 = false;
+    let realId = houseId;
+
+    if (typeof houseId === 'string' && houseId.startsWith('h2-')) {
+        isHome2 = true;
+        realId = houseId.replace('h2-', '');
+        if (!regionId) {
+            const home2Region = getHome2Region();
+            regionId = home2Region?.ID || null;
+        }
+    }
+
+    let houseData = loadedHouses.get(String(realId));
     if (!houseData) {
         try {
-            houseData = await fetchHouse(houseId);
-            loadedHouses.set(houseId, houseData);
+            houseData = await fetchHouse(realId, regionId);
+            loadedHouses.set(String(realId), houseData);
         } catch (err) {
             console.error('Ошибка загрузки дома:', err);
             return;
@@ -1878,11 +2256,13 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
 
     const step3 = document.createElement('div');
     step3.className = 'block-genplan__content-container step3';
-    step3.dataset.id = `h${houseId}`;
+    step3.dataset.id = isHome2 ? `h2-${realId}` : `h${realId}`;
+    step3.dataset.step2Target = isHome2 ? 'home2' : '';
+    if (regionId) step3.dataset.regionId = regionId;
 
     const sortedFloors = [...houseData.FLOORS].sort((a, b) => parseInt(b.FLOOR) - parseInt(a.FLOOR));
 
-    const sizeConfig = houseSizeConfig[houseId] || houseSizeConfig.default;
+    const sizeConfig = houseSizeConfig[realId] || houseSizeConfig.default;
     const { svgWidth, svgHeight, imgWidth, imgHeight } = sizeConfig;
 
     let defaultFloor = '4';
@@ -2120,12 +2500,10 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
 
     const titleRooms = document.querySelector('.title-romms span');
     if (titleRooms) {
-        let houseDisplayName = `Дом №${houseId}`;
-        if (regionsData && regionsData[0] && regionsData[0].HOUSES) {
-            const house = regionsData[0].HOUSES.find(h => h.ID == houseId);
-            if (house && house.NAME) {
-                houseDisplayName = house.NAME;
-            }
+        let houseDisplayName = `Дом №${realId}`;
+        const houseDataRaw = findHouseData(realId, regionId);
+        if (houseDataRaw && houseDataRaw.NAME) {
+            houseDisplayName = houseDataRaw.NAME;
         }
         titleRooms.textContent = houseDisplayName;
     }
@@ -2139,17 +2517,16 @@ async function loadAndRenderStep3(houseId, selectedFloor = null) {
         updateEntrancesState();
     }
 
-    const visualHouseId = `h${houseId}`;
-    toggleSteps(false, true, visualHouseId);
+    const visualHouseId = isHome2 ? `h2-${realId}` : `h${realId}`;
+    toggleSteps(false, true, visualHouseId, isHome2 ? 'home2' : null);
 
     forceInitEntrancesToggle();
     reinitToggleForNewHouse();
 }
 
-function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null) {
+function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null, targetStep2Id = null) {
     const contentContainerStep1 = document.querySelector('.block-genplan__content-container.step1');
-    const contentContainerStep2 = document.querySelector('.block-genplan__content-container.step2');
-    const privateHousesBlock = document.querySelector('#private-houses');
+    const allStep2Containers = document.querySelectorAll('.block-genplan__content-container.step2');
     const titleGenplan = document.querySelector('.title-genplan');
     const titleHouse = document.querySelector('.title-house');
     const titleRooms = document.querySelector('.title-romms');
@@ -2158,8 +2535,7 @@ function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null)
     const fullscreenBtn = document.querySelector('.fullsreen-genplan__button');
 
     contentContainerStep1?.classList.remove('_active');
-    contentContainerStep2?.classList.remove('_active');
-    if (privateHousesBlock) privateHousesBlock.classList.remove('_active');
+    allStep2Containers.forEach(el => el.classList.remove('_active'));
     document.querySelectorAll('.block-genplan__content-container.step3').forEach(el => el.classList.remove('_active'));
 
     titleGenplan?.classList.remove('_active');
@@ -2205,19 +2581,26 @@ function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null)
     if (showStep3) {
         const isMobile = window.innerWidth < 1200;
         if (isMobile) {
-            contentContainerStep2?.classList.add('_active');
+            let step2ToActivate = null;
+            if (targetStep2Id) {
+                step2ToActivate = document.getElementById(targetStep2Id);
+            }
+            if (!step2ToActivate) {
+                step2ToActivate = document.querySelector('.block-genplan__content-container.step2');
+            }
+            step2ToActivate?.classList.add('_active');
             titleHouse?.classList.add('_active');
             document.documentElement.classList.add('choice-home');
             if (titleRooms) titleRooms.classList.remove('_active');
         } else {
             let step3ToActivate = null;
 
-            if (targetHouseId && targetHouseId.startsWith('h')) {
+            if (targetHouseId && (targetHouseId.startsWith('h2-') || targetHouseId.startsWith('h'))) {
                 step3ToActivate = document.querySelector(`.block-genplan__content-container.step3[data-id="${targetHouseId}"]`);
             } else if (targetHouseId) {
                 const allStep3 = document.querySelectorAll('.block-genplan__content-container.step3');
                 for (let step3 of allStep3) {
-                    const step3HouseId = step3.dataset.id.replace('h', '');
+                    const step3HouseId = step3.dataset.id.replace(/^h2-/, '').replace(/^h/, '');
                     if (step3HouseId == targetHouseId) {
                         step3ToActivate = step3;
                         break;
@@ -2229,12 +2612,28 @@ function toggleSteps(showStep2 = false, showStep3 = false, targetHouseId = null)
                 step3ToActivate.classList.add('_active');
                 titleRooms?.classList.add('_active');
                 document.documentElement.classList.remove('choice-home');
+
+                const step2Target = step3ToActivate.dataset.step2Target;
+                if (step2Target) {
+                    let step2ToActivate = document.getElementById(step2Target);
+                    if (!step2ToActivate) {
+                        step2ToActivate = document.querySelector('.block-genplan__content-container.step2');
+                    }
+                    step2ToActivate?.classList.add('_active');
+                }
             }
         }
         titleHouse?.classList.add('hidden');
 
     } else if (showStep2) {
-        contentContainerStep2?.classList.add('_active');
+        let step2ToActivate = null;
+        if (targetStep2Id) {
+            step2ToActivate = document.getElementById(targetStep2Id);
+        }
+        if (!step2ToActivate) {
+            step2ToActivate = document.querySelector('.block-genplan__content-container.step2');
+        }
+        step2ToActivate?.classList.add('_active');
         titleHouse?.classList.add('_active');
         document.documentElement.classList.add('choice-home');
         titleHouse?.classList.remove('hidden');
@@ -2280,27 +2679,35 @@ function initExistingHandlers() {
     titleRooms?.addEventListener('click', () => {
         const activeStep3 = document.querySelector('.block-genplan__content-container.step3._active');
         if (activeStep3) {
-            toggleSteps(true, false);
+            const step2Target = activeStep3.dataset.step2Target || null;
+            toggleSteps(true, false, null, step2Target);
         }
         updateEntrancesStateForAllHouses;
     });
 
     document.addEventListener('click', (e) => {
-        if (e.target.closest('.btn-genplan')) {
+        if (e.target.closest('.btn-genplan') &&
+            !e.target.closest('.btn-fourth-stage') &&
+            !e.target.closest('.btn-private-house')) {
             e.preventDefault();
             e.stopPropagation();
-            toggleSteps(true, false);
 
-            const titleGenplan = document.querySelector('.title-genplan');
-            if (titleGenplan) {
-                titleGenplan.classList.add('hidden');
-            }
+            const fallbackImage = regionsData && regionsData[0] && regionsData[0].GENPLAN_IMAGE
+                ? regionsData[0].GENPLAN_IMAGE
+                : null;
 
-            const activePopup = document.querySelector('.block-genplan-popup._active');
-            if (activePopup) {
-                activePopup.classList.remove('_active');
-                document.documentElement.classList.remove('popup-open');
-            }
+            showStep2WithImage(fallbackImage).then(() => {
+                const titleGenplan = document.querySelector('.title-genplan');
+                if (titleGenplan) {
+                    titleGenplan.classList.add('hidden');
+                }
+
+                const activePopup = document.querySelector('.block-genplan-popup._active');
+                if (activePopup) {
+                    activePopup.classList.remove('_active');
+                    document.documentElement.classList.remove('popup-open');
+                }
+            });
             return;
         }
     });
@@ -2888,20 +3295,20 @@ function initMainGenplanLogic() {
 
 function observePrivateHousesState() {
     const privateHousesBlock = document.querySelector('#private-houses');
-    if (!privateHousesBlock) return;
-
-    const observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-            if (mutation.attributeName === 'class') {
-                updateDescriptionText();
-            }
+    if (privateHousesBlock) {
+        const observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (mutation.attributeName === 'class') {
+                    updateDescriptionText();
+                }
+            });
         });
-    });
 
-    observer.observe(privateHousesBlock, {
-        attributes: true,
-        attributeFilter: ['class']
-    });
+        observer.observe(privateHousesBlock, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    }
 
     const step2Container = document.querySelector('.block-genplan__content-container.step2');
     if (step2Container) {
@@ -2934,6 +3341,22 @@ function observePrivateHousesState() {
             attributeFilter: ['class']
         });
     }
+
+    const home2Block = document.querySelector('#home2');
+    if (home2Block) {
+        const home2Observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (mutation.attributeName === 'class') {
+                    updateDescriptionText();
+                }
+            });
+        });
+
+        home2Observer.observe(home2Block, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    }
 }
 
 function interceptPrivateHouseActivations() {
@@ -2946,6 +3369,13 @@ function interceptPrivateHouseActivations() {
 
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('.block-genplan-popup[data-id-popup="r2"] .btn-genplan');
+        if (btn) {
+            setTimeout(updateDescriptionText, 100);
+        }
+    });
+
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.btn-fourth-stage');
         if (btn) {
             setTimeout(updateDescriptionText, 100);
         }
