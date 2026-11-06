@@ -322,16 +322,6 @@ function renderPrivateHouses() {
 
     let privateHousesData = loadedHouses.get('33');
 
-    if (!privateHousesData && regionsData && regionsData[0]) {
-        const region = regionsData[0];
-        if (region.HOUSES) {
-            privateHousesData = region.HOUSES.find(h => h.ID == 33);
-        }
-        if (!privateHousesData && region.PRIVATE_HOUSES) {
-            privateHousesData = region.PRIVATE_HOUSES;
-        }
-    }
-
     if (!privateHousesData) {
         fetchHouse(33).then(data => {
             loadedHouses.set('33', data);
@@ -401,16 +391,6 @@ function renderPrivateHousePopups() {
     if (!privateHousesBlock) return;
 
     let privateHousesData = loadedHouses.get('33');
-
-    if (!privateHousesData && regionsData && regionsData[0]) {
-        const region = regionsData[0];
-        if (region.HOUSES) {
-            privateHousesData = region.HOUSES.find(h => h.ID == 33);
-        }
-        if (!privateHousesData && region.PRIVATE_HOUSES) {
-            privateHousesData = region.PRIVATE_HOUSES;
-        }
-    }
 
     if (!privateHousesData) {
         fetchHouse(33).then(data => {
@@ -1223,11 +1203,10 @@ function renderPopups() {
     privateHousesPopup.dataset.idPopup = 'r2';
     applyIndividualPopupPosition(privateHousesPopup, 'r2');
 
-    let privateHouseData = null;
-    if (region.PRIVATE_HOUSES) {
-        privateHouseData = region.PRIVATE_HOUSES;
-    } else if (region.HOUSES) {
-        privateHouseData = region.HOUSES.find(h => h.ID == 33);
+    let privateHouseData = loadedHouses.get('33');
+
+    if (!privateHouseData && regionsData) {
+        privateHouseData = regionsData.find(r => r.ID == 33);
     }
 
     const privateData = privateHouseData || {
@@ -1312,21 +1291,10 @@ function renderPopups() {
         </button>
         <div class="block-genplan-popup__content">
             <div class="block-genplan-popup__body">
-                <div class="block-genplan-popup__title">Второй этап</div>
-                <div class="block-genplan-popup__top">
-                    <ul>
-                        <li><div class="block-genplan-popup__name">Домов построено</div><div class="block-genplan-popup__value">${region.HOUSES_COUNT || 0}</div></li>
-                        <li><div class="block-genplan-popup__name">Срок сдачи:</div><div class="block-genplan-popup__value">${region.DEADLINE || '2026'}</div></li>
-                    </ul>
-                </div>
+                <div style="display: block;" class="block-genplan-popup__title">Дома и секции - скоро в продаже</div>
                 <div class="block-genplan-popup__image">
-                    <img loading="lazy" src="/local/templates/makro/img/image-private-house.webp" alt="">
+                    <img loading="lazy" src="/local/templates/makro/img/stage-house.webp" alt="">
                     <p>Свой дом. Со всеми преимуществами города.</p>
-                </div>
-                <div class="block-genplan-popup__rooms">
-                    <ul>
-                        ${secondStageRoomsHtml}
-                    </ul>
                 </div>
                 <div class="block-genplan-popup__buttons">
                     <a href="https://signatur-ms.ru/form/" target="_blank" rel="noopener" class="block-genplan-popup__button btn">
@@ -1344,9 +1312,23 @@ function renderPopups() {
     fourthPopup.dataset.idPopup = 'r4';
     applyIndividualPopupPosition(fourthPopup, 'r4');
 
+    const home2Region = getHome2Region();
+    const fourthRegion = home2Region || region;
+
+    const fourthImage = fourthRegion.IMAGE
+        || fourthRegion.GENPLAN_IMAGE
+        || region.IMAGE
+        || '';
+
+    const fourthPreviewText = fourthRegion.PREVIEW_TEXT
+        || region.PREVIEW_TEXT
+        || '';
+
+    const fourthTitle = fourthRegion.NAME || 'Второй этап';
+
     let fourthRoomsHtml = '';
-    if (region.ROOMS_INFO) {
-        region.ROOMS_INFO.forEach(r => {
+    if (fourthRegion.ROOMS_INFO) {
+        fourthRegion.ROOMS_INFO.forEach(r => {
             const priceText = r.PRICE ? `от ${r.PRICE.toLocaleString('ru-RU')} руб.` : '';
             fourthRoomsHtml += `
                 <li>
@@ -1363,16 +1345,16 @@ function renderPopups() {
         </button>
         <div class="block-genplan-popup__content">
             <div class="block-genplan-popup__body">
-                <div class="block-genplan-popup__title">Второй этап</div>
+                <div class="block-genplan-popup__title">${fourthTitle}</div>
                 <div class="block-genplan-popup__top">
                     <ul>
-                        <li><div class="block-genplan-popup__name">Домов построено</div><div class="block-genplan-popup__value">${region.HOUSES_COUNT}</div></li>
-                        <li><div class="block-genplan-popup__name">Срок сдачи:</div><div class="block-genplan-popup__value">${region.DEADLINE}</div></li>
+                        <li><div class="block-genplan-popup__name">Домов построено</div><div class="block-genplan-popup__value">${fourthRegion.HOUSES_COUNT || '0 / 12'}</div></li>
+                        <li><div class="block-genplan-popup__name">Срок сдачи:</div><div class="block-genplan-popup__value">${fourthRegion.DEADLINE || '01.09.2027'}</div></li>
                     </ul>
                 </div>
                 <div class="block-genplan-popup__image">
-                    <img loading="lazy" src="${region.IMAGE}" alt="">
-                    <p>${region.PREVIEW_TEXT}</p>
+                    <img loading="lazy" src="/local/templates/makro/img/step2-house.webp" alt="">
+                    <p>${fourthPreviewText}</p>
                 </div>
                 <div class="block-genplan-popup__rooms">
                     <ul>
